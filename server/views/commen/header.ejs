@@ -1,0 +1,33 @@
+<%
+(function() {
+  var css = {};
+  include_css = function(path) {
+    if(!css[path]) {
+      css[path] = true;
+      return '<link rel="stylesheet" href="' + path + '"/>';
+    }
+  }
+
+  var js = {}
+  include_js = function(path) {
+    if(!js[path]) {
+      js[path] = true;
+      return '<script src="' + path + '"></script>';
+    }
+  }
+})()
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title><%- locals.title || 'Test' %></title>
+
+  <%# 常见库的 CDN 引用 -%>
+
+</head>
+
+<body>
