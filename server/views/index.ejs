@@ -1,5 +1,34 @@
 <%- include(_v + '/commen/header') %>
 
-<pre><%- code %></pre>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3 well">
+    <%- include(_v + '/component/form', {
+        id: 'form', 
+        items: [{
+          name: 'usn',
+          type: 'text',
+          label: '用户名',
+        },{
+          name: 'email',
+          type: 'email',
+          label: '邮箱',
+        },{
+          name: 'pwd',
+          type: 'password',
+          label: '密码',
+        }],
+        submit: {
+          text: '提交',
+          position: 'right',
+        }
+      }) %>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  
+});
+</script>
 
 <%- include(_v + '/commen/footer') %>
