@@ -1,0 +1,40 @@
+<%#
+  scope: 组件的片段 id
+  item: 组件 dataObject
+%>
+<%# html template -%>
+<% if(scope === 'ele') { %>
+
+  <% if(item.label) { %>
+    <label><%- item.label %></label>
+  <% } %>
+  <input name="<%- item.name %>" type="<%- item.type %>" class="form-control">
+
+<% } -%>
+
+
+<%# js %>
+<% if(0){ %><script><% } -%>
+
+<% if (scope === 'validate') { %>
+  <%#
+    绑定校验事件
+    $item: $(ele)
+  -%>
+  $item.on('keyup', function() {
+    var $this = $(this);
+    var value = $this.val();
+    // TODO
+  });
+
+<% } else if (scope === 'val') { %>
+  <%# 
+    取值 
+    $item: $(ele)
+    form: 写入对象
+  -%>
+  form['<%- item.name %>'] = $item.val();
+
+<% } %>
+
+<% if(0){ %></script><% } -%>

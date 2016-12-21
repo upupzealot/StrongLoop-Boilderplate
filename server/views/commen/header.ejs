@@ -15,6 +15,11 @@
       return '<script src="' + path + '"></script>';
     }
   }
+
+  inc = function(component, scope, params) {
+    _.merge(params, {scope: scope});
+    return include(_v + '/component/' + component, params);
+  }
 })();
 %>
 
