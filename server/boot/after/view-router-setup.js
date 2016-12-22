@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const _ = require('lodash');
 
 module.exports = (server)=>{
@@ -12,4 +13,14 @@ module.exports = (server)=>{
     res.locals._v = server.get('views');
     next();
   });
+
+  let routerDir = path.resolve(__dirname, '../../router');
+  let router = server.loopback.Router();
+  fs.readdirSync(routerDir)
+  .filter(function(fileName) {
+    return path.extname(fileName) === '.js';
+  }).forEach(function(fileName) {
+    require(routerDir + '/' + fileName)(router, server);
+  });
+  server.use(router);
 };
