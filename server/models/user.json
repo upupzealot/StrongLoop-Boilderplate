@@ -1,0 +1,77 @@
+{
+  "name": "user",
+  "description": "用户",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "mixins": {
+    "RemoteRouting" : {
+      "only": [
+        "@create",
+        "@login",
+        "@logout"
+      ]
+    }
+  },
+  "properties": {
+    "usn": {
+      "type": "string",
+      "required": true,
+      "index": {
+        "unique": true
+      },
+      "description": "用户名"
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "index": {
+        "unique": true
+      },
+      "description": "注册邮箱"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "用户头像"
+    },
+    "bio": {
+      "type": "string",
+      "description": "个性签名"
+    }
+  },
+  "hidden": [
+    "email"
+  ],
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "login"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findById"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "updateAttributes"
+    }
+  ],
+  "methods": {}
+}

@@ -10,10 +10,11 @@
       "loopback/common/mixins",
       "loopback/server/mixins",
       "../common/mixins",
-      "./mixins"
+      "./mixins",
+      "../node_modules/loopback-remote-routing"
     ]
   },
-  "User": {
+  "user": {
     "dataSource": "db"
   },
   "AccessToken": {
