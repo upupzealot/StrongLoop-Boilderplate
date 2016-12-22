@@ -8,7 +8,7 @@ module.exports = (server)=>{
   server.enableAuth();
 
   // 设置模板引擎为 EJS
-  server.set('views', path.resolve(__dirname, '../views'));
+  server.set('views', path.resolve(__dirname, '../../views'));
   server.set('view engine', 'ejs');
   server.use((req, res, next)=>{
     res.locals._ = _;
