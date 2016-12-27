@@ -1,12 +1,23 @@
+<%
+  // input components
+  var ics = {
+    input: 'form/input-text',
+    combobox: 'form/input-combobox'
+  };
+%>
+
 <div id = "<%- id %>" class="clearfix">
-  <% items.forEach(function(item) { %>
+  <% fields.forEach(function(field) { %>
     <div class="form-group">
-      <%- inc('form/input-text', 'ele', {item : item}); %>
+      <% if(field.opt.label) { %>
+        <label><%- field.opt.label %></label>
+      <% } %>
+      <%- inc(ics[field.type], 'ele', {opt : field.opt}); %>
     </div>
   <% }); %>
 
   <% if(submitBtn) { %>
-    <button name="submit" class="btn btn-default <% if(submitBtn.position === 'right'){ %>pull-right<% } %>">
+    <button name="submit" class="btn btn-default btn-block <% if(submitBtn.position === 'right'){ %>pull-right<% } %>">
       <%- submitBtn.text %>
     </button>
   <% } %>
@@ -15,22 +26,32 @@
 <script type="text/javascript">
 $(function() {
   var $form = $('#<%- id %>');
+  var $fields = {};
 
-  // 绑定校验事件
-  var $item = null;
-  <% items.forEach(function(item) { %>
-    $item = $form.find('[name=<%- item.name %>]');
-    <%- inc('form/input-text', 'validate', {item : item}); %>
+  // 初始化组件
+  var $field = null;
+  <% fields.forEach(function(field) { %>
+    $field = $form.find('[name=<%- field.opt.name %>]');
+    $fields['<%- field.opt.name %>'] = $field;
+    <%- inc(ics[field.type], 'init', {opt : field.opt}); %>
   <% }); %>
+
+  $form.bind('val', function(ev, callback) {
+    var form = {};
+
+    <% fields.forEach(function(field) { %>
+      $field = $fields['<%- field.opt.name %>'];
+      <%- inc(ics[field.type], 'val', {opt : field.opt}); %>
+    <% }); %>
+
+    return callback(form);
+  });
 
   var $submit_btn = $form.find('[name=submit]');
   $submit_btn.on('click', function() {
-    var form = {};
-    <% items.forEach(function(item) { %>
-      $item = $form.find('[name=<%- item.name %>]');
-      <%- inc('form/input-text', 'val', {item : item}); %>
-    <% }); %>
-    console.log(form);
+    $form.trigger('val', function(form) {
+      $form.trigger('submit', form);
+    });
   });
 });
 </script>

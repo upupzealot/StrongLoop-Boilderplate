@@ -1,3 +1,6 @@
+<%# 参考：http://silviomoreto.github.io/bootstrap-select/ -%>
+<%- include_css('//cdn.bootcss.com/bootstrap-select/1.12.1/css/bootstrap-select.min.css'); %>
+<%- include_js('//cdn.bootcss.com/bootstrap-select/1.12.1/js/bootstrap-select.min.js'); %>
 <%#
   scope: 组件的片段 id
   opt: 组件 dataObject
@@ -8,7 +11,11 @@
   <%#
     DOM
   -%>
-  <input name="<%- opt.name %>" type="<%- opt.type %>" class="form-control">
+  <select name="<%- opt.name %>" class="selectpicker">
+    <% opt.options.forEach(function(option) { %>
+      <option><%- option %></option>
+    <% }); %>
+  </select>
 
 
 <% } else if  (scope === 'init') { -%><% if(0){ %><script><% } -%>
@@ -18,11 +25,7 @@
     绑定校验事件
     $field: $(ele)
   -%>
-  $field.on('keyup', function() {
-    var $this = $(this);
-    var value = $this.val();
-    // TODO
-  });
+  $field.selectpicker();
 
 
 <% } else if  (scope === 'val') { %>
