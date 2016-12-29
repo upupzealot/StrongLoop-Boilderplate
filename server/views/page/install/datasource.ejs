@@ -4,39 +4,84 @@
   <div class="well" style="max-width: 320px;margin: 0 auto;">
     <h3>设置数据源</h3>
     <hr>
+
+    <div id="form" class="clearfix">
     <%- include(_v + '/component/form/form', {
         id: 'form', 
         fields: [{
           type: 'combobox',
           opt: {
-            name: 'usn',
+            name: 'connector',
             options: [
-              'a',
-              'b',
-              'c',
+              'memory',
+              'postgresql',
+              'mysql',
+              'redis',
+              'mongodb',
             ],
+            default: 'postgresql',
+            linkages: {
+              help: {
+                memory: 'memory 数据库是纯内存数据库' +
+                  '<br>的数据会在重启后丢失' +
+                  '<br>请选择持久化的数据库',
+                
+              },
+              form: {
+                postgresql: 'form-postgresql',
+                mysql: 'form-mysql',
+                redis: 'form-redis',
+                mongodb: 'form-mongodb',
+              },
+            },
             label: '数据库',
           },
-        },{
-          type: 'input',
-          opt: {
-            name: 'host',
-            type: 'text',
-            validate: 'text',
-            label: 'host',
-          },
-        }],
-        submitBtn: {
-          text: '提交',
-          position: 'right',
-        }
+        },
+        '<hr>'],
       }); %>
+
+      <div id="form-postgresql" class="clearfix" hidden="true">
+      <%- include(_v + '/component/form/form', {
+          id: 'form-postgresql',
+          fields: [{
+            type: 'input',
+            opt: {
+              name: 'host',
+              type: 'text',
+              validate: 'text',
+              label: 'host',
+            },
+          },
+          '<hr>'],
+        }); %>
+      </div>
+
+      <div id="form-mysql" class="clearfix" hidden="true">
+      <%- include(_v + '/component/form/form', {
+          id: 'form-mysql',
+          fields: [{
+            type: 'input',
+            opt: {
+              name: 'host',
+              type: 'text',
+              validate: 'text',
+              label: 'host',
+            },
+          },
+          '<hr>'],
+        }); %>
+      </div>
+
+      <button id="form-submit" class="btn btn-default btn-block">提交</button>
+    </div>
   </div>
 </div>
 
 <script type="text/javascript">
 $(function() {
-  $('#form').bind('submit', function(ev, form) {
+  $('#form-submit').on('click', function() {
+    var form = $('#form').data('val')().connector;
+
     console.log(form)
     $.ajax({
       type: 'POST',
