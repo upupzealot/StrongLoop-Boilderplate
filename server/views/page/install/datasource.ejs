@@ -11,7 +11,7 @@
         fields: [{
           type: 'combobox',
           opt: {
-            name: 'connector',
+            name: 'db',
             options: [
               'memory',
               'postgresql',
@@ -19,13 +19,12 @@
               'redis',
               'mongodb',
             ],
-            default: 'postgresql',
+            default: 'memory',
             linkages: {
+              rootName: 'connector',
               help: {
-                memory: 'memory 数据库是纯内存数据库' +
-                  '<br>的数据会在重启后丢失' +
-                  '<br>请选择持久化的数据库',
-                
+                memory: '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                      + ' 纯内存数据库,数据在重启后丢失',
               },
               form: {
                 postgresql: 'form-postgresql',
@@ -48,7 +47,7 @@
             opt: {
               name: 'host',
               type: 'text',
-              validate: 'text',
+              vali: 'username("aaa")',
               label: 'host',
             },
           },
@@ -64,7 +63,7 @@
             opt: {
               name: 'host',
               type: 'text',
-              validate: 'text',
+              vali: /[\w]+/,
               label: 'host',
             },
           },
@@ -80,9 +79,9 @@
 <script type="text/javascript">
 $(function() {
   $('#form-submit').on('click', function() {
-    var form = $('#form').data('val')().connector;
+    var form = $('#form').data('val')();
 
-    console.log(form)
+    console.log(JSON.stringify(form, null, 2))
     $.ajax({
       type: 'POST',
       data: form,

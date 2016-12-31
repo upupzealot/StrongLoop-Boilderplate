@@ -13,15 +13,65 @@
 
 <% } else if  (scope === 'init') { -%><% if(0){ %><script><% } -%>
 
-
+  
+  <%
+    var defaultValidators = {
+      username: (function(value, name) {
+        return value == name;
+      }),
+      email: 0,
+      number: 0,
+      integer: 0,
+    }
+  %>
+  <%
+    var validate = function(vali) {
+      if(_.isRegExp(vali)) {
+      %>
+        var validator = function(value) {
+          return <%- vali %>.test(value);
+        };
+        var args = [value];
+      <%
+      }
+      if(_.isString(vali)) {
+        if(vali.indexOf('(') > 0) {
+          var splits = vali.split(/\(|\)/);
+          var args = splits[1].split(',')
+            .map(function(s) {
+              return _.trim(s);
+            });
+          %>
+          var validator = <%- defaultValidators[splits[0]] %>;
+          var args = [value].concat([<%- args %>]
+            .map(function(arg) {
+              return typeof arg === 'string' ? arg : JSON.parse(arg);
+            }));
+          <%
+        } else {
+          %>
+          var validator = <%- defaultValidators[vali] %>;
+          var args = [value];
+          <%
+        }
+      }
+    }
+  %>
   <%#
     绑定校验事件
     $field: $(ele)
   -%>
   $field.on('keyup', function() {
     var $this = $(this);
+    var $group = $this.parent('.form-group');
     var value = $this.val();
-    // TODO
+
+    <%- validate(opt.vali) %>;
+    if(!validator.apply(this, args)) {
+      $group.addClass('has-error');
+    } else {
+      $group.removeClass('has-error');
+    }
   });
 
 

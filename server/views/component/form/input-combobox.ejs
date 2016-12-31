@@ -82,7 +82,7 @@
   -%>
   <% if(opt.linkages && opt.linkages.form) { %>
     form['<%- opt.name %>'] = $field.data('linkage-form').data('val')();
-    form['<%- opt.name %>'].name = $field.val();
+    form['<%- opt.name %>']['<%- opt.linkages.rootName %>'] = $field.val();
   <% } else { %>
     form['<%- opt.name %>'] = $field.val();
   <% } %>
