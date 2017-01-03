@@ -37,6 +37,7 @@
 <script type="text/javascript">
 $(function() {
   <% RegExp.prototype.toJSON = RegExp.prototype.toString; %>
+  <%# 参考: http://javascript.ruanyifeng.com/stdlib/json.html#tojson -%>
   var opt = <%- JSON.stringify(opt); %>;
   $('#' + opt.id).form(opt);
 });

@@ -42,7 +42,8 @@
       var args = [this.val()];
 
       try{
-        var v = eval(vali);
+        var v = new RegExp(vali.slice(1, -1));
+        // 参考: http://stackoverflow.com/questions/12257703/jquery-convert-string-to-reg-exp-object
         if(_.isRegExp(v)) {
           vali = v;
         }
