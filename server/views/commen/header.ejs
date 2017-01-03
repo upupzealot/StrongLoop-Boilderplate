@@ -32,6 +32,8 @@
   <title><%- locals.title || 'Test' %></title>
 
   <%# 常见库的 CDN 引用 -%>
+  <%# lodash -%>
+  <%- include_js('//cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js'); %>
   <%# jquery -%>
   <%- include_js('//cdn.bootcss.com/jquery/2.1.4/jquery.min.js'); %>
   <%# bootstrap -%>
@@ -39,6 +41,8 @@
   <%- include_js('//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js'); %>
   <%# font-awsome -%>
   <%- include_css('//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css'); %>
+
+  <%- include_js('/component/jq-c.js'); %>
 </head>
 
 <body>

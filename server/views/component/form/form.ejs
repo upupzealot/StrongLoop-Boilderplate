@@ -6,20 +6,25 @@
   };
 %>
 
-<% fields = fields.filter(function(field) { %>
-  <% if(typeof(field) === 'object') { %>
+<%# DOM -%>
+<% opt.fields.map(function(field) { %>
+  <% if(_.isObject(field)) { %>
     <div class="form-group">
       <% if(field.opt && field.opt.label) { %>
         <label><%- field.opt.label %></label>
       <% } %>
       <%- inc(ics[field.type], 'ele', {opt : field.opt}); %>
     </div>
-    <% return true;
-     } else { %>
-      <%- field %>
-    <% return false;
-     } %>
+  <% } else { %>
+    <%- field %>
+  <% } %>
 <% }); %>
+
+<%
+  opt.fields = opt.fields.filter(field=>{
+    return _.isObject(field);
+  });
+%>
 
 <% if(locals.submitBtn) { %>
   <button name="submit" class="btn btn-default btn-block <% if(submitBtn.position === 'right'){ %>pull-right<% } %>">
@@ -27,28 +32,12 @@
   </button>
 <% } %>
 
+
+<%- include_js('/component/form/jq-form.js'); %>
 <script type="text/javascript">
 $(function() {
-  var $form = $('#<%- id %>');
-  var $fields = {};
-
-  // 初始化组件
-  var $field = null;
-  <% fields.forEach(function(field) { %>
-    $field = $form.find('[name=<%- field.opt.name %>]');
-    $fields['<%- field.opt.name %>'] = $field;
-    <%- inc(ics[field.type], 'init', {opt : field.opt}); %>
-  <% }); %>
-
-  $form.data('val', function() {
-    var form = {};
-
-    <% fields.forEach(function(field) { %>
-      $field = $fields['<%- field.opt.name %>'];
-      <%- inc(ics[field.type], 'val', {opt : field.opt}); %>
-    <% }); %>
-
-    return form;
-  });
+  <% RegExp.prototype.toJSON = RegExp.prototype.toString; %>
+  var opt = <%- JSON.stringify(opt); %>;
+  $('#' + opt.id).form(opt);
 });
 </script>

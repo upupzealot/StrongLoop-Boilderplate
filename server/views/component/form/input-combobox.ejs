@@ -1,91 +1,24 @@
+
+<%#
+  opt: 组件 dataObject
+%>
+<%# DOM -%>
+<select name="<%- opt.name %>" class="selectpicker">
+  <% opt.options.forEach(function(option, index) { %>
+    <option
+      <% if((!opt.default && index === 0) || option === opt.default) { %>
+        selected="selected"
+      <% } %>
+    >
+      <%- option %>
+    </option>
+  <% }); %>
+</select>
+<% if(opt.linkages && opt.linkages.help) { %>
+  <p class="help-block"></p>
+<% } %>
+
 <%# 参考：http://silviomoreto.github.io/bootstrap-select/ -%>
 <%- include_css('//cdn.bootcss.com/bootstrap-select/1.12.1/css/bootstrap-select.min.css'); %>
 <%- include_js('//cdn.bootcss.com/bootstrap-select/1.12.1/js/bootstrap-select.min.js'); %>
-<%#
-  scope: 组件的片段 id
-  opt: 组件 dataObject
-%>
-<%# html template -%>
-<% if         (scope === 'ele') { %>
-
-
-  <%#
-    DOM
-  -%>
-  <select name="<%- opt.name %>" class="selectpicker">
-    <% opt.options.forEach(function(option, index) { %>
-      <option
-        <% if((!opt.default && index === 0) || option === opt.default) { %>
-          selected="selected"
-        <% } %>
-      >
-        <%- option %>
-      </option>
-    <% }); %>
-  </select>
-  <% if(opt.linkages && opt.linkages.help) { %>
-    <p class="help-block"></p>
-  <% } %>
-
-
-<% } else if  (scope === 'init') { -%><% if(0){ %><script><% } -%>
-
-
-  <%#
-    初始化
-    $field: $(ele)
-  -%>
-  $field.selectpicker({
-    width: '100%'
-  });
-  
-  <% if(opt.linkages) { %>
-  (function(){
-    var $this = $field;
-    var select = $this.val();
-    var linkages = <%- JSON.stringify(opt.linkages); %>;
-    <% if(opt.linkages.help) { %>
-      var $help_block = $this.parent('.bootstrap-select').next('.help-block');
-    <% } %>
-    <% if(opt.linkages.form) { %>
-      var $forms = {};
-      <% opt.options.forEach(function(option) { %>
-        $forms['<%- option %>'] = $('#<%- opt.linkages.form[option] || "" %>');
-      <% }); %>
-    <% } %>
-
-      $this.on('change', function() {
-        <% if(opt.linkages.help) { %>
-          $help_block.html(linkages.help[$this.val()] || '');
-        <% } %>
-
-        <% if(opt.linkages.form) { %>
-          $forms[select].hide();
-          $forms[$this.val()].show();
-        <% } %>
-        select = $this.val();
-        $this.data('linkage-form', $forms[select]);
-      });
-
-      $this.trigger('change');
-  })();
-  <% } %>
-
-
-<% } else if  (scope === 'val') { %>
-
-
-  <%# 
-    取值
-    $field: $(ele)
-    form: 写入对象
-  -%>
-  <% if(opt.linkages && opt.linkages.form) { %>
-    form['<%- opt.name %>'] = $field.data('linkage-form').data('val')();
-    form['<%- opt.name %>']['<%- opt.linkages.rootName %>'] = $field.val();
-  <% } else { %>
-    form['<%- opt.name %>'] = $field.val();
-  <% } %>
-
-
-<% } %><% if(0){ %></script><% } -%>
+<%- include_js('/component/form/jq-form-combobox.js'); %>

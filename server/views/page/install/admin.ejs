@@ -1,0 +1,48 @@
+<%- include(_v + '/commen/header') %>
+
+<div class="row">
+  <div class="well" style="max-width: 320px;margin: 0 auto;">
+    <h3>设置管理员</h3>
+    <hr>
+
+    <div id="form" class="clearfix">
+    <%- include(_v + '/component/form/form', {
+        opt: {
+          id: 'form',
+          fields: [{
+            type: 'input',
+            opt: {
+              name: 'username',
+              type: 'text',
+              vali: 'username("aaa")',
+              label: '用户名',
+            },
+          },
+          '<hr>'],
+        },
+      }); %>
+    </div>
+
+    <button id="form-submit" class="btn btn-default btn-block">提交</button>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  $('#form-submit').on('click', function() {
+    var form = $('#form').c().val();
+
+    console.log(JSON.stringify(form, null, 2))
+    $.ajax({
+      type: 'POST',
+      data: form,
+    }).success(function(msg) {
+      console.log(msg);
+    }).error(function(err) {
+      console.log(err);
+    });
+  });
+});
+</script>
+
+<%- include(_v + '/commen/footer') %>

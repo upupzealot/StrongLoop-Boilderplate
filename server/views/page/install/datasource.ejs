@@ -7,67 +7,73 @@
 
     <div id="form" class="clearfix">
     <%- include(_v + '/component/form/form', {
-        id: 'form', 
-        fields: [{
-          type: 'combobox',
-          opt: {
-            name: 'db',
-            options: [
-              'memory',
-              'postgresql',
-              'mysql',
-              'redis',
-              'mongodb',
-            ],
-            default: 'memory',
-            linkages: {
-              rootName: 'connector',
-              help: {
-                memory: '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
-                      + ' 纯内存数据库,数据在重启后丢失',
+        opt: {
+          id: 'form', 
+          fields: [{
+            type: 'combobox',
+            opt: {
+              name: 'db',
+              options: [
+                'memory',
+                'postgresql',
+                'mysql',
+                'redis',
+                'mongodb',
+              ],
+              default: 'memory',
+              linkages: {
+                rootName: 'connector',
+                help: {
+                  memory: '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                        + ' 纯内存数据库,数据在重启后丢失',
+                },
+                form: {
+                  postgresql: 'form-postgresql',
+                  mysql: 'form-mysql',
+                  //redis: 'form-redis',
+                  //mongodb: 'form-mongodb',
+                },
               },
-              form: {
-                postgresql: 'form-postgresql',
-                mysql: 'form-mysql',
-                redis: 'form-redis',
-                mongodb: 'form-mongodb',
-              },
+              label: '数据库',
             },
-            label: '数据库',
           },
+          '<hr>'],
         },
-        '<hr>'],
       }); %>
 
       <div id="form-postgresql" class="clearfix" hidden="true">
       <%- include(_v + '/component/form/form', {
-          id: 'form-postgresql',
-          fields: [{
-            type: 'input',
-            opt: {
-              name: 'host',
-              type: 'text',
-              vali: 'username("aaa")',
-              label: 'host',
+          opt: {
+            id: 'form-postgresql',
+            fields: [{
+              type: 'input',
+              opt: {
+                name: 'host',
+                type: 'text',
+                vali: 'username("aaa")',
+                label: 'host',
+              },
             },
-          },
-          '<hr>'],
+            '<hr>'],
+          }
         }); %>
       </div>
 
       <div id="form-mysql" class="clearfix" hidden="true">
       <%- include(_v + '/component/form/form', {
-          id: 'form-mysql',
-          fields: [{
-            type: 'input',
-            opt: {
-              name: 'host',
-              type: 'text',
-              vali: /[\w]+/,
-              label: 'host',
+          opt: {
+            id: 'form-mysql',
+            fields: [{
+              type: 'input',
+              opt: {
+                name: 'host',
+                type: 'text',
+                vali: /[\w]+/,
+                label: 'host',
+              },
             },
-          },
-          '<hr>'],
+            '<hr>'],
+          }
         }); %>
       </div>
 
@@ -79,7 +85,7 @@
 <script type="text/javascript">
 $(function() {
   $('#form-submit').on('click', function() {
-    var form = $('#form').data('val')();
+    var form = $('#form').c().val();
 
     console.log(JSON.stringify(form, null, 2))
     $.ajax({
