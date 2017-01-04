@@ -20,13 +20,15 @@
       var opt = self.opt;
 
       var $group = self.$group = self.$ele.parent('.form-group');
-      self.$ele.on('keyup', function() {
-        if(!self.validate(opt.vali)) {
-          $group.addClass('has-error');
-        } else {
-          $group.removeClass('has-error');
-        }
-      });
+      if(opt.vali) {
+        self.$ele.on('keyup', function() {
+          if(!self.validate(opt.vali)) {
+            $group.addClass('has-error');
+          } else {
+            $group.removeClass('has-error');
+          }
+        });
+      }
     }
 
     Input.defaultValidators = {

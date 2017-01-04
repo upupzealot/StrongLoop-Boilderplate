@@ -4,7 +4,7 @@
 %>
 <%# DOM -%>
 <select name="<%- opt.name %>" class="selectpicker">
-  <% opt.options.forEach(function(option, index) { %>
+  <% opt.options.map(function(option, index) { %>
     <option
       <% if((!opt.default && index === 0) || option === opt.default) { %>
         selected="selected"

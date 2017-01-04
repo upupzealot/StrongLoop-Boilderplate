@@ -12,6 +12,8 @@
       return $ele;
     };
 
+    
+    // 组件类型到 jq 插件名的映射
     var fieldClasses = {
       'input': 'formInput',
       'combobox': 'formCombobox'
@@ -33,8 +35,7 @@
 
     Form.prototype.val = function() {
       var form = {};
-      for(k in this.opt.fields) {
-        var name = this.opt.fields[k].opt.name;
+      for(var name in this.filedComponents) {
         form[name] = this.filedComponents[name].val();
       }
       return form;

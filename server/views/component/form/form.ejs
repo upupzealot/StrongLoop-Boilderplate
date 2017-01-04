@@ -1,5 +1,5 @@
 <%
-  // input components
+  // 组件名到对应 js 文件的映射
   var ics = {
     input: 'form/input-text',
     combobox: 'form/input-combobox',
@@ -15,30 +15,25 @@
       <% } %>
       <%- inc(ics[field.type], 'ele', {opt : field.opt}); %>
     </div>
-  <% } else { %>
+  <% } else { //直接输出 HTML %>
     <%- field %>
   <% } %>
 <% }); %>
 
 <%
+  // 过滤直接输出 HTML 的项
   opt.fields = opt.fields.filter(field=>{
     return _.isObject(field);
   });
 %>
 
-<% if(locals.submitBtn) { %>
-  <button name="submit" class="btn btn-default btn-block <% if(submitBtn.position === 'right'){ %>pull-right<% } %>">
-    <%- submitBtn.text %>
-  </button>
-<% } %>
-
-
+<%# JS -%>
 <%- include_js('/component/form/jq-form.js'); %>
 <script type="text/javascript">
 $(function() {
   <% RegExp.prototype.toJSON = RegExp.prototype.toString; %>
   <%# 参考: http://javascript.ruanyifeng.com/stdlib/json.html#tojson -%>
-  var opt = <%- JSON.stringify(opt); %>;
+  var opt = <%- JSON.stringify(opt) %>;
   $('#' + opt.id).form(opt);
 });
 </script>
