@@ -21,7 +21,7 @@
 <% }); %>
 
 <%
-  // 过滤直接输出 HTML 的项
+  // 过滤掉直接输出 HTML 的项
   opt.fields = opt.fields.filter(field=>{
     return _.isObject(field);
   });
