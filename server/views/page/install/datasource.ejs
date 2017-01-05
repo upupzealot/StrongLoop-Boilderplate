@@ -29,7 +29,7 @@
                 },
                 form: {
                   postgresql: 'form-postgresql',
-                  mysql: 'form-mysql',
+                  //mysql: 'form-mysql',
                   //redis: 'form-redis',
                   //mongodb: 'form-mongodb',
                 },
@@ -49,9 +49,19 @@
               type: 'input',
               opt: {
                 name: 'host',
-                type: 'text',
-                //vali: 'username("aaa")',
+                vali: {
+                  rule: ['notEmpty', 'username'],
+                },
                 label: 'host',
+              },
+            },{
+              type: 'input',
+              opt: {
+                name: 'port',
+                vali: {
+                  rule: ['notEmpty', 'number', 'integer'],
+                },
+                label: 'port',
               },
             },
             '<hr>'],
@@ -60,14 +70,13 @@
       </div>
 
       <div id="form-mysql" class="clearfix" hidden="true">
-      <%- include(_v + '/component/form/form', {
+      <% include(_v + '/component/form/form', {
           opt: {
             id: 'form-mysql',
             fields: [{
               type: 'input',
               opt: {
                 name: 'host',
-                type: 'text',
                 vali: /[\w]+/,
                 label: 'host',
               },

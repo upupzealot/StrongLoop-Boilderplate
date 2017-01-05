@@ -5,9 +5,3 @@
 <input name="<%- opt.name %>" type="<%- opt.type %>" class="form-control">
 
 <%- include_js('/component/form/jq-form-input.js'); %>
-<script type="text/javascript">
-$(function() {
-  var opt = <%- JSON.stringify(opt); %>;
-  $('#' + opt.id).formInput(opt);
-});
-</script>
