@@ -4,9 +4,10 @@
 %>
 <%# DOM -%>
 <select name="<%- opt.name %>" class="selectpicker">
+  <% opt.default = opt.default || opt.options[0] %>
   <% opt.options.map(function(option, index) { %>
     <option
-      <% if((!opt.default && index === 0) || option === opt.default) { %>
+      <% if(option === opt.default) { %>
         selected="selected"
       <% } %>
     >
@@ -14,8 +15,8 @@
     </option>
   <% }); %>
 </select>
-<% if(opt.linkages && opt.linkages.help) { %>
-  <p class="help-block"></p>
+<% if(opt.linkages && opt.linkages.help && opt.linkages.help[opt.default]) { %>
+  <p class="help-block"><%- opt.linkages.help[opt.default] %></p>
 <% } %>
 
 <%# 参考：http://silviomoreto.github.io/bootstrap-select/ -%>
