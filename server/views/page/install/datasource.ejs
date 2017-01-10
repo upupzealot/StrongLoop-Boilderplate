@@ -50,7 +50,7 @@
               opt: {
                 name: 'host',
                 vali: {
-                  check: ['notEmpty'],
+                  check: 'notEmpty',
                 },
                 label: 'host',
               },
@@ -59,7 +59,7 @@
               opt: {
                 name: 'port',
                 vali: {
-                  check: ['notEmpty', 'number', 'integer', 'numberLimit("[0", "65535]")'],
+                  check: ['integer', 'numberLimit("[0", "65535]")'],
                 },
                 label: 'port',
               },

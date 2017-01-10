@@ -26,7 +26,7 @@
           var valiResult = self.validate();
           if(valiResult !== true) {
             $group.addClass('has-error');
-            console.log(valiResult);
+            console.log('Error: ' + valiResult);
           } else {
             $group.removeClass('has-error');
           }

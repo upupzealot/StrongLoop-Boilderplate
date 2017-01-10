@@ -2,7 +2,7 @@
   if(!$.fn.getValidator) {
     var defaultValidators = {
       username: function(){
-        this.check = /[\u4e00-\u9fa5_a-zA-Z0-9_-]+/;
+        this.check = ['notEmpty', /[\u4e00-\u9fa5_a-zA-Z0-9_-]+/];
         this.msg = '用户名必须由 中英日韩、数字、下划线、中划线构成';
       },
       notEmpty: function(){
@@ -12,23 +12,23 @@
         this.msg = '不能为空';
       },
       number: function(){
-        this.check = function(value) {
+        this.check = ['notEmpty', function(value) {
           return !isNaN(value);
-        };
+        }];
         this.msg = '必须是数字';
       },
       integer: function(){
-        this.check = function(value) {
+        this.check = ['number', function(value) {
           return !isNaN(value) && _.isInteger(parseFloat(value));
-        };
+        }];
         this.msg = '必须是整数';
       },
-      numberLimit: function(floor, ceil){
+      numberLimit: function(floor, ceil) {
         var self = this;
         self.floor = floor;
         self.ceil = ceil;
 
-        this.check = function(value) {
+        this.check = ['number', function(value) {
           var floor = parseFloat(self.floor.slice(1));
           var ceil = parseFloat(self.ceil.slice(0, -1));
           var gt = self.floor.slice(0, 1) === '[' ?
@@ -38,7 +38,7 @@
                    value <= ceil :
                    value < ceil;
           return gt && lt ? true : self.msg;      
-        };
+        }];
         this.msg = '超出允许的数值范围' + floor + ',' + ceil;
       }
     }
@@ -46,7 +46,7 @@
     function getValidator(opt) {
       var check = null;
       var msg = null;
-      if(_.isObject(opt) && !_.isArray(opt) && !_.isFunction(opt)) {
+      if(_.isObject(opt) && !_.isArray(opt) && !_.isRegExp(opt) && !_.isFunction(opt)) {
         check = opt.check;
         msg = opt.msg;
       } else {
@@ -54,28 +54,50 @@
       }
 
       if(_.isArray(check)) {
-        return {check: fromArray(check)};
+        return {
+          check: function(value) {
+            return fromArray(check)(value);
+          }
+        }
       }
 
       check = parseRegExp(check);
       if(_.isRegExp(check)) {
-        return {check: fromRegExp(check)};
+        return {
+          check: function(value) {
+            var result = fromRegExp(check)(value);
+            return result === true 
+                   ? true 
+                   : _.isString(result) ? result : msg;
+          }
+        }
       };
 
       check = parseFunction(check);
       if(_.isFunction(check)) {
-        return {check: check};
+        return {
+          check: function(value) {
+            var result = check(value);
+            return result === true
+                   ? true
+                   : _.isString(result) ? result : msg;
+          }
+        };
       };
 
       var args = [];
       // check 为字符时，去 defaultValidators 中找对应
       if(_.isString(check)) {
+        var defaultVali = check;
         // 校验器带参
         if(check.indexOf('(') > 0) {
-          var splits = check.split(/\(|\)/);
-          check = splits[0];
+          var start = check.indexOf('(');
+          var end = check.lastIndexOf(')');
+
+          defaultVali = check.slice(0, start);
+          //check = splits[0];
           var args = args.concat(
-            splits[1]
+              check.slice(check.indexOf('(') + 1, check.lastIndexOf(')'))
               .split(',')
               .map(function(arg) {
                 arg = _.trim(arg);
@@ -85,7 +107,7 @@
                 return arg;
               }));
         }
-        var defaultVali = defaultValidators[check];
+        defaultVali = defaultValidators[defaultVali];
         var constructor = function(clazz) {
           var wrapper = function(args) {
             clazz.apply(this, args);
@@ -94,10 +116,13 @@
           return wrapper;
         };
         var vali = new (new constructor(defaultVali))(args);
-        vali.validator = getValidator(vali.check);
+        vali.validator = getValidator(vali);
         return {
           check: function(value) {
-            return vali.validator.check.apply(null, [value].concat(args)) === true ? true : vali.msg;
+            var result = vali.validator.check.apply(null, [value].concat(args));
+            return result === true
+                   ? true
+                   : _.isString(result) ? result : vali.msg;
           }
         }
       }
@@ -109,13 +134,12 @@
       var validators = opts.map(function(o) {
         return getValidator(o);
       });
-      return function(value) {
+      return function arrayCheck(value) {
+        var result = true;
         for(var i = 0; i < validators.length; i++) {
-          var result = true;
           result = result && validators[i].check(value);
-
           if(result !== true) {
-            return result;
+            break;
           }
         }
         return result;
