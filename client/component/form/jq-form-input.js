@@ -52,7 +52,7 @@
 
       var $group = self.$group = self.$ele.parent('.form-group');
       if(opt.vali) {
-        self.validator = getValidator(opt.vali);
+        self.validator = $.getValidator(opt.vali);
         self.$ele.on('keyup', function() {
           var valiResult = self.validate();
           if(valiResult !== true) {
@@ -65,100 +65,6 @@
       }
     }
 
-    function getValidator(opt) {
-      if(opt && opt.rule && _.isArray(opt.rule)) {
-        var validators = opt.rule.map(function(o) {
-          return getValidator(o);
-        });
-
-        return function(value) {
-          for(var i = 0; i < validators.length; i++) {
-            var result = true;
-            result = result && validators[i](value);
-
-            if(result !== true) {
-              return result;
-            }
-          }
-          return result;
-        }
-      }
-
-      var rule = null;
-      var msg = null;
-      if(_.isObject(opt)) {
-        rule = opt.rule;
-        msg = opt.msg;
-      } else {
-        rule = opt;
-      }
-      var validator = null;
-      var args = [];
-
-      // 若为正则，转化为正则
-      if(_.isString(rule)
-        && rule.length > 2
-        && _.startsWith(rule, '/')
-        && _.endsWith(rule, '/')) {
-        try{
-          var v = new RegExp(rule.slice(1, -1));
-          // 参考: http://stackoverflow.com/questions/12257703/jquery-convert-string-to-reg-exp-object
-          if(_.isRegExp(v)) {
-            rule = v;
-          }
-        }catch(e){};
-      }
-      // 正则作为校验器时，转为响应的函数
-      function convertRegExp(rule) {
-        if(_.isRegExp(rule)) {
-          return function(value) {
-            return rule.test(value) && value.replace(rule, '1') === '1';
-          };
-        }
-        return rule;
-      }
-      validator = convertRegExp(rule);
-
-      // 若为函数，转化为函数
-      if(_.isString(rule)) {
-        try{
-          var v = eval("(function(){return " + rule + " })()");
-          if(_.isFunction(v)) {
-            rule = v;
-            validator = v;
-          }
-        }catch(e){};
-      }
-
-      // 字符串作为校验器时，去 defaultValidators 中找对应
-      if(_.isString(rule)) {
-        // 校验器带参
-        if(rule.indexOf('(') > 0) {
-          var splits = rule.split(/\(|\)/);
-          rule = splits[0];
-          args = args.concat(
-            splits[1]
-              .split(',')
-              .map(function(arg) {
-                arg = _.trim(arg);
-                try {
-                  arg = JSON.parse(arg);
-                }catch(e){};
-                return arg;
-              }));
-        }
-        var defaultVali = defaultValidators[rule];
-        if(_.isFunction(defaultVali)) {
-          defaultVali = new defaultVali();
-        }
-        validator = convertRegExp(defaultVali.validator);
-        msg = opt.msg || defaultVali.msg;
-      }
-
-      return function(value) {
-        return validator.apply(null, [value].concat(args)) ? true : msg;
-      }
-    }
     Input.prototype.validate = function() {
       return this.validator.apply(null, [this.val()]);
     }
