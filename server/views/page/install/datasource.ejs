@@ -20,7 +20,7 @@
                 'redis',
                 'mongodb',
               ],
-              default: 'memory',
+              default: 'postgresql',
               linkages: {
                 rootName: 'connector',
                 help: {
@@ -29,7 +29,7 @@
                 },
                 form: {
                   postgresql: 'form-postgresql',
-                  //mysql: 'form-mysql',
+                  mysql: 'form-mysql',
                   //redis: 'form-redis',
                   //mongodb: 'form-mongodb',
                 },
@@ -41,7 +41,7 @@
         },
       }); %>
 
-      <div id="form-postgresql" class="clearfix" hidden="true">
+      <div id="form-postgresql" class="clearfix">
       <%- include(_v + '/component/form/form', {
           opt: {
             id: 'form-postgresql',
@@ -50,7 +50,7 @@
               opt: {
                 name: 'host',
                 vali: {
-                  rule: ['notEmpty', 'username'],
+                  check: ['notEmpty'],
                 },
                 label: 'host',
               },
@@ -59,7 +59,7 @@
               opt: {
                 name: 'port',
                 vali: {
-                  rule: ['notEmpty', 'number', 'integer'],
+                  check: ['notEmpty', 'number', 'integer', 'numberLimit("[0", "65535]")'],
                 },
                 label: 'port',
               },
@@ -70,7 +70,7 @@
       </div>
 
       <div id="form-mysql" class="clearfix" hidden="true">
-      <% include(_v + '/component/form/form', {
+      <%- include(_v + '/component/form/form', {
           opt: {
             id: 'form-mysql',
             fields: [{
