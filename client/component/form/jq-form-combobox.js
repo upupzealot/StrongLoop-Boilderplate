@@ -27,7 +27,7 @@
 
       var linkageHelp = opt.linkages && opt.linkages.help;
       if(linkageHelp) {
-        self.$help_block = $ele.parent('.bootstrap-select').next('.help-block');
+        self.$helpBlock = $ele.closest('.form-group').find('.help-block');
       }
 
       var linkageForm = opt.linkages && opt.linkages.form;
@@ -40,7 +40,7 @@
 
       $ele.on('change', function() {
         if(linkageHelp) {
-          self.$help_block.html(linkageHelp[$ele.val()] || '');
+          self.$helpBlock.html(linkageHelp[$ele.val()] || '');
         }
 
         if(linkageForm) {
