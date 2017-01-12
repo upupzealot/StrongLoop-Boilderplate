@@ -19,31 +19,32 @@
       var self = this;
       var opt = self.opt;
 
-      var $group = self.$group = self.$ele.parent('.form-group');
-      var $helpBlock = $group.find('.help-block');
+      self.$group = self.$ele.parent('.form-group');
+      self.$helpBlock = self.$group.find('.help-block');
       if(opt.vali) {
         self.validator = $.getValidator(opt.vali).check;
-        if(!$helpBlock.length) {
-          $group.append('<p class="help-block"></p>');
-          $helpBlock = $group.find('.help-block');
+        if(!self.$helpBlock.length) {
+          self.$group.append('<p class="help-block"></p>');
+          self.$helpBlock = self.$group.find('.help-block');
         }
 
         self.$ele.on('keyup', function() {
-          var valiResult = self.validate();
-          if(valiResult !== true) {
-            $group.addClass('has-error');
-            $helpBlock.html(valiResult).show();
-            console.log('Error: ' + valiResult);
-          } else {
-            $group.removeClass('has-error');
-            $helpBlock.hide();
-          }
+          self.validate();
         });
       }
     }
 
     Input.prototype.validate = function() {
-      return this.validator.apply(null, [this.val()]);
+      var valiResult = this.validator.apply(null, [this.val()]);
+      if(valiResult !== true) {
+        this.$group.addClass('has-error');
+        this.$helpBlock.html(valiResult).show();
+        console.log('Error: ' + valiResult);
+      } else {
+        this.$group.removeClass('has-error');
+        this.$helpBlock.hide();
+      }
+      return valiResult;
     }
 
     Input.prototype.val = function() {

@@ -47,25 +47,27 @@
             id: 'form-postgresql',
             fields: [{
               name: 'host',
-              label: '主机名 (host)',
+              label: 'host',
               vali: 'notEmpty',
-              placeholder: '例如：localhost'
+              placeholder: 'localhost',
             },{
               name: 'port',
-              label: '端口 (port)',
+              label: 'port',
               vali: ['integer', 'numberLimit("[0", "65535]")'],
+              placeholder: '5432',
             },{
               name: 'database',
-              label: '数据库名称 (database)',
+              label: 'database',
               vali: 'notEmpty',
             },{
               name: 'username',
-              label: '用户名 (username)',
+              label: 'username',
               vali: 'notEmpty',
             },{
               name: 'password',
-              label: '密码 (password)',
+              label: 'password',
               vali: 'notEmpty',
+              type: 'password'
             },
             '<span>' +
               '<a href="http://loopback.io/doc/en/lb3/PostgreSQL-connector.html#properties" target="_blank">' +
@@ -102,12 +104,19 @@
 <script type="text/javascript">
 $(function() {
   $('#form-submit').on('click', function() {
-    var form = $('#form').c().val();
+    var form = $('#form').c();
 
-    console.log(JSON.stringify(form, null, 2))
+    var validation = form.validate();
+    if(validation !== true) {
+      return;
+    }
+    console.log(validation)
+
+    var formData = form.val();
+    console.log(JSON.stringify(formData, null, 2))
     $.ajax({
       type: 'POST',
-      data: form,
+      data: formData,
     }).success(function(msg) {
       console.log(msg);
     }).error(function(err) {

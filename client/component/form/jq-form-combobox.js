@@ -67,6 +67,10 @@
       return value;
     }
 
+    Combobox.prototype.validate = function() {
+      return this.$forms[this.$ele.val()].c().validate();
+    }
+
 
     $.fn.formCombobox = function(opt) {
       return new Combobox(this, opt);
