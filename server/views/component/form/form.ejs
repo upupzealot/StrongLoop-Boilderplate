@@ -4,6 +4,17 @@
     input: 'form/input-text',
     combobox: 'form/input-combobox',
   };
+
+  opt.fields = opt.fields.map(field=>{
+    if(_.isObject(field)) {
+      field = field.opt ? field : { opt: field };
+      field.type = field.type || 'input';
+      field.vali = _.isObject(field.vali) && !_.isFunction(field.vali) ? field.vali : {check: field.vali};
+      return field;
+    } else {
+      return field;
+    };
+  });
 %>
 
 <%# DOM -%>
@@ -33,6 +44,7 @@
 <script type="text/javascript">
 $(function() {
   <% RegExp.prototype.toJSON = RegExp.prototype.toString; %>
+  <% Function.prototype.toJSON = Function.prototype.toString; %>
   <%# 参考: http://javascript.ruanyifeng.com/stdlib/json.html#tojson -%>
   var opt = <%- JSON.stringify(opt) %>;
   $('#' + opt.id).form(opt);

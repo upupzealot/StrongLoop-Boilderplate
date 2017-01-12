@@ -46,24 +46,32 @@
           opt: {
             id: 'form-postgresql',
             fields: [{
-              type: 'input',
-              opt: {
-                name: 'host',
-                vali: {
-                  check: 'notEmpty',
-                },
-                label: 'host',
-              },
+              name: 'host',
+              label: '主机名 (host)',
+              vali: 'notEmpty',
+              placeholder: '例如：localhost'
             },{
-              type: 'input',
-              opt: {
-                name: 'port',
-                vali: {
-                  check: ['integer', 'numberLimit("[0", "65535]")'],
-                },
-                label: 'port',
-              },
+              name: 'port',
+              label: '端口 (port)',
+              vali: ['integer', 'numberLimit("[0", "65535]")'],
+            },{
+              name: 'database',
+              label: '数据库名称 (database)',
+              vali: 'notEmpty',
+            },{
+              name: 'username',
+              label: '用户名 (username)',
+              vali: 'notEmpty',
+            },{
+              name: 'password',
+              label: '密码 (password)',
+              vali: 'notEmpty',
             },
+            '<span>' +
+              '<a href="http://loopback.io/doc/en/lb3/PostgreSQL-connector.html#properties" target="_blank">' +
+                '配置参考' +
+              '</a>' +
+            '</span>',
             '<hr>'],
           }
         }); %>

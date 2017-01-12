@@ -37,9 +37,9 @@
           var lt = self.ceil.slice(-1) === ']' ?
                    value <= ceil :
                    value < ceil;
-          return gt && lt ? true : self.msg;      
+          return gt && lt ? true : self.msg;
         }];
-        this.msg = '超出允许的数值范围' + floor + ',' + ceil;
+        this.msg = '超出允许的数值范围' + floor + ' ,' + ceil;
       }
     }
 
@@ -50,6 +50,7 @@
         check = opt.check;
         msg = opt.msg;
       } else {
+
         check = opt;
       }
 
@@ -67,7 +68,7 @@
           check: function(value) {
             var result = fromRegExp(check)(value);
             return result === true 
-                   ? true 
+                   ? true
                    : _.isString(result) ? result : msg;
           }
         }
