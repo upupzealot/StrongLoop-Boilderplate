@@ -46,10 +46,7 @@
       var result = true;
       for(var k in self.filedComponents) {
         var component = self.filedComponents[k];
-        result = result && component.validate();
-        if(!result === true) {
-          return result;
-        }
+        result = component.validate() === true && result;
       }
       return result;
     }
