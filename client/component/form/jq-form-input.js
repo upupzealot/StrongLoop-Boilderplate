@@ -35,6 +35,10 @@
     }
 
     Input.prototype.validate = function() {
+      if(!this.validator) {
+        return true;
+      }
+      
       var valiResult = this.validator.apply(null, [this.val()]);
       if(valiResult !== true) {
         this.$group.addClass('has-error');
