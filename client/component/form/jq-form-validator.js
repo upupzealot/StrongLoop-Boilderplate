@@ -2,14 +2,39 @@
   if(!$.fn.getValidator) {
     var defaultValidators = {
       username: function(){
-        this.check = ['notEmpty', /[\u4e00-\u9fa5_a-zA-Z0-9_-]+/];
-        this.msg = '用户名必须由 中英日韩、数字、下划线、中划线构成';
+        console.log(this)
+        this.check = ['notEmpty', /[\u4e00-\u9fa5_a-zA-Z0-9\_\-]+/];
+        this.msg = '用户名必须由 中英日韩、数字、下划线、中划线 构成';
+      },
+      password: function(){
+        console.log(this)
+        this.check = ['length(6, 20)', /[A-Za-z0-9\~\!\@\#\$\%\^\&\*\.\_\-\?]+/];
+        this.msg = '密码必须由 英文大小写、数字、半角符号（~!@#$%^&*._-?） 构成';
       },
       notEmpty: function(){
         this.check = function(value) {
           return value.length > 0;
         };
         this.msg = '不能为空';
+      },
+      length: function(minLength, maxLength) {
+        var self = this;
+        self.minLength = minLength;
+        self.maxLength = maxLength;
+
+        this.check = function(value) {
+          return value.length >= self.minLength && value.length <= self.maxLength;
+        };
+        this.msg = '长度需在' + minLength + '~' + maxLength + '之间';
+      },
+      sameAs: function(name){
+        var self = this;
+
+        this.check = function(value) {
+          var otherComponent = self.component.form.filedComponents[name];
+          return value === otherComponent.val();
+        };
+        this.msg = '两次输入不一致'
       },
       number: function(){
         this.check = ['notEmpty', function(value) {
@@ -43,21 +68,20 @@
       }
     }
 
-    function getValidator(opt) {
+    function getValidator(opt, component) {
       var check = null;
       var msg = null;
       if(_.isObject(opt) && !_.isArray(opt) && !_.isRegExp(opt) && !_.isFunction(opt)) {
         check = opt.check;
         msg = opt.msg;
       } else {
-
         check = opt;
       }
 
       if(_.isArray(check)) {
         return {
           check: function(value) {
-            return fromArray(check)(value);
+            return fromArray(check, component)(value);
           }
         }
       }
@@ -96,7 +120,6 @@
           var end = check.lastIndexOf(')');
 
           defaultVali = check.slice(0, start);
-          //check = splits[0];
           var args = args.concat(
               check.slice(check.indexOf('(') + 1, check.lastIndexOf(')'))
               .split(',')
@@ -109,6 +132,9 @@
               }));
         }
         defaultVali = defaultValidators[defaultVali];
+        if(!defaultVali) {
+          return;
+        }
         var constructor = function(clazz) {
           var wrapper = function(args) {
             clazz.apply(this, args);
@@ -117,6 +143,7 @@
           return wrapper;
         };
         var vali = new (new constructor(defaultVali))(args);
+        vali.component = component;
         vali.validator = getValidator(vali);
         return {
           check: function(value) {
@@ -131,9 +158,9 @@
 
 
 
-    function fromArray(opts) {
+    function fromArray(opts, component) {
       var validators = opts.map(function(o) {
-        return getValidator(o);
+        return getValidator(o, component);
       });
       return function arrayCheck(value) {
         var result = true;

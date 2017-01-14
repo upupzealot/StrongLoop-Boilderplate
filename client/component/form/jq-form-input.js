@@ -22,7 +22,10 @@
       self.$group = self.$ele.parent('.form-group');
       self.$helpBlock = self.$group.find('.help-block');
       if(opt.vali) {
-        self.validator = $.getValidator(opt.vali).check;
+        self.validator = $.getValidator(opt.vali, self);
+        if(!self.validator) {
+          console ? console.warn('validator undefined for field: ' + self.opt.name): null;
+        }
         if(!self.$helpBlock.length) {
           self.$group.append('<p class="help-block"></p>');
           self.$helpBlock = self.$group.find('.help-block');
@@ -39,11 +42,10 @@
         return true;
       }
       
-      var valiResult = this.validator.apply(null, [this.val()]);
+      var valiResult = this.validator.check.apply(null, [this.val()]);
       if(valiResult !== true) {
         this.$group.addClass('has-error');
         this.$helpBlock.html(valiResult).show();
-        console.log('Error: ' + valiResult);
       } else {
         this.$group.removeClass('has-error');
         this.$helpBlock.hide();

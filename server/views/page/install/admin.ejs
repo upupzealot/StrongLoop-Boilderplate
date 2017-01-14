@@ -10,13 +10,17 @@
         opt: {
           id: 'form',
           fields: [{
-            type: 'input',
-            opt: {
-              name: 'username',
-              type: 'text',
-              vali: 'username("aaa")',
-              label: '用户名',
-            },
+            name: 'username',
+            vali: 'username',
+            label: '用户名',
+          },{
+            name: 'password',
+            vali: 'password',
+            label: '密码',
+          },{
+            name: 'password-repeat',
+            vali: 'sameAs("password")',
+            label: '密码',
           },
           '<hr>'],
         },

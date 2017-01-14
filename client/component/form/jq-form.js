@@ -28,8 +28,9 @@
         var $field = self.$ele.find('[name=' + name + ']');
 
         var fieldClass = fieldClasses[field.type];
-        $field[fieldClass](field.opt);
-        self.filedComponents[name] = $field.c();
+        var component = $field[fieldClass](field.opt).c();
+        component.form = self;
+        self.filedComponents[name] = component;
       });
     }
 
