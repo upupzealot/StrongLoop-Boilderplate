@@ -66,7 +66,6 @@
             },{
               name: 'password',
               label: 'password',
-              vali: 'notEmpty',
               type: 'password'
             },
             '<span>' +
@@ -96,16 +95,25 @@
         }); %>
       </div>
 
-      <button id="form-submit" class="btn btn-default btn-block">提交</button>
+      <div class="row">
+        <div class="col-sm-6">
+           <button id="test-btn" class="btn btn-default btn-block">测试</button>
+        </div>
+        <div class="col-sm-6">
+           <button id="confirm-btn" class="btn btn-default btn-block" disabled="true">确定</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
 $(function() {
-  $('#form-submit').on('click', function() {
-    var form = $('#form').c();
+  var form = $('#form').c();
+  var $testBtn = $('#test-btn');
+  var $confirmBtn = $('#confirm-btn');
 
+  var dbTest = function(confirm) {
     var validation = form.validate();
     if(validation !== true) {
       return;
@@ -113,15 +121,38 @@ $(function() {
     console.log(validation)
 
     var formData = form.val();
-    console.log(JSON.stringify(formData, null, 2))
+    formData.confirm = confirm;
+
     $.ajax({
       type: 'POST',
       data: formData,
-    }).success(function(msg) {
-      console.log(msg);
+    }).success(function(result) {
+      if(confirm) {
+        // TODO 页面跳转
+      } else {
+        $testBtn.html('测试 <i class="fa fa-check-circle text-success" aria-hidden="true"></i>');
+        $confirmBtn
+          .attr('disabled', false)
+          .removeClass('btn-default')
+          .addClass('btn-primary');
+      }
     }).error(function(err) {
-      console.log(err);
+      $testBtn.html('测试');
+      $confirmBtn
+        .attr('disabled', true)
+        .removeClass('btn-primary')
+        .addClass('btn-default');
+      // TODO 用 modal 代替 alert
+      alert('连接失败！请检查所填的参数是否正确');
     });
+  };
+
+  $('#test-btn').on('click', function() {
+    dbTest();
+  });
+
+  $('#confirm-btn').on('click', function() {
+    dbTest(true);
   });
 });
 </script>
