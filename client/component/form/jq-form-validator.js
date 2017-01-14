@@ -2,12 +2,10 @@
   if(!$.fn.getValidator) {
     var defaultValidators = {
       username: function(){
-        console.log(this)
         this.check = ['notEmpty', /[\u4e00-\u9fa5_a-zA-Z0-9\_\-]+/];
         this.msg = '用户名必须由 中英日韩、数字、下划线、中划线 构成';
       },
       password: function(){
-        console.log(this)
         this.check = ['length(6, 20)', /[A-Za-z0-9\~\!\@\#\$\%\^\&\*\.\_\-\?]+/];
         this.msg = '密码必须由 英文大小写、数字、半角符号（~!@#$%^&*._-?） 构成';
       },
