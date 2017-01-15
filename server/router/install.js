@@ -20,9 +20,20 @@ module.exports = (router, server)=>{
     res.render('page/install/admin');
   });
   router.post('/install/admin', (req, res)=>{
-    let file = path.resolve(__dirname, '../config/admin.json');
-    jsonfile.writeFileSync(file, req.body, {spaces: 2});
-    res.json({success: true});
+    co(function*() {
+      let User = loopback.getModel('user');
+      let adminData = req.body;
+      console.log(adminData);
+      // 后端验证 可暂时省略
+      let user = yield User.create(adminData);
+      console.log(user);
+
+      return res.json({
+        success: true
+      });
+    }).catch(err=>{
+      onError(err, res);
+    });
   });
 
   // 数据库配置

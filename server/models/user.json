@@ -16,17 +16,9 @@
     }
   },
   "properties": {
-    "usn": {
-      "type": "string",
-      "required": true,
-      "index": {
-        "unique": true
-      },
-      "description": "用户名"
-    },
     "email": {
       "type": "string",
-      "required": true,
+      "required": false,
       "index": {
         "unique": true
       },

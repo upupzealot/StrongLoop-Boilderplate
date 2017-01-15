@@ -15,12 +15,14 @@
             label: '用户名',
           },{
             name: 'password',
+            type: 'password',
             vali: 'password',
             label: '密码',
           },{
             name: 'password-repeat',
+            type: 'password',
             vali: 'sameAs("password")',
-            label: '密码',
+            label: '重复密码',
           },
           '<hr>'],
         },
@@ -34,12 +36,19 @@
 <script type="text/javascript">
 $(function() {
   $('#form-submit').on('click', function() {
-    var form = $('#form').c().val();
+    var form = $('#form').c();
+    var validation = form.validate();
+    if(validation !== true) {
+      return;
+    }
 
-    console.log(JSON.stringify(form, null, 2))
+    var formData = form.val();
+    delete formData['password-repeat'];
+
+    console.log(JSON.stringify(formData, null, 2))
     $.ajax({
       type: 'POST',
-      data: form,
+      data: formData,
     }).success(function(msg) {
       console.log(msg);
     }).error(function(err) {
