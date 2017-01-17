@@ -52,17 +52,22 @@ module.exports = (router, server)=>{
         // 用 confirm 字段来区分 test 和 confirm 情况
         // conform 的情况下需要：
         
+        var confirm = req.body.confirm;
         // 1.将配置写入 datasources.json 配置文件
-        if(req.body.confirm) {
-          let file = path.resolve(__dirname, '../datasource.json');
+        if(confirm) {
+          let file = path.resolve(__dirname, '../datasources.json');
           jsonfile.writeFileSync(file, {db: dbConf}, {spaces: 2});
         }
-        // 2.重启服务
-        // TODO
 
-        return res.json({
+        // 2.返回
+        res.json({
           success: true
         });
+
+        // 3.重启服务
+        if(confirm) {
+          return process.exit();
+        }
       });
     }).catch(err=>{
       onError(err, res);

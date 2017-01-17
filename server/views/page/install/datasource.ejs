@@ -41,57 +41,68 @@
         },
       }); %>
 
+      <%
+        var dbOpt = {
+          fields: [{
+            name: 'host',
+            label: 'host',
+            vali: 'notEmpty',
+            placeholder: 'localhost',
+          },{
+            name: 'port',
+            label: 'port',
+            vali: ['integer', 'numberLimit("[0", "65535]")'],
+          },{
+            name: 'database',
+            label: 'database',
+            vali: 'notEmpty',
+          },{
+            name: 'username',
+            label: 'username',
+            vali: 'notEmpty',
+          },{
+            name: 'password',
+            label: 'password',
+            type: 'password'
+          }],
+        };
+      %>
+
+      <%# postgresql -%>
       <div id="form-postgresql" class="clearfix">
+      <%
+        var postgresqlOpt = _.merge({}, dbOpt);
+        postgresqlOpt.id = 'form-postgresql';
+        postgresqlOpt.fields[1].placeholder = '5432';
+        postgresqlOpt.fields = postgresqlOpt.fields.concat([
+          '<span>' +
+            '<a href="http://loopback.io/doc/en/lb3/PostgreSQL-connector.html#properties" target="_blank">' +
+              '配置参考' +
+            '</a>' +
+          '</span>',
+          '<hr>']);
+      %>
       <%- include(_v + '/component/form/form', {
-          opt: {
-            id: 'form-postgresql',
-            fields: [{
-              name: 'host',
-              label: 'host',
-              vali: 'notEmpty',
-              placeholder: 'localhost',
-            },{
-              name: 'port',
-              label: 'port',
-              vali: ['integer', 'numberLimit("[0", "65535]")'],
-              placeholder: '5432',
-            },{
-              name: 'database',
-              label: 'database',
-              vali: 'notEmpty',
-            },{
-              name: 'username',
-              label: 'username',
-              vali: 'notEmpty',
-            },{
-              name: 'password',
-              label: 'password',
-              type: 'password'
-            },
-            '<span>' +
-              '<a href="http://loopback.io/doc/en/lb3/PostgreSQL-connector.html#properties" target="_blank">' +
-                '配置参考' +
-              '</a>' +
-            '</span>',
-            '<hr>'],
-          }
+          opt: postgresqlOpt
         }); %>
       </div>
 
+      <%# mysql -%>
       <div id="form-mysql" class="clearfix" hidden="true">
+      <%
+        var mysqlOpt = _.merge({}, dbOpt);
+        mysqlOpt.id = 'form-mysql';
+        mysqlOpt.fields[1].placeholder = '3306';
+        mysqlOpt.fields = mysqlOpt.fields.concat([
+          '<span>' +
+            '<a href="http://loopback.io/doc/en/lb3/MySQL-connector.html#properties" target="_blank">' +
+              '配置参考' +
+            '</a>' +
+          '</span>',
+          '<hr>']);
+      %>
       <%- include(_v + '/component/form/form', {
-          opt: {
-            id: 'form-mysql',
-            fields: [{
-              type: 'input',
-              opt: {
-                name: 'host',
-                vali: /[\w]+/,
-                label: 'host',
-              },
-            },
-            '<hr>'],
-          }
+          opt: mysqlOpt
         }); %>
       </div>
 
@@ -118,7 +129,6 @@ $(function() {
     if(validation !== true) {
       return;
     }
-    console.log(validation)
 
     var formData = form.val();
     formData.confirm = confirm;
@@ -128,7 +138,17 @@ $(function() {
       data: formData,
     }).success(function(result) {
       if(confirm) {
-        // TODO 页面跳转
+        var restartInterval = setInterval(function() {
+          try {
+            $.get('/status')
+              .success(function(status) {
+                clearInterval(restartInterval);
+                window.location.href = '/install/admin';
+              });
+          } catch(e){
+            //console.log(e);
+          }
+        }, 1000);
       } else {
         $testBtn.html('测试 <i class="fa fa-check-circle text-success" aria-hidden="true"></i>');
         $confirmBtn
@@ -142,6 +162,7 @@ $(function() {
         .attr('disabled', true)
         .removeClass('btn-primary')
         .addClass('btn-default');
+
       // TODO 用 modal 代替 alert
       alert('连接失败！请检查所填的参数是否正确');
     });
