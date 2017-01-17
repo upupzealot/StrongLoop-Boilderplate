@@ -69,7 +69,6 @@
 
     Combobox.prototype.validate = function() {
       var form = this.$forms[this.$ele.val()].c();
-      console.log(form)
       return form ? form.validate() : true;
     }
 
