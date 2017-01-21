@@ -22,11 +22,26 @@ module.exports = (router, server)=>{
   router.post('/install/admin', (req, res)=>{
     co(function*() {
       let User = loopback.getModel('user');
+      let Role = loopback.getModel('Role');
+      let RoleMapping = loopback.getModel('RoleMapping');
+
+      // 创建管理员用户
       let adminData = req.body;
-      console.log(adminData);
-      // 后端验证 可暂时省略
+      // TODO: 后端验证 可暂时省略
       let user = yield User.create(adminData);
-      console.log(user);
+
+      // 创建管理员角色
+      let adminRole = {name: 'admin'};
+      let role = yield Role.findOne({where: adminRole});
+      if(!role) {
+        role = yield Role.create(adminRole);
+      }
+
+      // 赋予新建的管理员角色
+      let principal = yield role.principals.create({
+        principalType: RoleMapping.USER,
+        principalId: user.id
+      });
 
       return res.json({
         success: true

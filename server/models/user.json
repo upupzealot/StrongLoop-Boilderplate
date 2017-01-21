@@ -16,14 +16,6 @@
     }
   },
   "properties": {
-    "email": {
-      "type": "string",
-      "required": false,
-      "index": {
-        "unique": true
-      },
-      "description": "注册邮箱"
-    },
     "avatar": {
       "type": "string",
       "description": "用户头像"
@@ -42,27 +34,6 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY"
-    },
-    {
-      "accessType": "READ",
-      "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "ALLOW",
-      "property": "login"
-    },
-    {
-      "accessType": "READ",
-      "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "ALLOW",
-      "property": "findById"
-    },
-    {
-      "accessType": "READ",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "updateAttributes"
     }
   ],
   "methods": {}
