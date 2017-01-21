@@ -15,7 +15,7 @@
       },
       notEmpty: function(){
         this.check = function(value) {
-          return value.length > 0;
+          return _.isObject(value) ? !!value : value.length > 0;
         };
         this.msg = '不能为空';
       },

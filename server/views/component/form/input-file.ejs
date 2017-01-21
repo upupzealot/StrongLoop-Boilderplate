@@ -1,0 +1,9 @@
+<%#
+  opt: 组件 dataObject
+%>
+<%# DOM -%>
+<input name="<%- opt.name %>" type="text" placeholder="<%- opt.placeholder %>" class="form-control">
+
+<%- include_js('/component/form/jq-form-input.js'); %>
+<%- include_js('//cdn.bootcss.com/plupload/2.2.1/plupload.full.min.js'); %>
+<%- include_js('/component/form/jq-form-file.js'); %>
