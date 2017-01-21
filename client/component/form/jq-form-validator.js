@@ -33,7 +33,7 @@
         var self = this;
 
         this.check = function(value) {
-          var otherComponent = self.component.form.filedComponents[name];
+          var otherComponent = self.component.form.fieldComponents[name];
           return value === otherComponent.val();
         };
         this.msg = '两次输入不一致'

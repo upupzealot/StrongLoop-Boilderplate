@@ -22,7 +22,7 @@
       var self = this;
       var opt = self.opt;
 
-      self.filedComponents = {};
+      self.fieldComponents = {};
       opt.fields.map(function(field) {
         var name = field.opt.name;
         var $field = self.$ele.find('[name=' + name + ']');
@@ -30,14 +30,14 @@
         var fieldClass = fieldClasses[field.type];
         var component = $field[fieldClass](field.opt).c();
         component.form = self;
-        self.filedComponents[name] = component;
+        self.fieldComponents[name] = component;
       });
     }
 
     Form.prototype.val = function() {
       var form = {};
-      for(var name in this.filedComponents) {
-        form[name] = this.filedComponents[name].val();
+      for(var name in this.fieldComponents) {
+        form[name] = this.fieldComponents[name].val();
       }
       return form;
     }
@@ -45,8 +45,8 @@
     Form.prototype.validate = function() {
       var self = this;
       var result = true;
-      for(var k in self.filedComponents) {
-        var component = self.filedComponents[k];
+      for(var k in self.fieldComponents) {
+        var component = self.fieldComponents[k];
         result = component.validate() === true && result;
       }
       return result;
