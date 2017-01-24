@@ -1,30 +1,11 @@
 ;(function ($) {
   if(!$.fn.formFile) {
-    var uploader_default_opt = {
-      url: '/upload',
-      name: 'file',
-      multi_selection: false,
-      progress: function (percent) {
-        //console.log(percent);
-      },
-      success: function (data) {
-        console.log(data + ' uploaded!');
-      },
-      complete: function(files) {
-        console.log('complete ' + files.length + ' files!');
-      },
-      error: function (err) {
-        console.log('upload error:');
-        console.log(err);
-        alert(JSON.stringify(err));
-      },
-    }
 
     var FileInput = function(ele, opt) {
       var $ele = this.$ele = ele;
       this.input = opt.input;
-      this.opt = _.merge({}, uploader_default_opt, {
-        browse_button: this.$ele[0],
+      this.opt = _.merge({}, {
+        added: this.$ele,
       });
 
       this.init();
@@ -44,47 +25,27 @@
         .attr('readonly', true)
         .css('background-color', 'white');
 
-      var opt = self.opt;
-      var uploader = new plupload.Uploader(opt);
-      uploader.init();
-      uploader.bind('FilesAdded', function(uploader, files) {
-        if(files.length) {
-          if(files.length === 1) {
-            self.$ele.val(files[0].name);
+      var opt = _.merge({}, self.opt, {
+        added: function(files) {
+          if(files.length) {
+            if(files.length === 1) {
+              self.$ele.val(files[0].name);
+            } else {
+              var text = files.map(function(file) {
+                return file.name;
+              }).join(', ');
+              self.$ele.val(text);
+            }
           } else {
-            var text = files.map(function(file) {
-              return file.name;
-            }).join(', ');
-            self.$ele.val(text);
+            self.$else.val('');
           }
-        } else {
-          self.$else.val('');
         }
-        uploader.splice(0, uploader.files.length - files.length);
-        uploader.refresh();
-        self.files = files;
       });
-      uploader.bind('BeforeUpload',function(uploader, file) {
-      });
-      uploader.bind('UploadProgress',function(uploader, file) {
-        opt.progress(file.percent);
-      });
-      uploader.bind('FileUploaded',function(uploader, file, responseObject) {
-        var url = JSON.parse(responseObject.response).url;
-        opt.success(url);
-      });
-      uploader.bind('UploadComplete',function(uploader, files) {
-        opt.complete(files);
-      });
-      uploader.bind('Error',function(uploader, errObject) {
-        opt.error(errObject);
-      });
-      self.uploader = uploader;
+      self.uploader = new $['uploader-server'](self.$ele, opt);
     }
 
     FileInput.prototype.upload = function(callback) {
-      var self = this;
-      self.uploader.start();
+      this.uploader.upload();
     }
 
     FileInput.prototype.validate = function() {

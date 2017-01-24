@@ -1,14 +1,14 @@
 <%- include(_v + '/commen/header') %>
 
 <div class="row">
-  <div class="well" style="max-width: 320px;margin: 0 auto;">
-    <h3>文件上传测试</h3>
+  <div class="col-sm-4 well">
+    <h3>文件上传 (Server)</h3>
     <hr>
 
-    <div id="form" class="clearfix">
+    <div id="form-server" class="clearfix">
     <%- include(_v + '/component/form/form', {
         opt: {
-          id: 'form',
+          id: 'form-server',
           fields: [{
             type: 'file',
             opt: {
@@ -21,26 +21,23 @@
         },
       }); %>
     </div>
+    <button id="server-submit" class="btn btn-default btn-block">提交</button>
+    <script type="text/javascript">
+    $(function() {
+      $('#server-submit').on('click', function() {
+        var form = $('#form-server').c();
+        var validation = form.validate();
+        if(validation !== true) {
+          return;
+        }
 
-    <button id="form-submit" class="btn btn-default btn-block">提交</button>
+        var fileInput = form.fieldComponents['file'];
+        fileInput.upload();
+      });
+    });
+    </script>
+
   </div>
 </div>
-
-<script type="text/javascript">
-$(function() {
-
-
-  $('#form-submit').on('click', function() {
-    var form = $('#form').c();
-    var validation = form.validate();
-    if(validation !== true) {
-      return;
-    }
-
-    var fileInput = form.fieldComponents['file'];
-    fileInput.upload();
-  });
-});
-</script>
 
 <%- include(_v + '/commen/footer') %>
