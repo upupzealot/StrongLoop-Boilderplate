@@ -1,0 +1,175 @@
+<%- include(_v + '/commen/header') %>
+
+<div class="row">
+  <div class="well" style="max-width: 320px;margin: 0 auto;">
+    <h3>设置数据源</h3>
+    <hr>
+
+    <div id="form" class="clearfix">
+    <%- include(_v + '/component/form/form', {
+        opt: {
+          id: 'form', 
+          fields: [{
+            type: 'combobox',
+            opt: {
+              name: 'uploader',
+              options: [
+                'server',
+                'alioss',
+                'qiniu',
+              ],
+              default: 'server',
+              linkages: {
+                rootName: 'connector',
+                help: {
+                  server: '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+                        + ' 存储在服务器磁盘，不推荐',
+                },
+                form: {
+                  server: 'form-server',
+                  alioss: 'form-alioss',
+                  qiniu: 'form-qiniu',
+                },
+              },
+              label: '数据库',
+            },
+          },
+          '<hr>'],
+        },
+      }); %>
+
+      <%# server -%>
+      <div id="form-server" class="clearfix">
+      <%- include(_v + '/component/form/form', {
+          opt: {
+            id: 'form-server',
+            fields: [{
+              name: 'rootPath',
+              vali: 'notEmpty',
+              label: '上传根目录',
+              placeholder: '/upload'
+            }],
+          },
+        }); %>
+      </div>
+
+      <%# alioss -%>
+      <div id="form-alioss" class="clearfix" hidden="true">
+      <%- include(_v + '/component/form/form', {
+          opt: {
+            id: 'form-alioss',
+            fields: [{
+              name: 'accessKeyID',
+              vali: 'notEmpty',
+              label: 'AccessKeyID',
+            },{
+              name: 'accessKeySecret',
+              vali: 'notEmpty',
+              label: 'AccessKeySecret',
+            },{
+              type: 'combobox',
+              opt: {
+                name: 'endPoint',
+                options: [
+                  'oss-cn-hangzhou.aliyuncs.com',
+                  'oss-cn-shanghai.aliyuncs.com',
+                  'oss-cn-qingdao.aliyuncs.com',
+                  'oss-cn-beijing.aliyuncs.com',
+                  'oss-cn-shenzhen.aliyuncs.com',
+                  'oss-cn-hongkong.aliyuncs.com',
+                  'oss-us-west-1.aliyuncs.com',
+                  'oss-us-east-1.aliyuncs.com',
+                  'oss-ap-southeast-1.aliyuncs.com',
+                  'oss-ap-southeast-2.aliyuncs.com',
+                  'oss-ap-northeast-1.aliyuncs.com',
+                  'oss-eu-central-1.aliyuncs.com',
+                  'oss-me-east-1.aliyuncs.com',
+                ],
+                optionsContent: [
+                  '华东 1（杭州）',
+                  '华东 2（上海）',
+                  '华北 1（青岛）',
+                  '华北 2（北京）',
+                  '华南 1（深圳）',
+                  '香港',
+                  '美国西部 1 （硅谷）',
+                  '美国东部 1 （弗吉尼亚）',
+                  '亚太东南 1 （新加坡）',
+                  '亚太东南 2 （悉尼）',
+                  '亚太东北 1 （日本）',
+                  '欧洲中部 1 （法兰克福）',
+                  '中东东部 1 （迪拜）',
+                ],
+                label: 'EndPoint',
+              }
+            },{
+              name: 'bucket',
+              vali: 'notEmpty',
+              label: 'Bucket',
+            },{
+              name: 'rootPath',
+              vali: 'notEmpty',
+              label: '上传根目录',
+              placeholder: '/upload'
+            }],
+          },
+        }); %>
+      </div>
+
+      <%# qiniu -%>
+      <div id="form-qiniu" class="clearfix" hidden="true">
+      <%- include(_v + '/component/form/form', {
+          opt: {
+            id: 'form-qiniu',
+            fields: [],
+          },
+        }); %>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+           <button id="submit-btn" class="btn btn-default btn-block">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  var form = $('#form').c();
+
+  $('#submit-btn').on('click', function() {
+    var validation = form.validate();
+    if(validation !== true) {
+      return;
+    }
+
+    var formData = form.val();
+    console.log(formData);
+
+    $.ajax({
+      type: 'POST',
+      data: formData,
+    }).success(function(result) {
+      var restartInterval = setInterval(function() {
+        try {
+          $.get('/status')
+            .success(function(status) {
+              clearInterval(restartInterval);
+              //window.location.href = '/test/upload';
+            });
+        } catch(e){
+          //console.log(e);
+        }
+      }, 1000);
+    }).error(function(err) {
+      console.log(err);
+      // TODO 用 modal 代替 alert
+      alert(JSON.stringify(err));
+    });
+  });
+});
+</script>
+
+<%- include(_v + '/commen/footer') %>

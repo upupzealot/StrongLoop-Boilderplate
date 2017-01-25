@@ -11,6 +11,7 @@ module.exports = (server)=>{
   server.use((req, res, next)=>{
     res.locals._ = _;
     res.locals._v = server.get('views');
+    res.locals.config = global.config;
     next();
   });
 

@@ -6,5 +6,7 @@
 
 <%- include_js('/component/form/jq-form-input.js'); %>
 <%- include_js('//cdn.bootcss.com/plupload/2.2.1/plupload.full.min.js'); %>
-<%- include_js('/component/uploader/uploader-server.js'); %>
+<% var defaultUploader = config.uploadConf.default; %>
+<%- uploadConf(); %>
+<%- include_js('/component/uploader/uploader-' + defaultUploader + '.js'); %>
 <%- include_js('/component/form/jq-form-file.js'); %>

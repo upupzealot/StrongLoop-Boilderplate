@@ -89,5 +89,33 @@ module.exports = (router, server)=>{
     });
   });
 
+  // 配置上传方式
+  router.get('/install/uploader', (req, res)=>{
+    res.render('page/install/uploader');
+  });
+
+  router.post('/install/uploader', (req, res)=>{
+    co(function*() {
+      let file = path.resolve(__dirname, '../config/upload-conf.json');
+      let uploadConf = jsonfile.readFileSync(file);
+
+      let uploader = req.body.uploader;
+      let connector = uploader.connector;
+      delete uploader.connector;
+      uploadConf.uploaders[connector] = uploader;
+      uploadConf.default = connector;
+
+      jsonfile.writeFileSync(file, uploadConf, {spaces: 2});
+
+      res.json({
+        success: true
+      });
+
+      return process.exit();
+    }).catch(err=>{
+      onError(err, res);
+    });
+  });
+
   router.get('/status', server.loopback.status());
 };

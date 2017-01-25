@@ -20,6 +20,32 @@
     _.merge(params, {scope: scope});
     return include(_v + '/component/' + component, params);
   }
+
+  var _uploadConf = false;
+  uploadConf = function() {
+    if(!_uploadConf) {
+      _uploadConf = true;
+      var connector = config.uploadConf.default;
+      if(connector === 'server') {
+        return '<script>$.uploadConf = {' +
+                 'default: "server",' +
+               '};</script>';
+      } else if(connector === 'alioss') {
+        var alioss = config.uploadConf.uploaders.alioss;
+        alioss = _.pick(alioss, ['']);
+        return '<script>$.uploadConf = {' +
+                 'default: "alioss",' +
+                 'tokenUrl: "' + '/upload-token/alioss' + '",' +
+                 'bucket: "' + config.uploadConf.uploaders.alioss.bucket + '",' +
+                 'endPoint: "' + config.uploadConf.uploaders.alioss.endPoint + '",' +
+               '};</script>';
+      } else if(connector === 'qiniu') {
+        return '<script>$.uploadConf = {' +
+                 'default: "qiniu",' +
+               '};</script>';
+      }
+    }
+  }
 })();
 %>
 

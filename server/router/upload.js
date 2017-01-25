@@ -2,7 +2,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const uuid = require('uuid');
+const crypto = require('crypto');
 const multiparty = require('connect-multiparty')();
+
+const uploadConf = global.config.uploadConf;
 
 // 调用失败时的返回错误信息
 let onError = (err, res)=>{
@@ -18,10 +22,31 @@ module.exports = (router, server)=>{
     res.render('page/test/upload.ejs');
   });
 
-  /*
-   *  savePath: 基于 /client 的路径
-   */
-  let upload_endpoint = (req, res, next)=>{
+  // alioss
+  const ossConf = uploadConf.uploaders.alioss;
+  router.get('/upload-token/alioss', (req, res)=>{
+    let accessKeyId = ossConf.accessKeyID;
+    let secretAccessKey = ossConf.accessKeySecret;
+    let path = ossConf.rootPath.substr(1);//oss 不允许 '/' 开头作为key
+    let key_uuid =  uuid.v4();
+    let policy = '{"expiration":"2120-01-01T12:00:00.000Z",'
+    + '"conditions":[{"bucket":"' + ossConf.bucket + '" },'
+    + '["starts-with","$key","' + path + '/' + key_uuid + '-"]]}';
+
+    let policyBase64 = new Buffer(policy).toString('base64');
+    let signature = crypto.createHmac('sha1', secretAccessKey).update(policyBase64).digest().toString('base64');
+
+    return res.json({
+      path: path,
+      uuid: key_uuid,
+      policy: policyBase64,
+      OSSAccessKeyId: accessKeyId,
+      signature: signature
+    });
+  });
+
+  // server
+  let upload_server = (req, res, next)=>{
     let file = req.files.file;
     if(!file) {
       return next(new Error('上传的文件为空'));
@@ -31,6 +56,7 @@ module.exports = (router, server)=>{
       //get filename
       let filename = file.originalFilename || path.basename(file.path);
       let key = '/upload/' + filename;
+
       //copy file to a public directory
       let targetPath = path.resolve(__dirname, '../../client');
       targetPath += '/' + key;
@@ -58,6 +84,5 @@ module.exports = (router, server)=>{
       throw e;
     }
   }
-
-  router.post('/upload', multiparty, upload_endpoint);
+  router.post('/upload', multiparty, upload_server);
 }

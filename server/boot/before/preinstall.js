@@ -14,4 +14,17 @@ module.exports = (server)=>{
       },
     }, {spaces: 2});
   }
+
+  const uploadConf = path.resolve(__dirname, '../../config/upload-conf.json');
+  if(!fs.existsSync(uploadConf)) {
+    jsonfile.writeFileSync(uploadConf, {
+      uploaders: {
+        server: {
+          root: "/upload",
+        }
+      },
+    }, {spaces: 2});
+  }
+  global.config = global.config || {};
+  global.config.uploadConf = jsonfile.readFileSync(uploadConf);
 };
