@@ -3,10 +3,8 @@
 
     var FileInput = function(ele, opt) {
       var $ele = this.$ele = ele;
+      this.opt = _.merge({}, opt);
       this.input = opt.input;
-      this.opt = _.merge({}, {
-        added: this.$ele,
-      });
 
       this.init();
       $ele.c(this);
@@ -25,7 +23,8 @@
         .attr('readonly', true)
         .css('background-color', 'white');
 
-      var opt = _.merge({}, self.opt, {
+      var opt = _.merge({}, {
+        browse_button: self.$ele[0],
         added: function(files) {
           if(files.length) {
             if(files.length === 1) {
@@ -40,8 +39,9 @@
             self.$else.val('');
           }
         }
-      });
-      self.uploader = new $['uploader-server'](self.$ele, opt);
+      }, {uploadConf: $.uploadConf}, self.opt);
+
+      self.uploader = new $['uploader-' + opt.uploadConf.default](opt);
     }
 
     FileInput.prototype.upload = function(callback) {

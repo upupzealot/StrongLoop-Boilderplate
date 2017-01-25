@@ -5,7 +5,7 @@ const path = require('path');
 const jsonfile = require('jsonfile');
 
 module.exports = (server)=>{
-  var dataSourceConf = path.resolve(__dirname, '../../datasources.json');
+  const dataSourceConf = path.resolve(__dirname, '../../datasources.json');
   if(!fs.existsSync(dataSourceConf)) {
     jsonfile.writeFileSync(dataSourceConf, {
       db: {

@@ -39,7 +39,6 @@ module.exports = (router, server)=>{
         fs.mkdirSync(dir);
       }
 
-      console.log(file.path)
       fs.rename(
         file.path,
         targetPath,

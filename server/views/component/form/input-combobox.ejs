@@ -10,6 +10,9 @@
       <% if(option === opt.default) { %>
         selected="selected"
       <% } %>
+      <% if(opt.optionsContent) { %>
+        data-content="<%- opt.optionsContent[index] %>"
+      <% } %>
     >
       <%- option %>
     </option>

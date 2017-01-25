@@ -23,12 +23,8 @@
       },
     }
 
-    var Uploader = function(ele, opt) {
-      var $ele = this.$ele = ele;
-      console.log(ele)
-      this.opt = _.merge({}, uploader_default_opt, {
-        browse_button: this.$ele[0],
-      }, opt);
+    var Uploader = function(opt) {
+      this.opt = _.merge({}, uploader_default_opt, opt);
 
       this.init();
       return this;
@@ -44,7 +40,7 @@
         uploader.splice(0, uploader.files.length - files.length);
         uploader.refresh();
         self.files = files;
-        
+
         opt.added(files);
       });
       uploader.bind('BeforeUpload',function(uploader, file) {

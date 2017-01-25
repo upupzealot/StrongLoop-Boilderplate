@@ -1,17 +1,17 @@
 <%
 (function() {
-  var css = {};
+  var _css = {};
   include_css = function(path) {
-    if(!css[path]) {
-      css[path] = true;
+    if(!_css[path]) {
+      _css[path] = true;
       return '<link rel="stylesheet" href="' + path + '"/>';
     }
   }
 
-  var js = {};
+  var _js = {};
   include_js = function(path) {
-    if(!js[path]) {
-      js[path] = true;
+    if(!_js[path]) {
+      _js[path] = true;
       return '<script src="' + path + '"></script>';
     }
   }
