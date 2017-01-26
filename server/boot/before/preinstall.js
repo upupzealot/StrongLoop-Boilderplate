@@ -20,7 +20,7 @@ module.exports = (server)=>{
     jsonfile.writeFileSync(uploadConf, {
       uploaders: {
         server: {
-          root: "/upload",
+          rootPath: "/upload",
         }
       },
     }, {spaces: 2});

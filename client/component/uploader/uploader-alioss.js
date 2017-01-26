@@ -33,9 +33,8 @@
       var self = this;
 
       var opt = self.opt;
-      opt.url = 'http://' + opt.uploadConf.bucket + '.' + opt.uploadConf.endPoint,
+      opt.url = 'http://' + opt.uploadConf.bucket + '.' + opt.uploadConf.endPoint;
 
-      console.log(opt)
       var uploader = this.pluploader = new plupload.Uploader(opt);
       uploader.init();
 
@@ -78,9 +77,7 @@
       $.ajax({
         url: self.opt.uploadConf.tokenUrl,
         type: 'GET',
-        //async: false,
         success: function(data) {
-          console.log(data)
           var params = {
             'path': data.path,
             'uuid': data.uuid,
@@ -89,9 +86,7 @@
             'success_action_status' : '200',
             'signature': data.signature,
           };
-          //params.key = params.path + '/' + params.uuid + '-' + file.name;
           self.params = params;
-          //uploader.settings.multipart_params = params;
           self.uploader.start();
         }
       });
