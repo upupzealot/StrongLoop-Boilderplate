@@ -45,6 +45,27 @@ module.exports = (router, server)=>{
     });
   });
 
+  // qiniu
+  const qiniuConf = uploadConf.uploaders.qiniu;
+  router.get('/upload-token/qiniu', (req, res)=>{
+    let accessKeyId = qiniuConf.accessKeyID;
+    let secretAccessKey = qiniuConf.accessKeySecret;
+    let path = qiniuConf.rootPath.substr(1);//qiniu 不需要 '/' 开头作为key
+    let policy = '{"scope": "' + qiniuConf.bucket + '",'
+    + '"deadline":' + Math.floor(new Date('2120-01-01T12:00:00.000Z').valueOf() / 1000) + '}';
+
+    let policyBase64 = new Buffer(policy).toString('base64');
+    let signature = crypto.createHmac('sha1', secretAccessKey).update(policyBase64).digest().toString('base64');
+
+    let token = accessKeyId + ':' + signature + ':' + policyBase64;
+
+    return res.json({
+      path: path,
+      uuid: uuid.v4(),
+      token: token
+    });
+  });
+
   // server
   let upload_server = (req, res, next)=>{
     let file = req.files.file;

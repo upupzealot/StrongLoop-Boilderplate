@@ -121,7 +121,28 @@
       <%- include(_v + '/component/form/form', {
           opt: {
             id: 'form-qiniu',
-            fields: [],
+            fields: [{
+              name: 'accessKeyID',
+              vali: 'notEmpty',
+              label: 'AccessKeyID',
+            },{
+              name: 'accessKeySecret',
+              vali: 'notEmpty',
+              label: 'AccessKeySecret',
+            },{
+              name: 'host',
+              vali: 'notEmpty',
+              label: 'Host',
+            },{
+              name: 'bucket',
+              vali: 'notEmpty',
+              label: 'Bucket',
+            },{
+              name: 'rootPath',
+              vali: 'notEmpty',
+              label: '上传根目录',
+              placeholder: '/upload'
+            }],
           },
         }); %>
       </div>

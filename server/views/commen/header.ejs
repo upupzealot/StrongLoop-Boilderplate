@@ -42,6 +42,9 @@
       } else if(connector === 'qiniu') {
         return '<script>$.uploadConf = {' +
                  'default: "qiniu",' +
+                 'tokenUrl: "' + '/upload-token/qiniu' + '",' +
+                 'host: "' + config.uploadConf.uploaders.qiniu.host + '",' +
+                 'endPoint: "upload.qiniu.com",' +
                '};</script>';
       }
     }
