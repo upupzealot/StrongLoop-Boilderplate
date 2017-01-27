@@ -76,7 +76,7 @@ module.exports = (router, server)=>{
     try {
       //get filename
       let filename = file.originalFilename || path.basename(file.path);
-      let key = '/upload/' + filename;
+      let key = '/upload/' + uuid.v4() + '-' + filename;
 
       //copy file to a public directory
       let targetPath = path.resolve(__dirname, '../../client');
