@@ -1,0 +1,4 @@
+<%- include_js('//cdn.bootcss.com/plupload/2.2.1/plupload.full.min.js'); %>
+<%- uploadConf(); %>
+<% var defaultUploader = config.uploadConf.default; %>
+<%- include_js('/component/uploader/uploader-' + defaultUploader + '.js'); %>

@@ -4,9 +4,6 @@
 <%# DOM -%>
 <input name="<%- opt.name %>" type="text" placeholder="<%- opt.placeholder %>" class="form-control">
 
+<%- include(_v + '/component/uploader'); %>
 <%- include_js('/component/form/jq-form-input.js'); %>
-<%- include_js('//cdn.bootcss.com/plupload/2.2.1/plupload.full.min.js'); %>
-<% var defaultUploader = config.uploadConf.default; %>
-<%- uploadConf(); %>
-<%- include_js('/component/uploader/uploader-' + defaultUploader + '.js'); %>
 <%- include_js('/component/form/jq-form-file.js'); %>

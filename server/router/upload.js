@@ -18,9 +18,6 @@ let onError = (err, res)=>{
 }
 
 module.exports = (router, server)=>{
-  router.get('/test/upload', (req, res)=>{
-    res.render('page/test/upload.ejs');
-  });
 
   // alioss
   const ossConf = uploadConf.uploaders.alioss;
