@@ -4,18 +4,10 @@
       url: '/upload',
       name: 'file',
       multi_selection: false,
-      added: function (files) {
-        console.log(files);
-      },
-      progress: function (percent) {
-        //console.log(percent);
-      },
-      success: function (data) {
-        console.log(data + ' uploaded!');
-      },
-      complete: function(files) {
-        console.log('complete ' + files.length + ' files!');
-      },
+      added: function (files) {},
+      progress: function (percent) {},
+      success: function (data) {},
+      complete: function(files) {},
       error: function (err) {
         console.log('upload error:');
         console.log(err);
@@ -34,14 +26,19 @@
       var self = this;
 
       var opt = self.opt;
+
       var uploader = this.pluploader = new plupload.Uploader(opt);
       uploader.init();
+
+      self.urls = [];
       uploader.bind('FilesAdded', function(uploader, files) {
         uploader.splice(0, uploader.files.length - files.length);
         uploader.refresh();
-        self.files = files;
+        self.urls = [];
 
-        opt.added(files);
+        if(opt.added) {
+          opt.added(files);
+        }
       });
       uploader.bind('BeforeUpload',function(uploader, file) {
       });
@@ -50,6 +47,8 @@
       });
       uploader.bind('FileUploaded',function(uploader, file, responseObject) {
         var url = JSON.parse(responseObject.response).url;
+        self.urls.push(url);
+
         opt.success(url);
       });
       uploader.bind('UploadComplete',function(uploader, files) {
@@ -67,7 +66,11 @@
     }
 
     Uploader.prototype.val = function() {
-      return this.file;
+      if(this.opt.multi_selection) {
+        return this.urls;
+      } else {
+        return this.urls.length ? this.urls[0] : null;
+      }
     }
 
     $.extend({
