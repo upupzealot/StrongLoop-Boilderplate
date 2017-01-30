@@ -15,13 +15,26 @@
     FileInput.prototype.init = function() {
       var self = this;
 
-      self.input.init();
       self.$ele
         .on('change', function() {
           self.file = self.$ele.get(0).files[0];
         })
         .attr('readonly', true)
         .css('background-color', 'white');
+
+      var $progress = self.$ele.next('.progress');
+      var $progressbar = $progress.find('.progress-bar');
+      var $upload_btn = self.$ele
+        .closest('.form-group')
+        .find('.input-group-btn .btn');
+      $upload_btn.on('click', function() {
+        var validation = self.validate();
+        if(validation !== true) {
+          return;
+        }
+
+        self.upload();
+      });
 
       var opt = _.merge({}, {
         browse_button: self.$ele[0],
@@ -35,10 +48,20 @@
               }).join(', ');
               self.$ele.val(text);
             }
+            $progressbar.css('width', 0);
+            $upload_btn.attr('disabled', false);
           } else {
             self.$else.val('');
+            $upload_btn.attr('disabled', true);
           }
-        }
+          self.validate();
+        },
+        progress: function(percent) {
+          $progressbar.css('width', percent + '%');
+        },
+        complete: function(files) {
+          $upload_btn.attr('disabled', true);
+        },
       }, {uploadConf: $.uploadConf}, self.opt);
 
       self.uploader = new $['uploader-' + opt.uploadConf.default](opt);
@@ -53,7 +76,7 @@
     }
 
     FileInput.prototype.val = function() {
-      return this.file;
+      return this.uploader.val();
     }
 
     $.fn.formFile = function(opt) {

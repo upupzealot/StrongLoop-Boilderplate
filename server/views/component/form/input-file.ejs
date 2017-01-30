@@ -1,8 +1,39 @@
 <%#
   opt: 组件 dataObject
 %>
+<%# Style -%>
+<style type="text/css">
+  .form-file-progress{
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    margin: 0;
+    bottom: 0;
+    z-index: 10;
+    border: 1px #ccc solid;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    opacity: .2;
+  }
+  .form-file-btn{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+</style>
+
 <%# DOM -%>
-<input name="<%- opt.name %>" type="text" placeholder="<%- opt.placeholder %>" class="form-control">
+<div class="input-group">
+  <div class="clearfix">
+    <input name="<%- opt.name %>" type="text" placeholder="<%- opt.placeholder %>" class="form-control">
+    <div class="progress form-file-progress">
+      <div class="progress-bar" style="width: 0%;"></div>
+    </div>
+  </div>
+  <span class="input-group-btn">
+    <button class="btn btn-default form-file-btn" type="button">上传</button>
+  </span>
+</div>
 
 <%- include(_v + '/component/uploader'); %>
 <%- include_js('/component/form/jq-form-input.js'); %>

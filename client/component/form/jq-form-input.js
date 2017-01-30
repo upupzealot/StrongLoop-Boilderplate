@@ -19,7 +19,7 @@
       var self = this;
       var opt = self.opt;
 
-      self.$group = self.$ele.parent('.form-group');
+      self.$group = self.$ele.closest('.form-group');
       self.$helpBlock = self.$group.find('.help-block');
       if(opt.vali) {
         self.validator = $.getValidator(opt.vali, self);
