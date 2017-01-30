@@ -49,10 +49,14 @@
               self.$ele.val(text);
             }
             $progressbar.css('width', 0);
-            $upload_btn.attr('disabled', false);
+            $upload_btn
+              .attr('disabled', false)
+              .text('上传');
           } else {
             self.$else.val('');
-            $upload_btn.attr('disabled', true);
+            $upload_btn
+              .attr('disabled', true)
+              .text('上传');;
           }
           self.validate();
         },
@@ -60,7 +64,9 @@
           $progressbar.css('width', percent + '%');
         },
         complete: function(files) {
-          $upload_btn.attr('disabled', true);
+          $upload_btn
+            .attr('disabled', true)
+            .text('完成');
         },
       }, {uploadConf: $.uploadConf}, self.opt);
 

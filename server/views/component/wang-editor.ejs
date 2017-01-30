@@ -54,6 +54,6 @@ $(document).ready(function() {
     '|','source'
   ];
   editor.create();
-  window['wangEditor-<%- id %>'] = editor;
+  $('#<%- id %>').c(editor);
 });
 </script>
