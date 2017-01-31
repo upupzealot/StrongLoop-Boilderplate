@@ -52,10 +52,53 @@
       }
       return result;
     }
-    
+
 
     $.fn.form = function(opt) {
       return new Form(this, opt);
     }
+  }
+
+  if(!$['form-field']) {
+    $.extend({
+      'form-field': {
+        'vali-init': function(instance) {
+          var self = instance;
+          var opt = instance.opt;
+
+          self.$group = self.$ele.closest('.form-group');
+          self.$helpBlock = self.$group.find('.help-block');
+          if(opt.vali) {
+            self.validator = $.getValidator(opt.vali, self);
+            if(!self.validator) {
+              console ? console.warn('validator undefined for field: ' + self.opt.name): null;
+            }
+            if(!self.$helpBlock.length) {
+              self.$group.append('<p class="help-block"></p>');
+              self.$helpBlock = self.$group.find('.help-block');
+            }
+
+            var triggers = opt.valiTrigger || ['change'];
+            triggers.map(function(trigger) {
+              self.$ele.on(trigger, function() {
+                self.validate();
+              });
+            });
+          }
+        },
+        'vali-show': function(instance, result) {
+          var self = instance;
+
+          if(result !== true) {
+            self.$group.addClass('has-error');
+            self.$helpBlock.html(result).show();
+          } else {
+            self.$group.removeClass('has-error');
+            self.$helpBlock.hide();
+          }
+          return result;
+        },
+      },
+    });
   }
 })(jQuery);

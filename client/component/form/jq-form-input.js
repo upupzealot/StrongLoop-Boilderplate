@@ -2,6 +2,7 @@
   if(!$.fn.formInput) {
     var default_opt = {
       'type': 'text',
+      valiTrigger: ['keyup', 'change'],
     };
 
     var Input = function(ele, opt) {
@@ -19,37 +20,15 @@
       var self = this;
       var opt = self.opt;
 
-      self.$group = self.$ele.closest('.form-group');
-      self.$helpBlock = self.$group.find('.help-block');
-      if(opt.vali) {
-        self.validator = $.getValidator(opt.vali, self);
-        if(!self.validator) {
-          console ? console.warn('validator undefined for field: ' + self.opt.name): null;
-        }
-        if(!self.$helpBlock.length) {
-          self.$group.append('<p class="help-block"></p>');
-          self.$helpBlock = self.$group.find('.help-block');
-        }
-
-        self.$ele.on('keyup', function() {
-          self.validate();
-        });
-      }
+      $['form-field']['vali-init'](self);
     }
 
     Input.prototype.validate = function() {
-      if(!this.validator) {
-        return true;
+      var valiResult = true;
+      if(this.validator) {
+        valiResult = this.validator.check.apply(null, [this.val()]);
       }
-      
-      var valiResult = this.validator.check.apply(null, [this.val()]);
-      if(valiResult !== true) {
-        this.$group.addClass('has-error');
-        this.$helpBlock.html(valiResult).show();
-      } else {
-        this.$group.removeClass('has-error');
-        this.$helpBlock.hide();
-      }
+      $['form-field']['vali-show'](this, valiResult);
       return valiResult;
     }
 
