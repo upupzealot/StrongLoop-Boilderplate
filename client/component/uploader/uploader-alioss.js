@@ -76,7 +76,6 @@
           opt.error(errObject);
         }
       });
-      self.uploader = uploader;
     }
 
     Uploader.prototype.upload = function(callback) {
@@ -94,7 +93,7 @@
             'signature': data.signature,
           };
           self.params = params;
-          self.uploader.start();
+          self.pluploader.start();
         }
       });
     }

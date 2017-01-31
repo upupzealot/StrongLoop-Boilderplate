@@ -57,12 +57,11 @@
       uploader.bind('Error',function(uploader, errObject) {
         opt.error(errObject);
       });
-      self.uploader = uploader;
     }
 
     Uploader.prototype.upload = function(callback) {
       var self = this;
-      self.uploader.start();
+      self.pluploader.start();
     }
 
     Uploader.prototype.val = function() {

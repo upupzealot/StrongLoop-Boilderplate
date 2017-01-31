@@ -91,10 +91,15 @@
           var self = instance;
 
           if(result !== true) {
-            self.$group.addClass('has-error');
+            var type = 'has-error';
+            if(_.startsWith(result,'[warning:]')) {
+              type = 'has-warning';
+              result = result.substr('[warning:]'.length);
+            }
+            self.$group.removeClass('has-warning has-error').addClass(type);
             self.$helpBlock.html(result).show();
           } else {
-            self.$group.removeClass('has-error');
+            self.$group.removeClass('has-warning has-error');
             self.$helpBlock.hide();
           }
           return result;

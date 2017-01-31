@@ -76,7 +76,6 @@
           opt.error(errObject);
         }
       });
-      self.uploader = uploader;
     }
 
     Uploader.prototype.upload = function(callback) {
@@ -91,7 +90,7 @@
             'token': data.token,
           };
           self.params = params;
-          self.uploader.start();
+          self.pluploader.start();
         }
       });
     }

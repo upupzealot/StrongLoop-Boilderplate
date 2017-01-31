@@ -3,8 +3,10 @@
 
     var FileInput = function(ele, opt) {
       var $ele = this.$ele = ele;
-      this.opt = _.merge({}, opt);
-      this.input = opt.input;
+      this.opt = _.merge({
+        valiTrigger: ['change'],
+      }, opt);
+      this.input = $ele.formInput(this.opt).c();
 
       this.init();
       $ele.c(this);
@@ -14,6 +16,16 @@
 
     FileInput.prototype.init = function() {
       var self = this;
+      var opt = self.opt;
+      var WaitToUpload = '[warning:]等待上传'
+      opt.vali = [opt.vali, {
+        check: function(value) {
+          var queue = self.uploader.pluploader.files;
+          var urls = self.uploader.urls;
+          return queue.length > 0 && queue.length === urls.length;
+        },
+        msg: WaitToUpload,
+      }];
       $['form-field']['vali-init'](self);
 
       self.$ele
@@ -30,7 +42,7 @@
         .find('.input-group-btn .btn');
       $upload_btn.on('click', function() {
         var validation = self.validate();
-        if(validation !== true) {
+        if(validation !== true && validation !== WaitToUpload) {
           return;
         }
 
@@ -68,6 +80,7 @@
           $upload_btn
             .attr('disabled', true)
             .text('完成');
+          self.validate();
         },
       }, {uploadConf: $.uploadConf}, self.opt);
 
@@ -81,7 +94,7 @@
     FileInput.prototype.validate = function() {
       var valiResult = true;
       if(this.validator) {
-        valiResult = this.validator.check.apply(null, [this.val()]);
+        valiResult = this.validator.check.apply(null, [this.uploader.pluploader.files]);
       }
       $['form-field']['vali-show'](this, valiResult);
       return valiResult;
@@ -92,8 +105,6 @@
     }
 
     $.fn.formFile = function(opt) {
-      var input = this.formInput(opt);
-      opt.input = input.c();
       return new FileInput(this, opt);
     }
   }
