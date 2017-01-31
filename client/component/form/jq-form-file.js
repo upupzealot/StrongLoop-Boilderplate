@@ -14,6 +14,7 @@
 
     FileInput.prototype.init = function() {
       var self = this;
+      $['form-field']['vali-init'](self);
 
       self.$ele
         .on('change', function() {
@@ -78,7 +79,12 @@
     }
 
     FileInput.prototype.validate = function() {
-      return this.input.validate();
+      var valiResult = true;
+      if(this.validator) {
+        valiResult = this.validator.check.apply(null, [this.val()]);
+      }
+      $['form-field']['vali-show'](this, valiResult);
+      return valiResult;
     }
 
     FileInput.prototype.val = function() {

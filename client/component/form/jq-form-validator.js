@@ -15,7 +15,11 @@
       },
       notEmpty: function(){
         this.check = function(value) {
-          return _.isObject(value) ? !!value : value.length > 0;
+          if(_.isNil(value)) {
+            return false;
+          }
+          return _.isObject(value) && !_.isArray(value) ?
+            !!value : value.length > 0;
         };
         this.msg = '不能为空';
       },

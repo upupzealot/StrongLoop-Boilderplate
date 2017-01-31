@@ -22,6 +22,7 @@
     Form.prototype.init = function() {
       var self = this;
       var opt = self.opt;
+      $['form-field']['vali-init'](self);
 
       self.fieldComponents = {};
       opt.fields.map(function(field) {
