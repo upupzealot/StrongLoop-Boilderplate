@@ -18,6 +18,7 @@
       'input': 'formInput',
       'file': 'formInputFile',
       'combobox': 'formCombobox',
+      'richEditor': 'formRichEditor',
     };
     Form.prototype.init = function() {
       var self = this;

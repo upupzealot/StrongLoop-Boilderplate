@@ -5,9 +5,35 @@
     <h3>富文本编辑器(wangEditor)</h3>
     <hr>
 
-    <%- include(_v + '/component/wang-editor', {
-      id: 'rich-editor',
-    }); %>
+    <div id="form" class="clearfix">
+    <%- include(_v + '/component/form/form', {
+        opt: {
+          id: 'form',
+          fields: [{
+            type: 'richEditor',
+            opt: {
+              name: 'content',
+              vali: 'notEmpty',
+              label: '内容',
+            }
+          }],
+        },
+      }); %>
+    </div>
+    <button id="submit" class="btn btn-default btn-block">提交</button>
+    <script type="text/javascript">
+    $(function() {
+      $('#submit').on('click', function() {
+        var form = $('#form').c();
+        var validation = form.validate();
+        if(validation !== true) {
+          return;
+        }
+
+        console.log(form.val())
+      });
+    });
+    </script>
 
   </div>
 </div>

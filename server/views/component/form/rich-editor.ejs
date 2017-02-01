@@ -1,0 +1,11 @@
+<textarea
+  name="<%- opt.name %>"
+  style="<%- opt.style || 'height:200px;' %>"
+  hidden><% if(opt.content) { -%>
+    <%- opt.content -%>
+  <% } -%>
+</textarea>
+<%- include(_v + '/component/uploader'); %>
+<%- include_css('//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.min.css') %>
+<%- include_js('//cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.min.js') %>
+<%- include_js('/component/form/jq-form-rich-editor.js'); %>
