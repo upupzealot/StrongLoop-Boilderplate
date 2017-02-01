@@ -1,5 +1,5 @@
 ;(function ($) {
-  if(!$.fn.formFile) {
+  if(!$.fn.formInputFile) {
 
     var FileInput = function(ele, opt) {
       var $ele = this.$ele = ele;
@@ -104,7 +104,7 @@
       return this.uploader.val();
     }
 
-    $.fn.formFile = function(opt) {
+    $.fn.formInputFile = function(opt) {
       return new FileInput(this, opt);
     }
   }

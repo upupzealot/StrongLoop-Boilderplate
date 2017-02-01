@@ -16,8 +16,8 @@
     // 组件类型到 jq 插件名的映射
     var fieldClasses = {
       'input': 'formInput',
-      'file': 'formFile',
-      'combobox': 'formCombobox'
+      'file': 'formInputFile',
+      'combobox': 'formCombobox',
     };
     Form.prototype.init = function() {
       var self = this;
