@@ -1,3 +1,16 @@
+<%# Style -%>
+<style type="text/css">
+  .wangEditor-container {
+    border-radius: 4px;
+  }
+
+  .wangEditor-menu-container {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+</style>
+
+<%# DOM -%>
 <textarea
   name="<%- opt.name %>"
   style="<%- opt.style || 'height:200px;' %>"
@@ -8,4 +21,5 @@
 <%- include(_v + '/component/uploader'); %>
 <%- include_css('//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.min.css') %>
 <%- include_js('//cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.min.js') %>
+<%- include_js('/component/wang-editor/url-video.js') %>
 <%- include_js('/component/form/jq-form-rich-editor.js'); %>

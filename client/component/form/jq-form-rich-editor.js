@@ -31,7 +31,8 @@
         '|',
         'link',
         'img',
-        //'url_video',
+        //'video',
+        'url-video',
         'insertcode',
         '|','source'
       ];
