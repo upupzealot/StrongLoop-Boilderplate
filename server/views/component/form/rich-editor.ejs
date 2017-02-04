@@ -1,4 +1,5 @@
 <%# Style -%>
+<%- include_css('//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.min.css') %>
 <style type="text/css">
   .wangEditor-container {
     border-radius: 4px;
@@ -7,6 +8,22 @@
   .wangEditor-menu-container {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+  }
+
+  .rich-text-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+  }
+  .rich-text-video iframe,
+  .rich-text-video object,
+  .rich-text-video embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 </style>
 
@@ -19,7 +36,6 @@
   <% } -%>
 </textarea>
 <%- include(_v + '/component/uploader'); %>
-<%- include_css('//cdn.bootcss.com/wangeditor/2.1.20/css/wangEditor.min.css') %>
 <%- include_js('//cdn.bootcss.com/wangeditor/2.1.20/js/wangEditor.min.js') %>
 <%- include_js('/component/wang-editor/url-video.js') %>
 <%- include_js('/component/form/jq-form-rich-editor.js'); %>

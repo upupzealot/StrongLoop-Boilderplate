@@ -4,7 +4,7 @@ const request = require('request');
 
 const EmbedHTMLs = {
   youku: '<embed width="WIDTH" height="HEIGHT" src="http://player.youku.com/player.php/sid/VID/v.swf" allowFullScreen="true" quality="high" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
-  tudou: '<embed width="WIDTH" height="HEIGHT" src="http://www.tudou.com/v/VID/&bid=05&resourceId=0_05_05_99/v.swf" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="opaque">',
+  tudou: '<embed width="WIDTH" height="HEIGHT" src="http://www.tudou.com/v/VID/&bid=05&resourceId=0_05_05_99/v.swf" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="opaque"></embed>',
   tencent: '<embed width="WIDTH" height="HEIGHT" src="http://static.video.qq.com/TPout.swf?vid=VID&auto=0" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
   bilibili: '<iframe width="WIDTH" height="HEIGHT" src="http://www.bilibili.com/html/player.html?aid=1493075&page=1" scrolling="no" border="0" frameborder="no" framespacing="0"></iframe>',
 }

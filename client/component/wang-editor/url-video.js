@@ -56,7 +56,6 @@
         return;
       }
 
-      console.log(link)
       // 从后端接口取 embed 代码
       $.ajax({
         url: '/video-embed',
@@ -66,7 +65,7 @@
         },
         success: function(data) {
           // 执行命令
-          editor.command(e, 'insertHtml', data.embed);
+          editor.command(e, 'insertHtml', '<div class="rich-text-video">' + data.embed + '</div>');
           $linkInput.val('');
         },
         error: function(err) {
