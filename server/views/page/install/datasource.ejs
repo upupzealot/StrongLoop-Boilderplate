@@ -17,10 +17,10 @@
                 'memory',
                 'postgresql',
                 'mysql',
-                'redis',
-                'mongodb',
+                //'redis',
+                //'mongodb',
               ],
-              default: 'postgresql',
+              default: 'memory',
               linkages: {
                 rootName: 'connector',
                 help: {
@@ -69,7 +69,7 @@
       %>
 
       <%# postgresql -%>
-      <div id="form-postgresql" class="clearfix">
+      <div id="form-postgresql" class="clearfix" hidden="true">
       <%
         var postgresqlOpt = _.merge({}, dbOpt);
         postgresqlOpt.id = 'form-postgresql';
@@ -138,6 +138,7 @@ $(function() {
       data: formData,
     }).success(function(result) {
       if(confirm) {
+        $confirmBtn.attr('disabled', true);
         var restartInterval = setInterval(function() {
           try {
             $.get('/status')

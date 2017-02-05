@@ -39,7 +39,8 @@
 
 <script type="text/javascript">
 $(function() {
-  $('#form-submit').on('click', function() {
+  var $submitBtn = $('#form-submit');
+  $submitBtn.on('click', function() {
     var form = $('#form').c();
     var validation = form.validate();
     if(validation !== true) {
@@ -49,14 +50,14 @@ $(function() {
     var formData = form.val();
     delete formData['password-repeat'];
 
-    console.log(JSON.stringify(formData, null, 2))
+    $submitBtn.attr('disabled', true);
     $.ajax({
       type: 'POST',
       data: formData,
     }).success(function(msg) {
-      console.log(msg);
+      window.location.href = '/install/uploader';
     }).error(function(err) {
-      console.log(err);
+      $submitBtn.attr('disabled', false);
     });
   });
 });

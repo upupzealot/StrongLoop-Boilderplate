@@ -159,33 +159,33 @@
 <script type="text/javascript">
 $(function() {
   var form = $('#form').c();
-
-  $('#submit-btn').on('click', function() {
+  var $submitBtn = $('#submit-btn');
+  $submitBtn.on('click', function() {
     var validation = form.validate();
     if(validation !== true) {
       return;
     }
 
     var formData = form.val();
-    console.log(formData);
-
+    $submitBtn.attr('disabled', true);
     $.ajax({
       type: 'POST',
       data: formData,
     }).success(function(result) {
+
       var restartInterval = setInterval(function() {
         try {
           $.get('/status')
             .success(function(status) {
               clearInterval(restartInterval);
-              //window.location.href = '/test/upload';
+              window.location.href = '/';
             });
         } catch(e){
           //console.log(e);
         }
       }, 1000);
     }).error(function(err) {
-      console.log(err);
+      console ? console.log(err): null;
       // TODO 用 modal 代替 alert
       alert(JSON.stringify(err));
     });
