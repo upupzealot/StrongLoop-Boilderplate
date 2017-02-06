@@ -4,6 +4,7 @@ const path = require('path');
 const jsonfile = require('jsonfile');
 const loopback = require('loopback');
 const co = require('co');
+const cookieSignature = require('cookie-signature');
 const Promise = require('bluebird');
 
 // 调用失败时的返回错误信息
@@ -42,6 +43,11 @@ module.exports = (router, server)=>{
         principalType: RoleMapping.USER,
         principalId: user.id
       });
+
+      // 产生 token
+      let token = yield user.createAccessToken(1000 * 3600 * 24 * 7);
+      let signature = 's:' + cookieSignature.sign(token.id, '***');
+      res.cookie('authorization' ,signature);
 
       return res.json({
         success: true
