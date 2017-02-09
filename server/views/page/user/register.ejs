@@ -1,0 +1,74 @@
+<%- include(_v + '/commen/header') %>
+
+<div class="row">
+<div class="col-sm-4 col-sm-offset-4">
+  <div class="panel panel-default">
+    <div class="panel-heading" style="text-align:center;font-weight:bold;">
+      注册
+    </div>
+    <div class="panel-body">
+      <div id="form" class="clearfix">
+      <%- include(_v + '/component/form/form', {
+          opt: {
+            id: 'form',
+            fields: [{
+              name: 'username',
+              vali: 'username',
+              label: '用户名',
+            },{
+              name: 'email',
+              vali: 'email',
+              label: '邮箱',
+            },{
+              name: 'password',
+              type: 'password',
+              vali: 'password',
+              label: '密码',
+            },{
+              name: 'password-repeat',
+              type: 'password',
+              vali: 'sameAs("password")',
+              label: '重复密码',
+            },
+            '<hr>'],
+          },
+        }); %>
+      </div>
+      <button class="btn btn-default btn-block" id="submit-btn">注册</button>
+      <div style="text-align:center; margin-top:20px;">
+        已有账号？直接
+        <a href="/login">登录</a>&nbsp;！
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  var $submitBtn = $('#submit-btn');
+  $submitBtn.on('click', function() {
+    var form = $('#form').c();
+    var validation = form.validate();
+    if(validation !== true) {
+      return;
+    }
+
+    var formData = form.val();
+    delete formData['password-repeat'];
+
+    $submitBtn.attr('disabled', true);
+    $.ajax({
+      url: '/api/users/',
+      type: 'POST',
+      data: formData,
+    }).success(function(msg) {
+      window.location.href = '/';
+    }).error(function(err) {
+      $submitBtn.attr('disabled', false);
+    });
+  });
+});
+</script>
+
+<%- include(_v + '/commen/footer') %>
