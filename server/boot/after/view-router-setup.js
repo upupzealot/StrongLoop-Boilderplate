@@ -18,7 +18,6 @@ module.exports = (server)=>{
       res.locals._v = server.get('views');
       res.locals.config = global.config;
       if(req.accessToken) {
-        console.log(User.findById)
         res.locals.user = yield User.findById(req.accessToken.userId);
       }
       next();
