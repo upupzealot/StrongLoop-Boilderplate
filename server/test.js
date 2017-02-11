@@ -13,9 +13,12 @@ const app = loopback();
 const Mocha = require('mocha');
 const mocha = new Mocha();
 
-var testDir = path.resolve(__dirname, './test');
+const testDir = path.resolve(__dirname, './test');
+const mixinDir = path.resolve(__dirname, './mixins');
 
-boot(app, {}, function(err) {
+boot(app, {
+  mixinDirs: [path.resolve(__dirname, './mixins')],
+}, function(err) {
   if (err) throw err;
 
   co(function*() {
