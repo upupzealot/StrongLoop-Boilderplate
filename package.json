@@ -29,7 +29,8 @@
     "request": "^2.79.0",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^1.0.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "xss": "^0.3.3"
   },
   "devDependencies": {
     "co-mocha": "^1.2.0",
