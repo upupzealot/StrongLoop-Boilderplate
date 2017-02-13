@@ -34,5 +34,5 @@ boot(app, {
         process.exit(failures);  // exit with non-zero status if there were failures
       });
     });
-  }).catch(console.err);
+  }).catch(console.error);
 });
