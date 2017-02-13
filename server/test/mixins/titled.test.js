@@ -4,85 +4,48 @@ require('co-mocha')(require('mocha'));
 const should = require('should');
 const loopback = require('loopback');
 
-const shouldThrow = function*(generatorFunc) {
-  let err = null;
-  try {
-    yield generatorFunc();
-  } catch(e) {
-    err = e;
-  }
-  should(err).be.ok();
-}
-
-const shouldNotThrow = function*(generatorFunc) {
-  let err = null;
-  try {
-    yield generatorFunc();
-  } catch(e) {
-    err = e;
-  }
-  should(err).not.be.ok();
-}
+const util = require('../lib/util');
+const shouldThrow = util.shouldThrow;
+const shouldNotThrow = util.shouldNotThrow;
+const getModel = util.getMixinModel;
 
 describe('Mixin: Titled', function() {
-  const ctx = {};
-
-  before(function() {
-    const app = loopback();
-
-    const db = loopback.createDataSource('db', {adapter: 'memory'});
-    ctx.db = db;
-
-    const Topic = loopback.createModel('Topic', 
-      {}, {});
-    ctx.Topic = Topic;
-  });
-
-  it('"title" is required', function*() {
-    loopback.configureModel(ctx.Topic, {
-      dataSource: ctx.db,
-      mixins: {
-        Titled: {},
-      },
+  it('"title" field requirement', function*() {
+    const Topic = getModel('Topic', {
+      Titled: {},
     });
 
-    shouldThrow(function*() {
-      yield ctx.Topic.create({});
+    yield shouldThrow(function*() {
+      yield Topic.create({});
     });
 
-    shouldNotThrow(function*() {
-      yield ctx.Topic.create({title: '标题'});
+    yield shouldNotThrow(function*() {
+      yield Topic.create({title: '标题'});
     });
   });
 
-  describe('Mixin Options', function() {
+  describe('options', function() {
     it('field', function*() {
-      loopback.configureModel(ctx.Topic, {
-        dataSource: ctx.db,
-        mixins: {
-          Titled: {
-            field: 'topic_title',
-          },
+      const Topic = getModel('Topic', {
+        Titled: {
+          field: 'topic_title',
         },
       });
 
-      shouldNotThrow(function*() {
-        yield ctx.Topic.create({topic_title: '标题'});
+      yield shouldNotThrow(function*() {
+        yield Topic.create({topic_title: '标题'});
       });
     });
 
     it('required', function*() {
-      loopback.configureModel(ctx.Topic, {
-        dataSource: ctx.db,
-        mixins: {
-          Titled: {
-            required: false,
-          },
+      const Topic = getModel('Topic', {
+        Titled: {
+          required: false,
         },
       });
 
       shouldNotThrow(function*() {
-        yield ctx.Topic.create({});
+        yield Topic.create({});
       });
     });
   });
