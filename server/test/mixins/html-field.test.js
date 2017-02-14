@@ -9,7 +9,7 @@ const shouldThrow = util.shouldThrow;
 const shouldNotThrow = util.shouldNotThrow;
 const getModel = util.getMixinModel;
 
-describe('Mixin: HTML Field', function() {
+describe('Mixin: HTML Field', function () {
   it('field requirement', function*() {
     const Topic = getModel('Topic', {
       HtmlField: {},
@@ -29,7 +29,7 @@ describe('Mixin: HTML Field', function() {
       HtmlField: {},
     });
 
-    let topic = yield Topic.create({content: '<script>alert("xss");</script>'});
-    should(topic.content).equal('&lt;script&gt;alert("xss");&lt;/script&gt;'); 
+    const topic = yield Topic.create({content: '<script>alert("xss");</script>'});
+    should(topic.content).equal('&lt;script&gt;alert("xss");&lt;/script&gt;');
   });
 });

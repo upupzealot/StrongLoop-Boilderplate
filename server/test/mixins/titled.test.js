@@ -9,7 +9,7 @@ const shouldThrow = util.shouldThrow;
 const shouldNotThrow = util.shouldNotThrow;
 const getModel = util.getMixinModel;
 
-describe('Mixin: Titled', function() {
+describe('Mixin: Titled', function () {
   it('"title" field requirement', function*() {
     const Topic = getModel('Topic', {
       Titled: {},
@@ -24,7 +24,7 @@ describe('Mixin: Titled', function() {
     });
   });
 
-  describe('options', function() {
+  describe('options', function () {
     it('field', function*() {
       const Topic = getModel('Topic', {
         Titled: {

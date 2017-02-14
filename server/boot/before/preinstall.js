@@ -4,24 +4,24 @@ const fs = require('fs');
 const path = require('path');
 const jsonfile = require('jsonfile');
 
-module.exports = (server)=>{
+module.exports = (server) => {
   const dataSourceConf = path.resolve(__dirname, '../../datasources.json');
-  if(!fs.existsSync(dataSourceConf)) {
+  if (!fs.existsSync(dataSourceConf)) {
     jsonfile.writeFileSync(dataSourceConf, {
       db: {
-        name: "db",
-        connector: "memory",
+        name: 'db',
+        connector: 'memory',
       },
     }, {spaces: 2});
   }
 
   const uploadConf = path.resolve(__dirname, '../../config/upload-conf.json');
-  if(!fs.existsSync(uploadConf)) {
+  if (!fs.existsSync(uploadConf)) {
     jsonfile.writeFileSync(uploadConf, {
       uploaders: {
         server: {
-          rootPath: "/upload",
-        }
+          rootPath: '/upload',
+        },
       },
     }, {spaces: 2});
   }

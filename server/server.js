@@ -7,9 +7,9 @@ var loopback = require('loopback');
 var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
-app.start = function() {
+app.start = function () {
   // start the web server
-  return app.listen(function() {
+  return app.listen(() => {
     app.emit('started');
     var baseUrl = app.get('url').replace(/\/$/, '');
     console.log('Web server listening at: %s', baseUrl);
@@ -21,25 +21,24 @@ app.start = function() {
 };
 
 var beforeBoot = path.resolve(__dirname, './boot/before');
-fs.readdirSync(beforeBoot).filter(function(fileName) {
-    return path.extname(fileName) === '.js';
-}).forEach(function(fileName) {
-  var beforeScript = require(path.resolve(beforeBoot, './' + fileName));
+fs.readdirSync(beforeBoot).filter((fileName) => {
+  return path.extname(fileName) === '.js';
+}).forEach((fileName) => {
+  var beforeScript = require(path.resolve(beforeBoot, `./${fileName}`));
   beforeScript(app);
 });
 
 var afterBoot = path.resolve(__dirname, './boot/after');
 var bootOpt = {
   appRootDir: __dirname,
-  bootDirs: [afterBoot]
+  bootDirs: [afterBoot],
 };
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
-boot(app, bootOpt, function(err) {
+boot(app, bootOpt, (err) => {
   if (err) throw err;
 
   console.log('Loopback started');
   // start the server if `$ node server.js`
-  if (require.main === module)
-    app.start();
+  if (require.main === module) { app.start(); }
 });

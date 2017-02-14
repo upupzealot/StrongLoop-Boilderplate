@@ -18,19 +18,19 @@ const mixinDir = path.resolve(__dirname, './mixins');
 
 boot(app, {
   mixinDirs: [path.resolve(__dirname, './mixins')],
-}, function(err) {
+}, (err) => {
   if (err) throw err;
 
   co(function*() {
-    let files = yield (Promise.promisify(dir.files))(testDir);
-    files.forEach((fileName)=>{
-      if(_.endsWith(fileName, '.test.js')) {
+    const files = yield (Promise.promisify(dir.files))(testDir);
+    files.forEach((fileName) => {
+      if (_.endsWith(fileName, '.test.js')) {
         mocha.addFile(fileName);
       }
     });
 
-    mocha.run(function(failures){
-      process.on('exit', function () {
+    mocha.run((failures) => {
+      process.on('exit', () => {
         process.exit(failures);  // exit with non-zero status if there were failures
       });
     });

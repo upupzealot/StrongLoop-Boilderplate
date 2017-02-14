@@ -9,15 +9,15 @@ const shouldThrow = util.shouldThrow;
 const shouldNotThrow = util.shouldNotThrow;
 const getModel = util.getMixinModel;
 
-describe('Mixin: Rich Text Image', function() {
+describe('Mixin: Rich Text Image', function () {
   const instance = {
-      content: 
+    content:
         '<p>' +
           '<img src="/test-img-0.jpeg">aaaaa' +
           '<img src="/test-img-1.jpeg"></img>' +
           '<img src="/test-img-2.jpeg"></img>' +
-        '</p>'
-    }
+        '</p>',
+  };
 
   it('thumbnail filter', function*() {
     const Topic = getModel('Topic', {
@@ -26,8 +26,8 @@ describe('Mixin: Rich Text Image', function() {
       },
     });
 
-    let topic = yield Topic.create(instance);
-    should(topic.thumbnail).equal('/test-img-0.jpeg'); 
+    const topic = yield Topic.create(instance);
+    should(topic.thumbnail).equal('/test-img-0.jpeg');
   });
 
   it('gallery filter', function*() {
@@ -37,13 +37,13 @@ describe('Mixin: Rich Text Image', function() {
       },
     });
 
-    let topic = yield Topic.create(instance);
+    const topic = yield Topic.create(instance);
     should(topic.images).be.an.Array()
       .which.eql([
-          '/test-img-0.jpeg',
-          '/test-img-1.jpeg',
-          '/test-img-2.jpeg'
-        ]); 
+        '/test-img-0.jpeg',
+        '/test-img-1.jpeg',
+        '/test-img-2.jpeg',
+      ]);
   });
 
   it('gallery filter', function*() {
@@ -53,11 +53,11 @@ describe('Mixin: Rich Text Image', function() {
       },
     });
 
-    let topic = yield Topic.create(instance);
-    should(topic.text).equal('[图片]aaaaa[图片][图片]'); 
+    const topic = yield Topic.create(instance);
+    should(topic.text).equal('[图片]aaaaa[图片][图片]');
   });
 
-  describe('option', function() {
+  describe('option', function () {
     it('fromField', function*() {
       const Topic = getModel('Topic', {
         HtmlImage: {
@@ -67,13 +67,13 @@ describe('Mixin: Rich Text Image', function() {
       });
 
       shouldThrow(function*() {
-        let topic = yield Topic.create(instance);
+        const topic = yield Topic.create(instance);
       });
       shouldNotThrow(function*() {
-        let topic = yield Topic.create({
-          html: instance.content
+        const topic = yield Topic.create({
+          html: instance.content,
         });
-        should(topic.aaaaa).equal('/test-img-0.jpeg'); 
+        should(topic.aaaaa).equal('/test-img-0.jpeg');
       });
     });
   });

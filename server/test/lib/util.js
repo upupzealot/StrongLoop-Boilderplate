@@ -12,7 +12,7 @@ module.exports = {
     let err = null;
     try {
       yield generatorFunc();
-    } catch(e) {
+    } catch (e) {
       err = e;
     }
     should(err).be.ok();
@@ -22,17 +22,17 @@ module.exports = {
     let err = null;
     try {
       yield generatorFunc();
-    } catch(e) {
+    } catch (e) {
       err = e;
     }
     should(err).not.be.ok();
   },
 
-  getMixinModel: function(modelName, mixinOption) {
-    return db.createModel(modelName, 
+  getMixinModel: function (modelName, mixinOption) {
+    return db.createModel(modelName,
       {}, {
         dataSource: db,
         mixins: mixinOption,
       });
   },
-}
+};

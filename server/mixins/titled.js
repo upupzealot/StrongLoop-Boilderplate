@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-module.exports = (Model, options)=> {
+module.exports = (Model, options) => {
   const opt = _.merge({}, {
     field: 'title',
     required: true,
@@ -10,7 +10,7 @@ module.exports = (Model, options)=> {
 
   Model.defineProperty(opt.field, {
     type: String,
-    description: Model.name + ' 标题',
+    description: `${Model.name} 标题`,
     required: opt.required,
   });
-}
+};

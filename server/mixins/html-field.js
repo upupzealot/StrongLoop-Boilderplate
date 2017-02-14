@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const xss = require('xss');
 
-module.exports = (Model, options)=> {
+module.exports = (Model, options) => {
   const opt = _.merge({}, {
     field: 'content',
     required: true,
@@ -14,9 +14,9 @@ module.exports = (Model, options)=> {
     required: opt.required,
   });
 
-  Model.observe('before save', (ctx, next)=>{
+  Model.observe('before save', (ctx, next) => {
     const instance = ctx.instance;
     instance[opt.field] = xss(instance[opt.field]);
     next();
   });
-}
+};

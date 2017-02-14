@@ -2,6 +2,6 @@
 
 const loopback = require('loopback');
 
-module.exports = (server, callback)=>{
+module.exports = (server, callback) => {
   server.datasources.db.autoupdate(callback);
 };
