@@ -17,6 +17,11 @@ app.start = function () {
       var explorerPath = app.get('loopback-component-explorer').mountPath;
       console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
     }
+
+    if (process.env.NODE_ENV === 'test') {
+      const test = require('./test.js');
+      test();
+    }
   });
 };
 
@@ -32,7 +37,9 @@ var afterBoot = path.resolve(__dirname, './boot/after');
 var bootOpt = {
   appRootDir: __dirname,
   bootDirs: [afterBoot],
+  mixinDirs: [path.resolve(__dirname, './mixins')],
 };
+
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 boot(app, bootOpt, (err) => {

@@ -6,7 +6,7 @@
     "lint": "eslint .",
     "linx": "eslint . --fix",
     "start": "node .",
-    "test": "NODE_ENV=test node server/test.js"
+    "test": "NODE_ENV=test node server/server.js"
   },
   "dependencies": {
     "bluebird": "^3.4.7",

@@ -6,21 +6,12 @@ const co = require('co');
 const dir = require('node-dir');
 const path = require('path');
 
-const loopback = require('loopback');
-const boot = require('loopback-boot');
-const app = loopback();
-
 const Mocha = require('mocha');
 const mocha = new Mocha();
 
 const testDir = path.resolve(__dirname, './test');
-const mixinDir = path.resolve(__dirname, './mixins');
 
-boot(app, {
-  mixinDirs: [path.resolve(__dirname, './mixins')],
-}, (err) => {
-  if (err) throw err;
-
+module.exports = () => {
   co(function*() {
     const files = yield (Promise.promisify(dir.files))(testDir);
     files.forEach((fileName) => {
@@ -29,10 +20,13 @@ boot(app, {
       }
     });
 
+    console.log('\nTest start:');
     mocha.run((failures) => {
       process.on('exit', () => {
-        process.exit(failures);  // exit with non-zero status if there were failures
+        process.exit(failures);
       });
+
+      process.exit();
     });
   }).catch(console.error);
-});
+};
