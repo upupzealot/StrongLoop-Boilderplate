@@ -2,13 +2,14 @@
 
 require('co-mocha')(require('mocha'));
 const should = require('should');
-const loopback = require('loopback');
+const request = require('supertest');
 
 const app = require('../../server.js');
 const db = app.datasources.db;
 
 module.exports = {
   app: app,
+  request: request,
 
   shouldThrow: function*(generatorFunc) {
     let err = null;
@@ -31,10 +32,17 @@ module.exports = {
   },
 
   getMixinModel: function (modelName, mixinOption) {
-    return db.createModel(modelName,
+    const model = db.createModel(modelName,
       {}, {
-        dataSource: db,
         mixins: mixinOption,
       });
+
+    app.remotes()._typeRegistry._options.warnWhenOverridingType = false;
+    app.model(model, {
+      public: true,
+      dataSource: db,
+    });
+
+    return model;
   },
 };
