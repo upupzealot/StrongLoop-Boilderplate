@@ -16,6 +16,7 @@ module.exports = (Model, options) => {
     // isDeleted: 'is_deleted',
   }, options);
 
+  // create
   if (opt.createdAt) {
     Model.defineProperty(opt.createdAt, {
       type: Date,
@@ -33,30 +34,69 @@ module.exports = (Model, options) => {
     });
   }
 
+  // update
+  if (opt.updatedAt) {
+    Model.defineProperty(opt.updatedAt, {
+      type: Date,
+      required: true,
+    });
+  }
+  if (opt.updatedBy) {
+    Model.defineProperty(opt.updatedBy, {
+      type: Number,
+    });
+  }
+  if (opt.updatedIp) {
+    Model.defineProperty(opt.updatedIp, {
+      type: String,
+    });
+  }
+
+  // timestamp
   Model.observe('before save', (ctx, next) => {
-    ctx.now = ctx.now || new Date();
-    if (opt.createdAt && ctx.isNewInstance) {
-      ctx.instance[opt.createdAt] = ctx.now;
+    if(opt.createdAt || opt.updatedAt) {
+      const now = new Date();
+      if (ctx.instance && opt.createdAt) {
+        ctx.instance[opt.createdAt] = now;
+        if (opt.updatedAt) {
+          ctx.instance[opt.updatedAt] = now;
+        }
+      }
+      if (ctx.data && opt.updatedAt) {
+        ctx.data[opt.updatedAt] = now;
+      }
     }
     next();
   });
 
+  // operator
   Model.observe('before save', (ctx, next) => {
-    if ( opt.createdBy
-      && ctx.isNewInstance
-      && ctx.options
-      && ctx.options.accessToken) {
-      ctx.instance[opt.createdBy] = ctx.options.accessToken.userId;
+    if(ctx.options && ctx.options.accessToken) {
+      if(ctx.instance && opt.createdBy) {
+        ctx.instance[opt.createdBy] = ctx.options.accessToken.userId;
+        if (opt.updatedBy) {
+          ctx.instance[opt.updatedBy] = ctx.options.accessToken.userId;
+        }
+      }
+      if(ctx.data && opt.updatedBy) {
+        ctx.data[opt.updatedBy] = ctx.options.accessToken.userId;
+      }
     }
     next();
   });
 
+  // ip
   Model.observe('before save', (ctx, next) => {
-    if ( opt.createdIp
-      && ctx.isNewInstance
-      && ctx.options
-      && ctx.options.ip) {
-      ctx.instance[opt.createdIp] = ctx.options.ip;
+    if(ctx.options && ctx.options.ip) {
+      if(ctx.instance && opt.createdIp) {
+        ctx.instance[opt.createdIp] = ctx.options.ip;
+        if (opt.updatedIp) {
+          ctx.instance[opt.updatedIp] = ctx.options.ip;
+        }
+      }
+      if(ctx.data && opt.updatedIp) {
+        ctx.data[opt.updatedIp] = ctx.options.ip;
+      }
     }
     next();
   });
