@@ -46,7 +46,7 @@ describe('Mixin: Rich Text Image', function () {
       ]);
   });
 
-  it('gallery filter', function*() {
+  it('text filter', function*() {
     const Topic = getModel('Topic', {
       HtmlImage: {
         textField: 'text',
