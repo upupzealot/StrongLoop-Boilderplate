@@ -54,7 +54,7 @@ module.exports = (Model, options) => {
 
   // timestamp
   Model.observe('before save', (ctx, next) => {
-    if(opt.createdAt || opt.updatedAt) {
+    if (opt.createdAt || opt.updatedAt) {
       const now = new Date();
       if (ctx.instance && opt.createdAt) {
         ctx.instance[opt.createdAt] = now;
@@ -71,14 +71,14 @@ module.exports = (Model, options) => {
 
   // operator
   Model.observe('before save', (ctx, next) => {
-    if(ctx.options && ctx.options.accessToken) {
-      if(ctx.instance && opt.createdBy) {
+    if (ctx.options && ctx.options.accessToken) {
+      if (ctx.instance && opt.createdBy) {
         ctx.instance[opt.createdBy] = ctx.options.accessToken.userId;
         if (opt.updatedBy) {
           ctx.instance[opt.updatedBy] = ctx.options.accessToken.userId;
         }
       }
-      if(ctx.data && opt.updatedBy) {
+      if (ctx.data && opt.updatedBy) {
         ctx.data[opt.updatedBy] = ctx.options.accessToken.userId;
       }
     }
@@ -87,14 +87,14 @@ module.exports = (Model, options) => {
 
   // ip
   Model.observe('before save', (ctx, next) => {
-    if(ctx.options && ctx.options.ip) {
-      if(ctx.instance && opt.createdIp) {
+    if (ctx.options && ctx.options.ip) {
+      if (ctx.instance && opt.createdIp) {
         ctx.instance[opt.createdIp] = ctx.options.ip;
         if (opt.updatedIp) {
           ctx.instance[opt.updatedIp] = ctx.options.ip;
         }
       }
-      if(ctx.data && opt.updatedIp) {
+      if (ctx.data && opt.updatedIp) {
         ctx.data[opt.updatedIp] = ctx.options.ip;
       }
     }
@@ -102,7 +102,7 @@ module.exports = (Model, options) => {
   });
 
   Model.createOptionsFromRemotingContext = (ctx) => {
-    const match = ctx.req.ip.match(/\d+\.\d+\.\d+\.\d+/)
+    const match = ctx.req.ip.match(/\d+\.\d+\.\d+\.\d+/);
     const ip = match && match.length ? match[0] : null;
     return {
       accessToken: ctx.req.accessToken,
