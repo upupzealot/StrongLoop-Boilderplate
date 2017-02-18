@@ -4,6 +4,8 @@
     //"arrow-spacing": ["error", { "before": false, "after": false }],
     "comma-dangle": ["error", "always-multiline"],
     "curly": "error",
+    //"generator-star-spacing": ["error", "neither"],
+    "object-shorthand": ["error", "always"],
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
     "prefer-const": "error",
     "prefer-template": "error",

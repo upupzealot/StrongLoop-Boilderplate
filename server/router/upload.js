@@ -24,11 +24,11 @@ module.exports = (router, server) => {
     const signature = crypto.createHmac('sha1', secretAccessKey).update(policyBase64).digest().toString('base64');
 
     return res.json({
-      path: path,
+      path,
       uuid: hash,
       policy: policyBase64,
       OSSAccessKeyId: accessKeyId,
-      signature: signature,
+      signature,
     });
   });
 
@@ -47,9 +47,9 @@ module.exports = (router, server) => {
     const token = `${accessKeyId}:${signature}:${policyBase64}`;
 
     return res.json({
-      path: path,
+      path,
       uuid: uuid.v4(),
-      token: token,
+      token,
     });
   });
 

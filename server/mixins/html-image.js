@@ -49,7 +49,7 @@ module.exports = (Model, options) => {
         text = xss(html, {
           whiteList: [],
           stripIgnoreTag: true,
-          onTag: function (tag, html, info) {
+          onTag (tag, html, info) {
             if (tag === 'img') {
               if (_.startsWith(html, '</')) {
                 return '';

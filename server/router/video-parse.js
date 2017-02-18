@@ -84,7 +84,7 @@ module.exports = (router, server) => {
     }
 
     request({
-      url: url,
+      url,
     },
       (err, response, body) => {
         if (err || response.statusCode !== 200) {
@@ -95,7 +95,7 @@ module.exports = (router, server) => {
           const info = getInfoFromPage(url, body);
           if (info) {
             const embed = getEmbedHTML(info, '100%', 400);
-            res.json({embed: embed});
+            res.json({embed});
           } else {
             res.json({err: '暂不支持该站点或当前面没有明确的视频'});
           }

@@ -142,7 +142,7 @@ module.exports = (Model, options) => {
     const ip = match && match.length ? match[0] : null;
     return {
       accessToken: ctx.req.accessToken,
-      ip: ip,
+      ip,
     };
   };
 };

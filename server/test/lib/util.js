@@ -8,10 +8,10 @@ const app = require('../../server.js');
 const db = app.datasources.db;
 
 module.exports = {
-  app: app,
-  request: request,
+  app,
+  request,
 
-  shouldThrow: function*(generatorFunc) {
+  *shouldThrow (generatorFunc) {
     let err = null;
     try {
       yield generatorFunc();
@@ -21,7 +21,7 @@ module.exports = {
     should(err).be.ok();
   },
 
-  shouldNotThrow: function*(generatorFunc) {
+  *shouldNotThrow (generatorFunc) {
     let err = null;
     try {
       yield generatorFunc();
@@ -31,7 +31,7 @@ module.exports = {
     should(err).not.be.ok();
   },
 
-  getMixinModel: function (modelName, mixinOption) {
+  getMixinModel (modelName, mixinOption) {
     const model = db.createModel(modelName,
       {}, {
         mixins: mixinOption,
