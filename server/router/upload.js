@@ -8,15 +8,6 @@ const multiparty = require('connect-multiparty')();
 
 const uploadConf = global.config.uploadConf;
 
-// 调用失败时的返回错误信息
-const onError = (err, res) => {
-  res.status(500);
-  res.json({
-    success: false,
-    msg: err.toString(),
-  });
-};
-
 module.exports = (router, server) => {
   // alioss
   const ossConf = uploadConf.uploaders.alioss;
@@ -24,17 +15,17 @@ module.exports = (router, server) => {
     const accessKeyId = ossConf.accessKeyID;
     const secretAccessKey = ossConf.accessKeySecret;
     const path = ossConf.rootPath.substr(1);// oss 不允许 '/' 开头作为key
-    const key_uuid = uuid.v4();
+    const hash = uuid.v4();
     const policy = `${'{"expiration":"2120-01-01T12:00:00.000Z",' +
     '"conditions":[{"bucket":"'}${ossConf.bucket}" },` +
-    `["starts-with","$key","${path}/${key_uuid}-"]]}`;
+    `["starts-with","$key","${path}/${hash}-"]]}`;
 
     const policyBase64 = new Buffer(policy).toString('base64');
     const signature = crypto.createHmac('sha1', secretAccessKey).update(policyBase64).digest().toString('base64');
 
     return res.json({
       path: path,
-      uuid: key_uuid,
+      uuid: hash,
       policy: policyBase64,
       OSSAccessKeyId: accessKeyId,
       signature: signature,
@@ -63,7 +54,7 @@ module.exports = (router, server) => {
   });
 
   // server
-  const upload_server = (req, res, next) => {
+  const upload = (req, res, next) => {
     const file = req.files.file;
     if (!file) {
       return next(new Error('上传的文件为空'));
@@ -91,7 +82,6 @@ module.exports = (router, server) => {
             return next(err);
           }
 
-          const url = key;
           req.uploadedFile = key;
           return res.json({url: key});
         }
@@ -101,5 +91,5 @@ module.exports = (router, server) => {
       throw e;
     }
   };
-  router.post('/upload', multiparty, upload_server);
+  router.post('/upload', multiparty, upload);
 };

@@ -5,8 +5,6 @@ const should = require('should');
 const loopback = require('loopback');
 
 const util = require('../lib/util');
-const shouldThrow = util.shouldThrow;
-const shouldNotThrow = util.shouldNotThrow;
 const getModel = util.getMixinModel;
 
 const app = util.app;
@@ -15,7 +13,6 @@ const request = util.request;
 describe('Mixin: Marks', function () {
   let tony = null;
   let steve = null;
-  const accessToken = null;
 
   before(function*() {
     const User = loopback.getModel('user');
@@ -35,7 +32,7 @@ describe('Mixin: Marks', function () {
   });
 
   it('createdAt', function*() {
-    const Topic = getModel('Topic', {
+    getModel('Topic', {
       Marks: {
         createdAt: 'created_at',
       },
@@ -51,7 +48,7 @@ describe('Mixin: Marks', function () {
   });
 
   it('createdBy', function*() {
-    const Topic = getModel('Topic', {
+    getModel('Topic', {
       Marks: {
         createdBy: 'created_by',
       },
@@ -67,7 +64,7 @@ describe('Mixin: Marks', function () {
   });
 
   it('createdIp', function*() {
-    const Topic = getModel('Topic', {
+    getModel('Topic', {
       Marks: {
         createdIp: 'created_ip',
       },
@@ -83,7 +80,7 @@ describe('Mixin: Marks', function () {
   });
 
   it('updatedAt', function*() {
-    const Topic = getModel('Topic', {
+    getModel('Topic', {
       Marks: {
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -121,7 +118,7 @@ describe('Mixin: Marks', function () {
   });
 
   it('updatedBy', function*() {
-    const Topic = getModel('Topic', {
+    getModel('Topic', {
       Marks: {
         createdBy: 'created_by',
         updatedBy: 'updated_by',

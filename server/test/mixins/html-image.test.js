@@ -2,7 +2,6 @@
 
 require('co-mocha')(require('mocha'));
 const should = require('should');
-const loopback = require('loopback');
 
 const util = require('../lib/util');
 const shouldThrow = util.shouldThrow;
@@ -67,7 +66,7 @@ describe('Mixin: Rich Text Image', function () {
       });
 
       shouldThrow(function*() {
-        const topic = yield Topic.create(instance);
+        yield Topic.create(instance);
       });
       shouldNotThrow(function*() {
         const topic = yield Topic.create({

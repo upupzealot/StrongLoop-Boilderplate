@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const co = require('co');
 
 const SoftDeleteMixin = require('./soft-delete.js');
 

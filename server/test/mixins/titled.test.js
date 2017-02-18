@@ -1,8 +1,6 @@
 'use strict';
 
 require('co-mocha')(require('mocha'));
-const should = require('should');
-const loopback = require('loopback');
 
 const util = require('../lib/util');
 const shouldThrow = util.shouldThrow;

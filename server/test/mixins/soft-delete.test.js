@@ -5,8 +5,6 @@ const should = require('should');
 const loopback = require('loopback');
 
 const util = require('../lib/util');
-const shouldThrow = util.shouldThrow;
-const shouldNotThrow = util.shouldNotThrow;
 const getModel = util.getMixinModel;
 
 const app = util.app;
@@ -15,7 +13,6 @@ const request = util.request;
 describe('Mixin: SoftDelete', function () {
   let tony = null;
   let steve = null;
-  const accessToken = null;
 
   before(function*() {
     const User = loopback.getModel('user');

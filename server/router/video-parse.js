@@ -43,9 +43,9 @@ const getInfoFromPage = (url, body) => {
 
     const info = {site: k};
     if (site.test.test(url)) {
-      const vid_match = body.match(site.match);
-      if (vid_match && vid_match[1]) {
-        info.vid = vid_match[1];
+      const vidMatch = body.match(site.match);
+      if (vidMatch && vidMatch[1]) {
+        info.vid = vidMatch[1];
       }
       return info;
     }
@@ -58,9 +58,9 @@ module.exports = (router, server) => {
     const url = req.body.url;
 
     if (/http:\/\/www.bilibili.com\/video\/av(\d+)/.test(url)) {
-      const vid_match = url.match(/\/av(\d+)/);
-      if (vid_match && vid_match[1]) {
-        const vid = vid_match[1];
+      const vidMatch = url.match(/\/av(\d+)/);
+      if (vidMatch && vidMatch[1]) {
+        const vid = vidMatch[1];
         return res.json({
           embed: EmbedHTMLs['bilibili']
           .replace('VID', vid)
@@ -71,9 +71,9 @@ module.exports = (router, server) => {
     }
 
     if (/http:\/\/v.youku.com\//.test(url)) {
-      const vid_match = url.match(/id_([\w+=]+)/);
-      if (vid_match && vid_match[1]) {
-        const vid = vid_match[1];
+      const vidMatch = url.match(/id_([\w+=]+)/);
+      if (vidMatch && vidMatch[1]) {
+        const vid = vidMatch[1];
         return res.json({
           embed: EmbedHTMLs['youku']
           .replace('VID', vid)
@@ -87,7 +87,7 @@ module.exports = (router, server) => {
       url: url,
     },
       (err, response, body) => {
-        if (err || response.statusCode != 200) {
+        if (err || response.statusCode !== 200) {
           return res.json({
             err: err || response.statusCode,
           });

@@ -5,7 +5,6 @@ const jsonfile = require('jsonfile');
 const loopback = require('loopback');
 const co = require('co');
 const cookieSignature = require('cookie-signature');
-const Promise = require('bluebird');
 
 // 调用失败时的返回错误信息
 const onError = (err, res) => {
@@ -39,7 +38,7 @@ module.exports = (router, server) => {
       }
 
       // 赋予新建的管理员角色
-      const principal = yield role.principals.create({
+      yield role.principals.create({
         principalType: RoleMapping.USER,
         principalId: user.id,
       });
