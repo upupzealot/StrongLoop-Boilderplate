@@ -3,6 +3,8 @@
 const _ = require('lodash');
 const co = require('co');
 
+const SoftDeleteMixin = require('./soft-delete.js');
+
 module.exports = (Model, options) => {
   const opt = _.merge({}, {
     // createdAt: 'created_at',
@@ -55,12 +57,21 @@ module.exports = (Model, options) => {
 
   // delete
   if (opt.isDeleted || opt.deletedAt || opt.deletedBy || opt.deletedIp) {
-    opt.isDeleted = opt.isDeleted || 'is_deleted';
-    Model.defineProperty(opt.isDeleted, {
-      type: Boolean,
-      required: true,
-      default: false,
+    const softDeleteopt = _.pick(opt, ['isDeleted', 'deletedAt', 'deletedBy', 'deletedIp']);
+    Model.onDeleteFuncs = Model.onDeleteFuncs || [];
+    Model.onDeleteFuncs.push((updateObj, ctx) => {
+      if (opt.deletedAt) {
+        const now = new Date();
+        updateObj[opt.deletedAt] = now;
+      }
+      if (opt.deletedBy && ctx.options.accessToken) {
+        updateObj[opt.deletedBy] = ctx.options.accessToken.userId;
+      }
+      if (opt.deletedIp && ctx.options.ip) {
+        updateObj[opt.deletedIp] = ctx.options.ip;
+      }
     });
+    SoftDeleteMixin(Model, softDeleteopt);
   }
   if (opt.deletedAt) {
     Model.defineProperty(opt.deletedAt, {
@@ -122,61 +133,6 @@ module.exports = (Model, options) => {
       }
       if (ctx.data && opt.updatedIp) {
         ctx.data[opt.updatedIp] = ctx.options.ip;
-      }
-    }
-    next();
-  });
-
-  // soft delete
-  Model.observe('before delete', (ctx, next) => {
-    if (opt.isDeleted) {
-      co(function*() {
-        const updateObj = {};
-        updateObj[opt.isDeleted] = true;
-        if (opt.deletedAt) {
-          const now = new Date();
-          updateObj[opt.deletedAt] = now;
-        }
-        if (opt.deletedBy && ctx.options.accessToken) {
-          updateObj[opt.deletedBy] = ctx.options.accessToken.userId;
-        }
-        if (opt.deletedIp && ctx.options.ip) {
-          updateObj[opt.deletedIp] = ctx.options.ip;
-        }
-        const topics = yield Model.find(ctx.where);
-        yield topics.map(function*(topic) {
-          const t = yield topic.updateAttributes(updateObj);
-        });
-
-        ctx.where = {id: NaN};
-        next(null);
-      }).catch(next);
-    }
-  });
-
-  const recursiveAndOr = (condition) => {
-    if (condition[opt.isDeleted] === undefined) {
-      condition[opt.isDeleted] = false;
-    }
-    ['and', 'or'].forEach(operator => {
-      let op = condition[operator];
-      if (op) {
-        op = op.map(condition => {
-          return recursiveAndOr(condition);
-        });
-      }
-    });
-    return condition;
-  };
-  Model.observe('access', (ctx, next) => {
-    if (opt.isDeleted) {
-      if (ctx.query.where) {
-        recursiveAndOr(ctx.query.where);
-      } else {
-        ctx.query.where = _.omit(ctx.query, ['fields', 'include', 'order', 'limit', 'skip', 'offset']);
-        if (ctx.query.where[opt.isDeleted] === undefined) {
-          ctx.query.where[opt.isDeleted] = false;
-        }
       }
     }
     next();
