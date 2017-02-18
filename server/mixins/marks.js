@@ -131,12 +131,23 @@ module.exports = (Model, options) => {
   Model.observe('before delete', (ctx, next) => {
     if (opt.isDeleted) {
       co(function*() {
-        const now = new Date();
         const updateObj = {};
-        updateObj[opt.deletedAt] = now;
         updateObj[opt.isDeleted] = true;
+        if (opt.deletedAt) {
+          const now = new Date();
+          updateObj[opt.deletedAt] = now;
+        }
+        if (opt.deletedBy && ctx.options.accessToken) {
+          updateObj[opt.deletedBy] = ctx.options.accessToken.userId;
+        }
+        if (opt.deletedIp && ctx.options.ip) {
+          updateObj[opt.deletedIp] = ctx.options.ip;
+        }
+        const topics = yield Model.find(ctx.where);
+        yield topics.map(function*(topic) {
+          const t = yield topic.updateAttributes(updateObj);
+        });
 
-        yield Model.updateAll(ctx.where, updateObj);
         ctx.where = {id: NaN};
         next(null);
       }).catch(next);
@@ -162,7 +173,10 @@ module.exports = (Model, options) => {
       if (ctx.query.where) {
         recursiveAndOr(ctx.query.where);
       } else {
-        ctx.query.where = recursiveAndOr({});
+        ctx.query.where = _.omit(ctx.query, ['fields', 'include', 'order', 'limit', 'skip', 'offset']);
+        if (ctx.query.where[opt.isDeleted] === undefined) {
+          ctx.query.where[opt.isDeleted] = false;
+        }
       }
     }
     next();
