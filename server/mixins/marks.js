@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const co = require('co');
 
 module.exports = (Model, options) => {
   const opt = _.merge({}, {
@@ -52,6 +53,31 @@ module.exports = (Model, options) => {
     });
   }
 
+  // delete
+  if (opt.isDeleted || opt.deletedAt || opt.deletedBy || opt.deletedIp) {
+    opt.isDeleted = opt.isDeleted || 'is_deleted';
+    Model.defineProperty(opt.isDeleted, {
+      type: Boolean,
+      required: true,
+      default: false,
+    });
+  }
+  if (opt.deletedAt) {
+    Model.defineProperty(opt.deletedAt, {
+      type: Date,
+    });
+  }
+  if (opt.deletedBy) {
+    Model.defineProperty(opt.deletedBy, {
+      type: Number,
+    });
+  }
+  if (opt.deletedIp) {
+    Model.defineProperty(opt.deletedIp, {
+      type: String,
+    });
+  }
+
   // timestamp
   Model.observe('before save', (ctx, next) => {
     if (opt.createdAt || opt.updatedAt) {
@@ -96,6 +122,47 @@ module.exports = (Model, options) => {
       }
       if (ctx.data && opt.updatedIp) {
         ctx.data[opt.updatedIp] = ctx.options.ip;
+      }
+    }
+    next();
+  });
+
+  // soft delete
+  Model.observe('before delete', (ctx, next) => {
+    if (opt.isDeleted) {
+      co(function*() {
+        const now = new Date();
+        const updateObj = {};
+        updateObj[opt.deletedAt] = now;
+        updateObj[opt.isDeleted] = true;
+
+        yield Model.updateAll(ctx.where, updateObj);
+        ctx.where = {id: NaN};
+        next(null);
+      }).catch(next);
+    }
+  });
+
+  const recursiveAndOr = (condition) => {
+    if (condition[opt.isDeleted] === undefined) {
+      condition[opt.isDeleted] = false;
+    }
+    ['and', 'or'].forEach(operator => {
+      let op = condition[operator];
+      if (op) {
+        op = op.map(condition => {
+          return recursiveAndOr(condition);
+        });
+      }
+    });
+    return condition;
+  };
+  Model.observe('access', (ctx, next) => {
+    if (opt.isDeleted) {
+      if (ctx.query.where) {
+        recursiveAndOr(ctx.query.where);
+      } else {
+        ctx.query.where = recursiveAndOr({});
       }
     }
     next();

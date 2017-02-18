@@ -200,4 +200,53 @@ describe('Mixin: Marks', function () {
           .which.not.equal(created.updated_ip);
       });
   });
+
+  it('isDeleted', function*() {
+    const Topic = getModel('Topic', {
+      Marks: {
+        isDeleted: 'is_deleted',
+      },
+    });
+
+    const count = yield Topic.count();
+    let created = null;
+    yield request(app)
+      .post('/api/Topics')
+      .send({})
+      .then((res) => {
+        should(res).have.property('status').which.equal(200);
+      });
+
+    yield request(app)
+      .post('/api/Topics')
+      .send({})
+      .then((res) => {
+        should(res).have.property('status').which.equal(200);
+        created = res.body;
+      });
+
+    should(yield Topic.count()).equal(count + 2);
+    should(created).be.ok();
+
+    yield request(app)
+      .delete(`/api/Topics/${created.id}`)
+      .send({})
+      .then((res) => {
+        should(res).have.property('status').which.equal(200);
+      });
+
+    let topic = yield Topic.findById(created.id);
+    should(topic).not.be.ok();
+
+    topic = yield Topic.findOne({
+      where: {
+        id: created.id,
+        is_deleted: true,
+      },
+    });
+    should(topic).be.ok();
+
+    const topics = yield Topic.find();
+    should(topics.length).equal(count + 1);
+  });
 });
