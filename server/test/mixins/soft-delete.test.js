@@ -2,15 +2,12 @@
 
 require('co-mocha')(require('mocha'));
 const should = require('should');
-const loopback = require('loopback');
 
 const util = require('../lib/util');
 const getModel = util.getMixinModel;
-
-const testUsers = require('../lib/test-users');
-
 const app = util.app;
 const request = util.request;
+const testUsers = require('../lib/test-users');
 
 describe('Mixin: SoftDelete', function () {
   before(testUsers.register);

@@ -20,8 +20,8 @@ module.exports.register = function*() {
 
   this.tony = tony;
   this.steve = steve;
-}
+};
 
 module.exports.unregister = function*() {
   yield User.deleteAll();
-}
+};
