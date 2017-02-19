@@ -7,30 +7,14 @@ const loopback = require('loopback');
 const util = require('../lib/util');
 const getModel = util.getMixinModel;
 
+const testUsers = require('../lib/test-users');
+
 const app = util.app;
 const request = util.request;
 
 describe('Mixin: SoftDelete', function () {
-  let tony = null;
-  let steve = null;
-
-  before(function*() {
-    const User = loopback.getModel('user');
-    yield User.deleteAll();
-    tony = yield User.create({
-      username: 'tony',
-      email: 'tony@stark-industry.com',
-      password: 'tonystark0529',
-    });
-    tony.accessToken = (yield tony.createAccessToken()).id;
-
-    steve = yield User.create({
-      username: 'steve',
-      email: 'steve@us-army.us.gov',
-      password: 'steverogers0704',
-    });
-    steve.accessToken = (yield steve.createAccessToken()).id;
-  });
+  before(testUsers.register);
+  after(testUsers.unregister);
 
   it('isDeleted', function*() {
     const Topic = getModel('Topic', {
@@ -142,7 +126,7 @@ describe('Mixin: SoftDelete', function () {
       });
 
     yield request(app)
-      .delete(`/api/Topics/${created.id}?access_token=${tony.accessToken}`)
+      .delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -158,7 +142,7 @@ describe('Mixin: SoftDelete', function () {
     });
     should(topic).be.ok()
       .and.has.property('deleted_by')
-      .which.equal(tony.id);
+      .which.equal(this.tony.id);
   });
 
   it('deletedIp', function*() {

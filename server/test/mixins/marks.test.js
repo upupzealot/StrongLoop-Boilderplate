@@ -7,29 +7,14 @@ const loopback = require('loopback');
 const util = require('../lib/util');
 const getModel = util.getMixinModel;
 
+const testUsers = require('../lib/test-users');
+
 const app = util.app;
 const request = util.request;
 
 describe('Mixin: Marks', function () {
-  let tony = null;
-  let steve = null;
-
-  before(function*() {
-    const User = loopback.getModel('user');
-    tony = yield User.create({
-      username: 'tony',
-      email: 'tony@stark-industry.com',
-      password: 'tonystark0529',
-    });
-    tony.accessToken = (yield tony.createAccessToken()).id;
-
-    steve = yield User.create({
-      username: 'steve',
-      email: 'steve@us-army.us.gov',
-      password: 'steverogers0704',
-    });
-    steve.accessToken = (yield steve.createAccessToken()).id;
-  });
+  before(testUsers.register);
+  after(testUsers.unregister);
 
   it('createdAt', function*() {
     getModel('Topic', {
@@ -38,7 +23,7 @@ describe('Mixin: Marks', function () {
       },
     });
     yield request(app)
-      .post(`/api/Topics?access_token=${tony.accessToken}`)
+      .post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -54,12 +39,12 @@ describe('Mixin: Marks', function () {
       },
     });
     yield request(app)
-      .post(`/api/Topics?access_token=${tony.accessToken}`)
+      .post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
         const topic = res.body;
-        should(topic).have.property('created_by').which.equal(tony.id);
+        should(topic).have.property('created_by').which.equal(this.tony.id);
       });
   });
 
@@ -70,7 +55,7 @@ describe('Mixin: Marks', function () {
       },
     });
     yield request(app)
-      .post(`/api/Topics?access_token=${tony.accessToken}`)
+      .post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -89,7 +74,7 @@ describe('Mixin: Marks', function () {
 
     let created = null;
     yield request(app)
-      .post(`/api/Topics?access_token=${tony.accessToken}`)
+      .post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -103,7 +88,7 @@ describe('Mixin: Marks', function () {
       });
 
     yield request(app)
-      .patch(`/api/Topics/${created.id}?access_token=${tony.accessToken}`)
+      .patch(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -127,7 +112,7 @@ describe('Mixin: Marks', function () {
 
     let created = null;
     yield request(app)
-      .post(`/api/Topics?access_token=${tony.accessToken}`)
+      .post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -141,7 +126,7 @@ describe('Mixin: Marks', function () {
       });
 
     yield request(app)
-      .patch(`/api/Topics/${created.id}?access_token=${steve.accessToken}`)
+      .patch(`/api/Topics/${created.id}?access_token=${this.steve.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
@@ -184,7 +169,7 @@ describe('Mixin: Marks', function () {
       updated_ip: '999.999.999.999',
     });
     yield request(app)
-      .patch(`/api/Topics/${created.id}?access_token=${steve.accessToken}`)
+      .patch(`/api/Topics/${created.id}?access_token=${this.steve.accessToken}`)
       .send({})
       .then((res) => {
         should(res).have.property('status').which.equal(200);
