@@ -5,45 +5,40 @@ require('co-mocha')(require('mocha'));
 const util = require('../lib/util');
 const shouldThrow = util.shouldThrow;
 const shouldNotThrow = util.shouldNotThrow;
-const getModel = util.getMixinModel;
+const mixinModel = require('../lib/mixin-model');
 
 describe('Mixin: Titled', function () {
+  const opts = {};
+  beforeEach(mixinModel('Titled', opts));
+
   it('"title" field requirement', function*() {
-    const Topic = getModel('Topic', {
-      Titled: {},
-    });
+    const self = this;
 
     yield shouldThrow(function*() {
-      yield Topic.create({});
+      yield self.Topic.create({});
     });
 
     yield shouldNotThrow(function*() {
-      yield Topic.create({title: '标题'});
+      yield self.Topic.create({title: '标题'});
     });
   });
 
   describe('options', function () {
+    opts['field'] = { field: 'topic_title' };
     it('field', function*() {
-      const Topic = getModel('Topic', {
-        Titled: {
-          field: 'topic_title',
-        },
-      });
+      const self = this;
 
       yield shouldNotThrow(function*() {
-        yield Topic.create({topic_title: '标题'});
+        yield self.Topic.create({topic_title: '标题'});
       });
     });
 
+    opts['required'] = { required: false };
     it('required', function*() {
-      const Topic = getModel('Topic', {
-        Titled: {
-          required: false,
-        },
-      });
+      const self = this;
 
       shouldNotThrow(function*() {
-        yield Topic.create({});
+        yield self.Topic.create({});
       });
     });
   });

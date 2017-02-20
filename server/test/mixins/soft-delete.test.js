@@ -4,22 +4,20 @@ require('co-mocha')(require('mocha'));
 const should = require('should');
 
 const util = require('../lib/util');
-const getModel = util.getMixinModel;
 const remote = util.remote;
 const testUsers = require('../lib/test-users');
+const mixinModel = require('../lib/mixin-model');
 
 describe('Mixin: SoftDelete', function () {
   before(testUsers.register);
   after(testUsers.unregister);
 
-  it('isDeleted', function*() {
-    const Topic = getModel('Topic', {
-      Marks: {
-        isDeleted: 'is_deleted',
-      },
-    });
+  const opts = {};
+  beforeEach(mixinModel('Marks', opts));
 
-    const count = yield Topic.count();
+  opts['isDeleted'] = { isDeleted: 'is_deleted' };
+  it('isDeleted', function*() {
+    const count = yield this.Topic.count();
     let created = null;
     yield remote.post('/api/Topics');
     yield remote.post('/api/Topics')
@@ -27,14 +25,14 @@ describe('Mixin: SoftDelete', function () {
         created = topic;
       });
 
-    should(yield Topic.count()).equal(count + 2);
+    should(yield this.Topic.count()).equal(count + 2);
     should(created).be.ok();
 
     yield remote.delete(`/api/Topics/${created.id}`);
-    let topic = yield Topic.findById(created.id);
+    let topic = yield this.Topic.findById(created.id);
     should(topic).not.be.ok();
 
-    topic = yield Topic.findOne({
+    topic = yield this.Topic.findOne({
       where: {
         id: created.id,
         is_deleted: true,
@@ -42,26 +40,21 @@ describe('Mixin: SoftDelete', function () {
     });
     should(topic).be.ok();
 
-    let topics = yield Topic.find();
+    let topics = yield this.Topic.find();
     should(topics.length).equal(count + 1);
 
     yield topic.updateAttributes({
       is_deleted: false,
     });
-    topic = yield Topic.findById(created.id);
+    topic = yield this.Topic.findById(created.id);
     should(topic).be.ok();
 
-    topics = yield Topic.find();
+    topics = yield this.Topic.find();
     should(topics.length).equal(count + 2);
   });
 
+  opts['deletedAt'] = { deletedAt: 'deleted_at' };
   it('deletedAt', function*() {
-    const Topic = getModel('Topic', {
-      Marks: {
-        deletedAt: 'deleted_at',
-      },
-    });
-
     let created = null;
     yield remote.post('/api/Topics')
       .then((topic) => {
@@ -70,8 +63,8 @@ describe('Mixin: SoftDelete', function () {
 
     yield remote.delete(`/api/Topics/${created.id}`);
 
-    yield Topic.findById(created.id);
-    const topic = yield Topic.findOne({
+    yield this.Topic.findById(created.id);
+    const topic = yield this.Topic.findOne({
       where: {
         id: created.id,
         is_deleted: true,
@@ -81,13 +74,8 @@ describe('Mixin: SoftDelete', function () {
       .which.has.property('deleted_at');
   });
 
+  opts['deletedBy'] = { deletedBy: 'deleted_by' };
   it('deletedBy', function*() {
-    const Topic = getModel('Topic', {
-      Marks: {
-        deletedBy: 'deleted_by',
-      },
-    });
-
     let created = null;
     yield remote.post('/api/Topics')
       .then((topic) => {
@@ -95,9 +83,9 @@ describe('Mixin: SoftDelete', function () {
       });
     yield remote.delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`);
 
-    let topic = yield Topic.findById(created.id);
+    let topic = yield this.Topic.findById(created.id);
     should(topic).not.be.ok();
-    topic = yield Topic.findOne({
+    topic = yield this.Topic.findOne({
       where: {
         id: created.id,
         is_deleted: true,
@@ -108,13 +96,8 @@ describe('Mixin: SoftDelete', function () {
       .which.equal(this.tony.id);
   });
 
+  opts['deletedIp'] = { deletedIp: 'deleted_ip' };
   it('deletedIp', function*() {
-    const Topic = getModel('Topic', {
-      Marks: {
-        deletedIp: 'deleted_ip',
-      },
-    });
-
     let created = null;
     yield remote.post('/api/Topics')
       .then((topic) => {
@@ -122,9 +105,9 @@ describe('Mixin: SoftDelete', function () {
       });
     yield remote.delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`);
 
-    let topic = yield Topic.findById(created.id);
+    let topic = yield this.Topic.findById(created.id);
     should(topic).not.be.ok();
-    topic = yield Topic.findOne({
+    topic = yield this.Topic.findOne({
       where: {
         id: created.id,
         is_deleted: true,

@@ -4,32 +4,27 @@ require('co-mocha')(require('mocha'));
 const should = require('should');
 
 const util = require('../lib/util');
-const getModel = util.getMixinModel;
 const remote = util.remote;
 const testUsers = require('../lib/test-users');
+const mixinModel = require('../lib/mixin-model');
 
 describe('Mixin: Marks', function () {
   before(testUsers.register);
   after(testUsers.unregister);
 
+  const opts = {};
+  beforeEach(mixinModel('Marks', opts));
+
+  opts['createdAt'] = { createdAt: 'created_at' };
   it('createdAt', function*() {
-    getModel('Topic', {
-      Marks: {
-        createdAt: 'created_at',
-      },
-    });
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
         should(topic).have.property('created_at');
       });
   });
 
+  opts['createdBy'] = { createdBy: 'created_by' };
   it('createdBy', function*() {
-    getModel('Topic', {
-      Marks: {
-        createdBy: 'created_by',
-      },
-    });
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
         should(topic).have.property('created_by')
@@ -37,12 +32,8 @@ describe('Mixin: Marks', function () {
       });
   });
 
+  opts['createdIp'] = { createdIp: 'created_ip' };
   it('createdIp', function*() {
-    getModel('Topic', {
-      Marks: {
-        createdIp: 'created_ip',
-      },
-    });
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
         should(topic).have.property('created_ip')
@@ -50,14 +41,11 @@ describe('Mixin: Marks', function () {
       });
   });
 
+  opts['updatedAt'] = {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  };
   it('updatedAt', function*() {
-    getModel('Topic', {
-      Marks: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-      },
-    });
-
     let created = null;
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
@@ -80,14 +68,11 @@ describe('Mixin: Marks', function () {
       });
   });
 
+  opts['updatedBy'] = {
+    createdBy: 'created_by',
+    updatedBy: 'updated_by',
+  };
   it('updatedBy', function*() {
-    getModel('Topic', {
-      Marks: {
-        createdBy: 'created_by',
-        updatedBy: 'updated_by',
-      },
-    });
-
     let created = null;
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
@@ -110,14 +95,11 @@ describe('Mixin: Marks', function () {
       });
   });
 
+  opts['updatedIp'] = {
+    createdIp: 'created_ip',
+    updatedIp: 'updated_ip',
+  };
   it('updatedIp', function*() {
-    const Topic = getModel('Topic', {
-      Marks: {
-        createdIp: 'created_ip',
-        updatedIp: 'updated_ip',
-      },
-    });
-
     let created = null;
     yield remote.post('/api/Topics')
       .then((topic) => {
@@ -129,7 +111,7 @@ describe('Mixin: Marks', function () {
         created = topic;
       });
 
-    created = yield Topic.findById(created.id);
+    created = yield this.Topic.findById(created.id);
     created = yield created.updateAttributes({
       created_ip: '999.999.999.999',
       updated_ip: '999.999.999.999',

@@ -6,29 +6,27 @@ const should = require('should');
 const util = require('../lib/util');
 const shouldThrow = util.shouldThrow;
 const shouldNotThrow = util.shouldNotThrow;
-const getModel = util.getMixinModel;
+const mixinModel = require('../lib/mixin-model');
 
 describe('Mixin: HTML Field', function () {
+  const opts = {};
+  beforeEach(mixinModel('HtmlField', opts));
+
   it('field requirement', function*() {
-    const Topic = getModel('Topic', {
-      HtmlField: {},
-    });
+    const self = this;
 
     yield shouldThrow(function*() {
-      yield Topic.create({});
+      yield self.Topic.create({});
     });
 
     yield shouldNotThrow(function*() {
-      yield Topic.create({content: 'abcdefghijklmnopqrstuvwxyz'});
+      yield self.Topic.create({content: 'abcdefghijklmnopqrstuvwxyz'});
     });
   });
 
   it('xss filter', function*() {
-    const Topic = getModel('Topic', {
-      HtmlField: {},
-    });
+    const topic = yield this.Topic.create({content: '<script>alert("xss");</script>'});
 
-    const topic = yield Topic.create({content: '<script>alert("xss");</script>'});
     should(topic.content).equal('&lt;script&gt;alert("xss");&lt;/script&gt;');
   });
 });
