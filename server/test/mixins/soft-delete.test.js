@@ -23,9 +23,9 @@ describe('Mixin: SoftDelete', function () {
     let created = null;
     yield remote.post('/api/Topics');
     yield remote.post('/api/Topics')
-            .then((topic) => {
-              created = topic;
-            });
+      .then((topic) => {
+        created = topic;
+      });
 
     should(yield Topic.count()).equal(count + 2);
     should(created).be.ok();
