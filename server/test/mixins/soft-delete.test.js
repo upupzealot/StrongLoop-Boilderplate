@@ -5,8 +5,7 @@ const should = require('should');
 
 const util = require('../lib/util');
 const getModel = util.getMixinModel;
-const app = util.app;
-const request = util.request;
+const remote = util.remote;
 const testUsers = require('../lib/test-users');
 
 describe('Mixin: SoftDelete', function () {
@@ -22,31 +21,16 @@ describe('Mixin: SoftDelete', function () {
 
     const count = yield Topic.count();
     let created = null;
-    yield request(app)
-      .post('/api/Topics')
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-      });
-
-    yield request(app)
-      .post('/api/Topics')
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-        created = res.body;
-      });
+    yield remote.post('/api/Topics');
+    yield remote.post('/api/Topics')
+            .then((topic) => {
+              created = topic;
+            });
 
     should(yield Topic.count()).equal(count + 2);
     should(created).be.ok();
 
-    yield request(app)
-      .delete(`/api/Topics/${created.id}`)
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-      });
-
+    yield remote.delete(`/api/Topics/${created.id}`);
     let topic = yield Topic.findById(created.id);
     should(topic).not.be.ok();
 
@@ -79,24 +63,15 @@ describe('Mixin: SoftDelete', function () {
     });
 
     let created = null;
-    yield request(app)
-      .post('/api/Topics')
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-        created = res.body;
+    yield remote.post('/api/Topics')
+      .then((topic) => {
+        created = topic;
       });
 
-    yield request(app)
-      .delete(`/api/Topics/${created.id}`)
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-      });
+    yield remote.delete(`/api/Topics/${created.id}`);
 
-    let topic = yield Topic.findById(created.id);
-    should(topic).not.be.ok();
-    topic = yield Topic.findOne({
+    yield Topic.findById(created.id);
+    const topic = yield Topic.findOne({
       where: {
         id: created.id,
         is_deleted: true,
@@ -114,20 +89,11 @@ describe('Mixin: SoftDelete', function () {
     });
 
     let created = null;
-    yield request(app)
-      .post('/api/Topics')
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-        created = res.body;
+    yield remote.post('/api/Topics')
+      .then((topic) => {
+        created = topic;
       });
-
-    yield request(app)
-      .delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`)
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-      });
+    yield remote.delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`);
 
     let topic = yield Topic.findById(created.id);
     should(topic).not.be.ok();
@@ -150,20 +116,11 @@ describe('Mixin: SoftDelete', function () {
     });
 
     let created = null;
-    yield request(app)
-      .post('/api/Topics')
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-        created = res.body;
+    yield remote.post('/api/Topics')
+      .then((topic) => {
+        created = topic;
       });
-
-    yield request(app)
-      .delete(`/api/Topics/${created.id}`)
-      .send({})
-      .then((res) => {
-        should(res).have.property('status').which.equal(200);
-      });
+    yield remote.delete(`/api/Topics/${created.id}?access_token=${this.tony.accessToken}`);
 
     let topic = yield Topic.findById(created.id);
     should(topic).not.be.ok();
