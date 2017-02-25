@@ -55,19 +55,4 @@ module.exports = {
     }
     should(err).not.be.ok();
   },
-
-  getMixinModel (modelName, mixinOption) {
-    const model = db.createModel(modelName,
-      {}, {
-        mixins: mixinOption,
-      });
-
-    app.remotes()._typeRegistry._options.warnWhenOverridingType = false;
-    app.model(model, {
-      public: true,
-      dataSource: db,
-    });
-
-    return model;
-  },
 };
