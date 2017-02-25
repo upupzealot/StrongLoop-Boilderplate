@@ -6,7 +6,6 @@ const should = require('should');
 const request = require('supertest');
 
 const app = require('../../server.js');
-const db = app.datasources.db;
 
 const remoteFuns = (method) => {
   return function (url, body, code) {
@@ -32,6 +31,7 @@ module.exports = {
 
   remote: {
     delete: remoteFuns('delete'),
+    get: remoteFuns('get'),
     patch: remoteFuns('patch'),
     post: remoteFuns('post'),
   },
