@@ -25,3 +25,5 @@ module.exports = function (mixinName, opts) {
     this.Topic = getMixinModel('Topic', opt);
   };
 };
+
+module.exports.getMixinModel = getMixinModel;

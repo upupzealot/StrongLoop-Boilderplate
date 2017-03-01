@@ -30,6 +30,11 @@ module.exports = (Model, options) => {
             discriminator: 'commentable_type',
           },
         },
+        parent: {
+          type: 'belongsTo',
+          model: 'Comment',
+          foreignKey: 'parent_id',
+        },
         replied: {
           type: 'belongsTo',
           model: 'Comment',
@@ -46,11 +51,17 @@ module.exports = (Model, options) => {
       const instance = ctx.instance;
       if (instance && instance.commentable_type === 'Comment') {
         co(function*() {
-          const comment = yield Comment.findById(instance.commentable_id);
+          const replied = yield Comment.findById(instance.commentable_id);
 
-          instance.commentable_id = comment.commentable_id;
-          instance.commentable_type = comment.commentable_type;
-          instance.replied_id = comment.id;
+          instance.commentable_id = replied.commentable_id;
+          instance.commentable_type = replied.commentable_type;
+          instance.replied_id = replied.id;
+
+          if (replied && replied.replied_id === undefined) {
+            instance.parent_id = replied.id;
+          } else { // replied.commentable_type === 'Comment'
+            instance.parent_id = replied.parent_id;
+          }
 
           next();
         }).catch(next);
