@@ -6,12 +6,12 @@ const uuid = require('uuid');
 const crypto = require('crypto');
 const multiparty = require('connect-multiparty')();
 
-const uploadConf = global.config.uploadConf;
+const config = global.config;
 
 module.exports = (router, server) => {
   // alioss
-  const ossConf = uploadConf.uploaders.alioss;
   router.get('/upload-token/alioss', (req, res) => {
+    const ossConf = config.uploadConf.uploaders.alioss;
     const accessKeyId = ossConf.accessKeyID;
     const secretAccessKey = ossConf.accessKeySecret;
     const path = ossConf.rootPath.substr(1);// oss 不允许 '/' 开头作为key
@@ -33,8 +33,8 @@ module.exports = (router, server) => {
   });
 
   // qiniu
-  const qiniuConf = uploadConf.uploaders.qiniu;
   router.get('/upload-token/qiniu', (req, res) => {
+    const qiniuConf = config.uploadConf.uploaders.qiniu;
     const accessKeyId = qiniuConf.accessKeyID;
     const secretAccessKey = qiniuConf.accessKeySecret;
     const path = qiniuConf.rootPath.substr(1);// qiniu 不需要 '/' 开头作为key

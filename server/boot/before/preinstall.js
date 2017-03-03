@@ -1,8 +1,10 @@
 'use strict';
 
+const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const jsonfile = require('jsonfile');
+const chokidar = require('chokidar');
 
 module.exports = (server) => {
   const dataSourceConf = path.resolve(__dirname, '../../datasources.json');
@@ -25,6 +27,14 @@ module.exports = (server) => {
       },
     }, {spaces: 2});
   }
+
   global.config = global.config || {};
-  global.config.uploadConf = jsonfile.readFileSync(uploadConf);
+  const config = global.config;
+
+  const configDir = path.resolve(__dirname, '../../config/*.json');
+  chokidar.watch(configDir).on('all', (event, filePath) => {
+    const fileName = path.basename(filePath, '.json');
+    const key = _.camelCase(fileName);
+    config[key] = jsonfile.readFileSync(filePath);
+  });
 };

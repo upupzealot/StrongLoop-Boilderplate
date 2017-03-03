@@ -115,8 +115,6 @@ module.exports = (router, server) => {
       res.json({
         success: true,
       });
-
-      return process.exit();
     }).catch(err => {
       onError(err, res);
     });
