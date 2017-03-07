@@ -3,13 +3,13 @@
     "sources": [
       "loopback/common/models",
       "loopback/server/models",
-      "../models",
+      "../biz/models",
       "./models"
     ],
     "mixins": [
       "loopback/common/mixins",
       "loopback/server/mixins",
-      "../mixins",
+      "../biz/mixins",
       "./mixins",
       "../node_modules/loopback-remote-routing"
     ]
