@@ -3,13 +3,13 @@
     "sources": [
       "loopback/common/models",
       "loopback/server/models",
-      "../models",
+      "../common/models",
       "./models"
     ],
     "mixins": [
       "loopback/common/mixins",
       "loopback/server/mixins",
-      "../mixins",
+      "../common/mixins",
       "./mixins",
       "../node_modules/loopback-remote-routing"
     ]
@@ -32,9 +32,5 @@
   "Role": {
     "dataSource": "db",
     "public": false
-  },
-
-  "Topic": {
-    "dataSource": "db"
   }
 }
