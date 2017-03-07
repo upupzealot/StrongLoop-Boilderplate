@@ -12,6 +12,7 @@ module.exports = (Model, options) => {
       // properties
     }, {
       // options
+      description: '评论',
       mixins: {
         HtmlField: {},
         Marks: {
