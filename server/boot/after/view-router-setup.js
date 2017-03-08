@@ -38,8 +38,10 @@ module.exports = (server) => {
       require(`${dir}/${fileName}`)(router, server);
     });
   }
-  const bizRouterDir = path.resolve(__dirname, '../../../biz/router');
-  setupRouterDir(bizRouterDir);
+  if(process.env.NODE_ENV !== 'test') {
+    const bizRouterDir = path.resolve(__dirname, '../../../biz/router');
+    setupRouterDir(bizRouterDir);
+  }
   const routerDir = path.resolve(__dirname, '../../router');
   setupRouterDir(routerDir);
   

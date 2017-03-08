@@ -6,6 +6,7 @@
     "lint": "eslint .",
     "linx": "eslint . --fix",
     "start": "node .",
+    "dev": "NODE_ENV=develop pm2 start . --name=slb",
     "test": "NODE_ENV=test node server/server.js"
   },
   "dependencies": {
