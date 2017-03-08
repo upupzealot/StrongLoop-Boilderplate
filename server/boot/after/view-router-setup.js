@@ -30,20 +30,20 @@ module.exports = (server) => {
   });
 
   const router = server.loopback.Router();
-  const setupRouterDir = (dir)=>{
+  const setupRouterDir = (dir) => {
     fs.readdirSync(dir)
     .filter((fileName) => {
       return path.extname(fileName) === '.js';
     }).forEach((fileName) => {
       require(`${dir}/${fileName}`)(router, server);
     });
-  }
-  if(process.env.NODE_ENV !== 'test') {
+  };
+  if (process.env.NODE_ENV !== 'test') {
     const bizRouterDir = path.resolve(__dirname, '../../../biz/router');
     setupRouterDir(bizRouterDir);
   }
   const routerDir = path.resolve(__dirname, '../../router');
   setupRouterDir(routerDir);
-  
+
   server.use(router);
 };
