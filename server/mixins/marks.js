@@ -15,7 +15,6 @@ module.exports = (Model, options) => {
     // deletedAt: 'deleted_at',
     // deletedBy: 'deleted_by',
     // deletedIp: 'deleted_ip',
-    // isDeleted: 'is_deleted',
   }, options);
 
   // create

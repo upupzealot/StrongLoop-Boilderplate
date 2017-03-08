@@ -5,37 +5,37 @@ const xss = require('xss');
 
 module.exports = (Model, options) => {
   const opt = _.merge({}, {
-    fromField: 'content',
-    // thumbnailField: 'thumbnail',
-    // galleryField: 'images',
-    // textField: 'text',
+    from: 'content',
+    // thumbnail: 'thumbnail',
+    // gallery: 'images',
+    // text: 'text',
   }, options);
 
-  if (opt.thumbnailField) {
-    Model.defineProperty(opt.thumbnailField, {
+  if (opt.thumbnail) {
+    Model.defineProperty(opt.thumbnail, {
       type: String,
     });
   }
-  if (opt.galleryField) {
-    Model.defineProperty(opt.galleryField, {
+  if (opt.gallery) {
+    Model.defineProperty(opt.gallery, {
       type: Object,
     });
   }
-  if (opt.textField) {
-    Model.defineProperty(opt.textField, {
+  if (opt.text) {
+    Model.defineProperty(opt.text, {
       type: String,
     });
   }
 
   Model.observe('before save', (ctx, next) => {
     const instance = ctx.instance;
-    const html = instance[opt.fromField];
+    const html = instance[opt.from];
     let thumbnail = null;
     const images = [];
     let text = '';
     if (html) {
-      if (opt.thumbnailField || opt.galleryField) {
-        xss(instance[opt.fromField], {
+      if (opt.thumbnail || opt.gallery) {
+        xss(instance[opt.from], {
           onTagAttr: (tag, name, value, isWhiteAttr) => {
             if (tag === 'img' && name === 'src') {
               images.push(xss.friendlyAttrValue(value));
@@ -45,7 +45,7 @@ module.exports = (Model, options) => {
         thumbnail = images.length ? images[0] : null;
       }
 
-      if (opt.textField) {
+      if (opt.text) {
         text = xss(html, {
           whiteList: [],
           stripIgnoreTag: true,
@@ -61,14 +61,14 @@ module.exports = (Model, options) => {
       }
     }
 
-    if (opt.thumbnailField) {
-      instance[opt.thumbnailField] = thumbnail;
+    if (opt.thumbnail) {
+      instance[opt.thumbnail] = thumbnail;
     }
-    if (opt.galleryField) {
-      instance[opt.galleryField] = images;
+    if (opt.gallery) {
+      instance[opt.gallery] = images;
     }
-    if (opt.textField) {
-      instance[opt.textField] = text;
+    if (opt.text) {
+      instance[opt.text] = text;
     }
     next();
   });

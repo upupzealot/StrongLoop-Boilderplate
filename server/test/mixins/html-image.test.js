@@ -21,13 +21,13 @@ describe('Mixin: Rich Text Image', function () {
         '</p>',
   };
 
-  opts['thumbnail filter'] = { thumbnailField: 'thumbnail' };
+  opts['thumbnail filter'] = { thumbnail: 'thumbnail' };
   it('thumbnail filter', function*() {
     const topic = yield this.Topic.create(instance);
     should(topic.thumbnail).equal('/test-img-0.jpeg');
   });
 
-  opts['gallery filter'] = { galleryField: 'images' };
+  opts['gallery filter'] = { gallery: 'images' };
   it('gallery filter', function*() {
     const topic = yield this.Topic.create(instance);
     should(topic.images).be.an.Array()
@@ -38,7 +38,7 @@ describe('Mixin: Rich Text Image', function () {
       ]);
   });
 
-  opts['text filter'] = { textField: 'text' };
+  opts['text filter'] = { text: 'text' };
   it('text filter', function*() {
     const topic = yield this.Topic.create(instance);
     should(topic.text).equal('[图片]aaaaa[图片][图片]');
@@ -47,7 +47,7 @@ describe('Mixin: Rich Text Image', function () {
   describe('option', function () {
     opts['fromField'] = {
       fromField: 'html',
-      thumbnailField: 'aaaaa',
+      thumbnail: 'aaaaa',
     };
     it('fromField', function*() {
       const self = this;

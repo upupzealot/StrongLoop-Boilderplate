@@ -5,16 +5,13 @@ const co = require('co');
 
 module.exports = function (Model, options) {
   const opt = _.merge({}, {
-    // deletedAt: 'deleted_at',
-    // deletedBy: 'deleted_by',
-    // deletedIp: 'deleted_ip',
-    // isDeleted: 'is_deleted',
+    field: 'is_deleted',
   }, options);
 
   // delete
-  if (opt.isDeleted || opt.deletedAt || opt.deletedBy || opt.deletedIp) {
-    opt.isDeleted = opt.isDeleted || 'is_deleted';
-    Model.defineProperty(opt.isDeleted, {
+  if (opt.field) {
+    opt.field = opt.field || 'is_deleted';
+    Model.defineProperty(opt.field, {
       type: Boolean,
       required: true,
       default: false,
@@ -23,10 +20,10 @@ module.exports = function (Model, options) {
 
   // delete
   Model.observe('before delete', (ctx, next) => {
-    if (opt.isDeleted) {
+    if (opt.field) {
       co(function*() {
         const updateObj = {};
-        updateObj[opt.isDeleted] = true;
+        updateObj[opt.field] = true;
         if (Model.onDeleteFuncs) {
           Model.onDeleteFuncs.map((func) => {
             func(updateObj, ctx);
@@ -44,8 +41,8 @@ module.exports = function (Model, options) {
   });
 
   const recursiveAndOr = (condition) => {
-    if (condition[opt.isDeleted] === undefined) {
-      condition[opt.isDeleted] = false;
+    if (condition[opt.field] === undefined) {
+      condition[opt.field] = false;
     }
     ['and', 'or'].forEach(operator => {
       let op = condition[operator];
@@ -58,13 +55,13 @@ module.exports = function (Model, options) {
     return condition;
   };
   Model.observe('access', (ctx, next) => {
-    if (opt.isDeleted) {
+    if (opt.field) {
       if (ctx.query.where) {
         recursiveAndOr(ctx.query.where);
       } else {
         ctx.query.where = _.omit(ctx.query, ['fields', 'include', 'order', 'limit', 'skip', 'offset']);
-        if (ctx.query.where[opt.isDeleted] === undefined) {
-          ctx.query.where[opt.isDeleted] = false;
+        if (ctx.query.where[opt.field] === undefined) {
+          ctx.query.where[opt.field] = false;
         }
       }
     }
