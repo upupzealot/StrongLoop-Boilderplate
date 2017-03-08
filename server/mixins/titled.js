@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const HtmlField = require('./html-field.js');
 
 module.exports = (Model, options) => {
   const opt = _.merge({}, {
@@ -8,9 +9,6 @@ module.exports = (Model, options) => {
     required: true,
   }, options);
 
-  Model.defineProperty(opt.field, {
-    type: String,
-    description: `${Model.name} 标题`,
-    required: opt.required,
-  });
+
+  HtmlField(Model, opt);
 };

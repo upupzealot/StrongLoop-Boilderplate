@@ -12,6 +12,7 @@ module.exports = (Model, options) => {
   Model.defineProperty(opt.field, {
     type: String,
     required: opt.required,
+    description: opt.description,
   });
 
   Model.observe('before save', (ctx, next) => {
