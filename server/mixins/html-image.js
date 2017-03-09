@@ -54,10 +54,12 @@ module.exports = (Model, options) => {
               if (_.startsWith(html, '</')) {
                 return '';
               }
-              return '[图片]';
+              return ' [图片] ';
+            } else {
+              return ' ';
             }
           },
-        });
+        }).trim();
       }
     }
 

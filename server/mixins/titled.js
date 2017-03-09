@@ -9,6 +9,5 @@ module.exports = (Model, options) => {
     required: true,
   }, options);
 
-
   HtmlField(Model, opt);
 };
