@@ -21,17 +21,25 @@ app.start = function () {
     if (process.env.NODE_ENV === 'test') {
       const test = require('./test.js');
       test();
+    } else {
+      var bizBoot = path.resolve(__dirname, '../biz/boot');
+      bootDir(bizBoot);
     }
   });
 };
 
+function bootDir(dir) {
+  if(fs.existsSync(dir)) {
+    fs.readdirSync(dir).filter((fileName) => {
+      return path.extname(fileName) === '.js';
+    }).forEach((fileName) => {
+      var script = require(path.resolve(dir, `./${fileName}`));
+      script(app);
+    });
+  }
+}
 var beforeBoot = path.resolve(__dirname, './boot/before');
-fs.readdirSync(beforeBoot).filter((fileName) => {
-  return path.extname(fileName) === '.js';
-}).forEach((fileName) => {
-  var beforeScript = require(path.resolve(beforeBoot, `./${fileName}`));
-  beforeScript(app);
-});
+bootDir(beforeBoot);
 
 var afterBoot = path.resolve(__dirname, './boot/after');
 var bootOpt = {
