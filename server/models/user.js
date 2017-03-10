@@ -1,6 +1,8 @@
 'use strict';
 
 const co = require('co');
+const fs = require('fs');
+const path = require('path');
 const loopback = require('loopback');
 const cookieSignature = require('cookie-signature');
 
@@ -36,4 +38,11 @@ module.exports = (User) => {
       next();
     }).catch(next);
   });
+
+  if(process.env.NODE_ENV !== 'test') {
+    const userJs = path.resolve(__dirname, '../../biz/models/user.js');
+    if(fs.existsSync(userJs)) {
+      require(userJs)(User);
+    }
+  }
 };
