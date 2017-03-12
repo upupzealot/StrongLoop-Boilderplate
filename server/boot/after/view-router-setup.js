@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 const co = require('co');
+const moment = require('moment');
 
 const loopback = require('loopback');
 const User = loopback.getModel('user');
@@ -22,6 +23,7 @@ module.exports = (server) => {
       res.locals._ = _;
       res.locals._v = viewDir;
       res.locals.config = global.config;
+      res.locals.moment = moment;
       if (req.accessToken) {
         res.locals.user = yield User.findById(req.accessToken.userId);
       }

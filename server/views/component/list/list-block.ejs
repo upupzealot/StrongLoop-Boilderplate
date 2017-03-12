@@ -1,0 +1,66 @@
+<style type="text/css">
+.list-block-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+.list-block-info {
+  color: #ccc;
+}
+.list-block-content {
+  margin-left: 60px;
+}
+.list-block-text {
+  max-height: 80px;
+  overflow: hidden;
+}
+.list-block-thumbnail-wrapper {
+  max-width: 160px;
+  margin-right: 10px;
+}
+.list-block-thumbnail {
+  max-width: 100%;
+  max-height: 80px;
+}
+</style>
+
+<ul class="list-group">
+  <% items.map(function(item) { %>
+    <li class="list-group-item">
+      <h4><img class="list-block-avatar pull-left" src="<%- item.author.avatar %>"></h4>
+      <div class="list-block-content">
+        <span class="list-block-info">
+          <a><%- item.author.username %></a>
+          | <%- moment(item.createAt).locale('zh-cn').fromNow(); %>
+        </span>
+        <a href="#"><h4 class="list-block-title"><%- item.title %></h4></a>
+        <div class="list-block-thumbnail-wrapper pull-left clearfix">
+          <% if(item.thumbnail) { %>
+            <a href="<%- item.thumbnail %>" data-lightbox="thumnail-<%- item.id %>" data-title="<%- item.title %>">
+              <img src="<%- item.thumbnail %>" class="list-block-thumbnail">
+            </a>
+            <% } %>
+        </div>
+        <p class="list-block-text"><%- item.text %></p>
+      </div>
+    </li>
+  <% }); %>
+</ul>
+<%- include_css('//cdn.bootcss.com/lightbox2/2.9.0/css/lightbox.min.css'); %>
+<%- include_js('//cdn.bootcss.com/jQuery.dotdotdot/1.7.4/jquery.dotdotdot.min.js'); %>
+<%- include_js('//cdn.bootcss.com/lightbox2/2.9.0/js/lightbox.min.js'); %>
+<script type="text/javascript">
+$(function(){
+  var maxHeight = parseInt($('p').css('line-height')) * 4;
+  $('.list-block-text')
+    .css('max-height', maxHeight)
+    .dotdotdot();
+  $('.list-block-thumbnail')
+    .css('max-height', maxHeight);
+
+  lightbox.option({
+    'resizeDuration': 300,
+    'fadeDuration': 200,
+  });
+});
+</script>
