@@ -20,13 +20,7 @@ module.exports = (server) => {
   server.set('view engine', 'ejs');
   server.use((req, res, next) => {
     co(function*() {
-      res.locals._ = _;
       res.locals._v = viewDir;
-      res.locals.config = global.config;
-      res.locals.moment = moment;
-      if (req.accessToken) {
-        res.locals.user = yield User.findById(req.accessToken.userId);
-      }
       next();
     }).catch(next);
   });
