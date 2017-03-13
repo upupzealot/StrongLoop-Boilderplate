@@ -2,12 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const _ = require('lodash');
 const co = require('co');
-const moment = require('moment');
-
-const loopback = require('loopback');
-const User = loopback.getModel('user');
 
 module.exports = (server) => {
   // 设置模板引擎为 EJS

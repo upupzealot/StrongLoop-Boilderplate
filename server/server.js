@@ -28,8 +28,8 @@ app.start = function () {
   });
 };
 
-function bootDir(dir) {
-  if(fs.existsSync(dir)) {
+function bootDir (dir) {
+  if (fs.existsSync(dir)) {
     fs.readdirSync(dir).filter((fileName) => {
       return path.extname(fileName) === '.js';
     }).forEach((fileName) => {

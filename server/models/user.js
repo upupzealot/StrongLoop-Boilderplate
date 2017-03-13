@@ -39,9 +39,9 @@ module.exports = (User) => {
     }).catch(next);
   });
 
-  if(process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV !== 'test') {
     const userJs = path.resolve(__dirname, '../../biz/models/user.js');
-    if(fs.existsSync(userJs)) {
+    if (fs.existsSync(userJs)) {
       require(userJs)(User);
     }
   }

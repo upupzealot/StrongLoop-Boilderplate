@@ -6,29 +6,29 @@ const xss = require('xss');
 module.exports = (Model, options) => {
   let opts = options.field;
 
-  const parseField = function(field) {
-    if(_.isString(field)) {
+  const parseField = function (field) {
+    if (_.isString(field)) {
       return {
         field,
         required: true,
-      }
+      };
     } else {
       return _.merge({}, {
         field: 'content',
         required: true,
       }, field);
     }
-  }
+  };
 
-  if(_.isArray(opts)) {
-    opts = opts.map((option)=>{
+  if (_.isArray(opts)) {
+    opts = opts.map((option) => {
       return parseField(option);
     });
   } else {
     opts = [parseField(opts)];
   }
 
-  opts.map((opt)=>{
+  opts.map((opt) => {
     Model.defineProperty(opt.field, {
       type: String,
       required: opt.required,
