@@ -10,6 +10,11 @@
 .list-block-content {
   margin-left: 60px;
 }
+.list-block-title {
+  white-space: nowrap;
+  overflow:hidden !important;
+  text-overflow: ellipsis;
+}
 .list-block-text {
   max-height: 80px;
   overflow: hidden;
@@ -27,11 +32,18 @@
 <ul class="list-group">
   <% items.map(function(item) { %>
     <li class="list-group-item">
-      <h4><img class="list-block-avatar pull-left" src="<%- item.author.avatar %>"></h4>
+      <h4><img class="list-block-avatar pull-left" src="<%- item.creator.avatar %>"></h4>
       <div class="list-block-content">
         <span class="list-block-info">
-          <a><%- item.author.username %></a>
+          <a><%- item.creator.username %></a>
           | <%- moment(item.createAt).locale('zh-cn').fromNow(); %>
+          <% if(item.comments && item.comments.length) { %>
+            <span class="pull-right">
+              <a><%- item.comments[0].creator.username; %></a>
+              | <%- moment(item.comments[0].created_at).locale('zh-cn').fromNow(); %>
+              <i class="fa fa-reply"></i>
+            </span>
+          <% } %>
         </span>
         <a href="#"><h4 class="list-block-title"><%- item.title %></h4></a>
         <div class="list-block-thumbnail-wrapper pull-left clearfix">

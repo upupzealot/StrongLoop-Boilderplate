@@ -24,6 +24,11 @@ module.exports = (Model, options) => {
         Commentable: {},
       },
       relations: {
+        creator: {
+          type: 'belongsTo',
+          model: 'user',
+          foreignKey: 'created_by',
+        },
         commentable: {
           type: 'belongsTo',
           polymorphic: {
