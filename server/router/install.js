@@ -1,10 +1,11 @@
 'use strict';
 
-const path = require('path');
-const jsonfile = require('jsonfile');
-const loopback = require('loopback');
+const _ = require('lodash');
 const co = require('co');
+const loopback = require('loopback');
 const cookieSignature = require('cookie-signature');
+
+const config = require('../../biz/config');
 
 // 调用失败时的返回错误信息
 const onError = (err, res) => {
@@ -63,7 +64,7 @@ module.exports = (router, server) => {
   router.post('/install/datasource', (req, res) => {
     co(function*() {
       const dbConf = req.body.db;
-      const db = loopback.registry.createDataSource('db', dbConf);
+      const db = loopback.registry.createDataSource('db', _.merge({}, dbConf));
       db.ping((err) => {
         if (err) {
           return onError(err, res);
@@ -72,11 +73,10 @@ module.exports = (router, server) => {
         // 用 confirm 字段来区分 test 和 confirm 情况
         // conform 的情况下需要：
 
-        var confirm = req.body.confirm;
         // 1.将配置写入 datasources.json 配置文件
+        const confirm = req.body.confirm;
         if (confirm) {
-          const file = path.resolve(__dirname, '../datasources.json');
-          jsonfile.writeFileSync(file, {db: dbConf}, {spaces: 2});
+          config.datasources = {db: dbConf};
         }
 
         // 2.返回
@@ -101,8 +101,7 @@ module.exports = (router, server) => {
 
   router.post('/install/uploader', (req, res) => {
     co(function*() {
-      const file = path.resolve(__dirname, '../config/upload-conf.json');
-      const uploadConf = jsonfile.readFileSync(file);
+      const uploadConf = config.uploadConf;
 
       const uploader = req.body.uploader;
       const connector = uploader.connector;
@@ -110,7 +109,8 @@ module.exports = (router, server) => {
       uploadConf.uploaders[connector] = uploader;
       uploadConf.default = connector;
 
-      jsonfile.writeFileSync(file, uploadConf, {spaces: 2});
+      // write config
+      config.uploadConf = uploadConf;
 
       res.json({
         success: true,

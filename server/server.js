@@ -47,6 +47,9 @@ var bootOpt = {
   bootDirs: [afterBoot],
   mixinDirs: [path.resolve(__dirname, './mixins')],
 };
+if (process.env.NODE_ENV !== 'test') {
+  bootOpt.dsRootDir = path.resolve(__dirname, '../biz/config/');
+}
 
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.

@@ -6,7 +6,7 @@ const uuid = require('uuid');
 const crypto = require('crypto');
 const multiparty = require('connect-multiparty')();
 
-const config = global.config;
+const config = require('../../biz/config');
 
 module.exports = (router, server) => {
   // alioss

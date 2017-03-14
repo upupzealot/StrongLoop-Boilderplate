@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const moment = require('moment');
-const config = global.config;
+const config = require('../../../biz/config');
 
 const co = require('co');
 const loopback = require('loopback');
