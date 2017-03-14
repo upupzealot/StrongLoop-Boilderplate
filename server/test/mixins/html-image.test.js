@@ -41,7 +41,7 @@ describe('Mixin: Rich Text Image', function () {
   opts['text filter'] = { text: 'text' };
   it('text filter', function*() {
     const topic = yield this.Topic.create(instance);
-    should(topic.text).equal('[图片]aaaaa[图片][图片]');
+    should(topic.text).equal('[图片] aaaaa [图片]  [图片]');
   });
 
   describe('option', function () {
