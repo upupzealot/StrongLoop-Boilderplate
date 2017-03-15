@@ -15,7 +15,7 @@ describe('Mixin: SoftDelete', function () {
   const opts = {};
   beforeEach(mixinModel('Marks', opts));
 
-  opts['isDeleted'] = { isDeleted: 'is_deleted' };
+  opts['isDeleted'] = { isDeleted: true };
   it('isDeleted', function*() {
     const count = yield this.Topic.count();
     let created = null;
@@ -53,7 +53,7 @@ describe('Mixin: SoftDelete', function () {
     should(topics.length).equal(count + 2);
   });
 
-  opts['deletedAt'] = { deletedAt: 'deleted_at' };
+  opts['deletedAt'] = { deletedAt: true };
   it('deletedAt', function*() {
     let created = null;
     yield remote.post('/api/Topics')
@@ -74,7 +74,7 @@ describe('Mixin: SoftDelete', function () {
       .which.has.property('deleted_at');
   });
 
-  opts['deletedBy'] = { deletedBy: 'deleted_by' };
+  opts['deletedBy'] = { deletedBy: true };
   it('deletedBy', function*() {
     let created = null;
     yield remote.post('/api/Topics')
@@ -96,7 +96,7 @@ describe('Mixin: SoftDelete', function () {
       .which.equal(this.tony.id);
   });
 
-  opts['deletedIp'] = { deletedIp: 'deleted_ip' };
+  opts['deletedIp'] = { deletedIp: true };
   it('deletedIp', function*() {
     let created = null;
     yield remote.post('/api/Topics')

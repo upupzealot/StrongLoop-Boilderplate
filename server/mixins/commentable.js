@@ -4,6 +4,8 @@ const co = require('co');
 const loopback = require('loopback');
 const app = require('../server.js');
 
+const config = require('../config/index.js');
+
 module.exports = (Model, options) => {
   let Comment = loopback.findModel('Comment');
   if (!Comment) {
@@ -16,10 +18,10 @@ module.exports = (Model, options) => {
       mixins: {
         HtmlField: {},
         Marks: {
-          createdAt: 'created_at',
-          createdBy: 'created_by',
-          updatedAt: 'updated_at',
-          updatedBy: 'updated_by',
+          createdAt: true,
+          createdBy: true,
+          updatedAt: true,
+          updatedBy: true,
         },
         Commentable: {},
       },
@@ -27,7 +29,7 @@ module.exports = (Model, options) => {
         creator: {
           type: 'belongsTo',
           model: 'user',
-          foreignKey: 'created_by',
+          foreignKey: config.marksMixin.createdAt,
         },
         commentable: {
           type: 'belongsTo',

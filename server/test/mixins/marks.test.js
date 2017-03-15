@@ -15,7 +15,7 @@ describe('Mixin: Marks', function () {
   const opts = {};
   beforeEach(mixinModel('Marks', opts));
 
-  opts['createdAt'] = { createdAt: 'created_at' };
+  opts['createdAt'] = { createdAt: true };
   it('createdAt', function*() {
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
@@ -23,7 +23,7 @@ describe('Mixin: Marks', function () {
       });
   });
 
-  opts['createdBy'] = { createdBy: 'created_by' };
+  opts['createdBy'] = { createdBy: true };
   it('createdBy', function*() {
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
@@ -32,7 +32,7 @@ describe('Mixin: Marks', function () {
       });
   });
 
-  opts['createdIp'] = { createdIp: 'created_ip' };
+  opts['createdIp'] = { createdIp: true };
   it('createdIp', function*() {
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
@@ -42,8 +42,8 @@ describe('Mixin: Marks', function () {
   });
 
   opts['updatedAt'] = {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    createdAt: true,
+    updatedAt: true,
   };
   it('updatedAt', function*() {
     let created = null;
@@ -69,8 +69,8 @@ describe('Mixin: Marks', function () {
   });
 
   opts['updatedBy'] = {
-    createdBy: 'created_by',
-    updatedBy: 'updated_by',
+    createdBy: true,
+    updatedBy: true,
   };
   it('updatedBy', function*() {
     let created = null;
@@ -96,8 +96,8 @@ describe('Mixin: Marks', function () {
   });
 
   opts['updatedIp'] = {
-    createdIp: 'created_ip',
-    updatedIp: 'updated_ip',
+    createdIp: true,
+    updatedIp: true,
   };
   it('updatedIp', function*() {
     let created = null;

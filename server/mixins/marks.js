@@ -2,53 +2,44 @@
 
 const _ = require('lodash');
 
+const config = require('../config/index.js');
 const SoftDeleteMixin = require('./soft-delete.js');
 
 module.exports = (Model, options) => {
-  const opt = _.merge({}, {
-    // createdAt: 'created_at',
-    // createdBy: 'created_by',
-    // createdIp: 'created_ip',
-    // updatedAt: 'updated_at',
-    // updatedBy: 'updated_by',
-    // updatedIp: 'updated_ip',
-    // deletedAt: 'deleted_at',
-    // deletedBy: 'deleted_by',
-    // deletedIp: 'deleted_ip',
-  }, options);
+  const opt = _.merge({}, options);
 
   // create
   if (opt.createdAt) {
-    Model.defineProperty(opt.createdAt, {
+    Model.defineProperty(config.marksMixin.createdAt, {
       type: Date,
       required: true,
     });
   }
   if (opt.createdBy) {
-    Model.defineProperty(opt.createdBy, {
+    Model.defineProperty(config.marksMixin.createdBy, {
       type: Number,
     });
   }
   if (opt.createdIp) {
-    Model.defineProperty(opt.createdIp, {
+    Model.defineProperty(config.marksMixin.createdIp, {
       type: String,
     });
   }
 
   // update
   if (opt.updatedAt) {
-    Model.defineProperty(opt.updatedAt, {
+    Model.defineProperty(config.marksMixin.updatedAt, {
       type: Date,
       required: true,
     });
   }
   if (opt.updatedBy) {
-    Model.defineProperty(opt.updatedBy, {
+    Model.defineProperty(config.marksMixin.updatedBy, {
       type: Number,
     });
   }
   if (opt.updatedIp) {
-    Model.defineProperty(opt.updatedIp, {
+    Model.defineProperty(config.marksMixin.updatedIp, {
       type: String,
     });
   }
@@ -60,29 +51,29 @@ module.exports = (Model, options) => {
     Model.onDeleteFuncs.push((updateObj, ctx) => {
       if (opt.deletedAt) {
         const now = new Date();
-        updateObj[opt.deletedAt] = now;
+        updateObj[config.marksMixin.deletedAt] = now;
       }
       if (opt.deletedBy && ctx.options.accessToken) {
-        updateObj[opt.deletedBy] = ctx.options.accessToken.userId;
+        updateObj[config.marksMixin.deletedBy] = ctx.options.accessToken.userId;
       }
       if (opt.deletedIp && ctx.options.ip) {
-        updateObj[opt.deletedIp] = ctx.options.ip;
+        updateObj[config.marksMixin.deletedIp] = ctx.options.ip;
       }
     });
     SoftDeleteMixin(Model, softDeleteopt);
   }
   if (opt.deletedAt) {
-    Model.defineProperty(opt.deletedAt, {
+    Model.defineProperty(config.marksMixin.deletedAt, {
       type: Date,
     });
   }
   if (opt.deletedBy) {
-    Model.defineProperty(opt.deletedBy, {
+    Model.defineProperty(config.marksMixin.deletedBy, {
       type: Number,
     });
   }
   if (opt.deletedIp) {
-    Model.defineProperty(opt.deletedIp, {
+    Model.defineProperty(config.marksMixin.deletedIp, {
       type: String,
     });
   }
@@ -92,13 +83,13 @@ module.exports = (Model, options) => {
     if (opt.createdAt || opt.updatedAt) {
       const now = new Date();
       if (ctx.instance && opt.createdAt) {
-        ctx.instance[opt.createdAt] = now;
+        ctx.instance[config.marksMixin.createdAt] = now;
         if (opt.updatedAt) {
-          ctx.instance[opt.updatedAt] = now;
+          ctx.instance[config.marksMixin.updatedAt] = now;
         }
       }
       if (ctx.data && opt.updatedAt) {
-        ctx.data[opt.updatedAt] = now;
+        ctx.data[config.marksMixin.updatedAt] = now;
       }
     }
     next();
@@ -108,13 +99,13 @@ module.exports = (Model, options) => {
   Model.observe('before save', (ctx, next) => {
     if (ctx.options && ctx.options.accessToken) {
       if (ctx.instance && opt.createdBy) {
-        ctx.instance[opt.createdBy] = ctx.options.accessToken.userId;
+        ctx.instance[config.marksMixin.createdBy] = ctx.options.accessToken.userId;
         if (opt.updatedBy) {
-          ctx.instance[opt.updatedBy] = ctx.options.accessToken.userId;
+          ctx.instance[config.marksMixin.updatedBy] = ctx.options.accessToken.userId;
         }
       }
       if (ctx.data && opt.updatedBy) {
-        ctx.data[opt.updatedBy] = ctx.options.accessToken.userId;
+        ctx.data[config.marksMixin.updatedBy] = ctx.options.accessToken.userId;
       }
     }
     next();
@@ -124,13 +115,13 @@ module.exports = (Model, options) => {
   Model.observe('before save', (ctx, next) => {
     if (ctx.options && ctx.options.ip) {
       if (ctx.instance && opt.createdIp) {
-        ctx.instance[opt.createdIp] = ctx.options.ip;
+        ctx.instance[config.marksMixin.createdIp] = ctx.options.ip;
         if (opt.updatedIp) {
-          ctx.instance[opt.updatedIp] = ctx.options.ip;
+          ctx.instance[config.marksMixin.updatedIp] = ctx.options.ip;
         }
       }
       if (ctx.data && opt.updatedIp) {
-        ctx.data[opt.updatedIp] = ctx.options.ip;
+        ctx.data[config.marksMixin.updatedIp] = ctx.options.ip;
       }
     }
     next();
