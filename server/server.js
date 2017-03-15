@@ -49,6 +49,7 @@ var bootOpt = {
 };
 if (process.env.NODE_ENV !== 'test') {
   bootOpt.dsRootDir = path.resolve(__dirname, '../biz/config/');
+  bootOpt.modelsRootDir = path.resolve(__dirname, '../biz/');
 }
 
 // Bootstrap the application, configure models, datasources and middleware.
