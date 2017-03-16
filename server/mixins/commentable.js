@@ -29,7 +29,7 @@ module.exports = (Model, options) => {
         creator: {
           type: 'belongsTo',
           model: 'user',
-          foreignKey: config.marksMixin.createdAt,
+          foreignKey: config.marksMixin.createdBy,
         },
         commentable: {
           type: 'belongsTo',
