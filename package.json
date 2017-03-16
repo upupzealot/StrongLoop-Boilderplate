@@ -30,6 +30,7 @@
     "loopback-remote-routing": "^1.3.2",
     "moment": "^2.17.1",
     "node-dir": "^0.1.16",
+    "pureimage": "^0.0.16",
     "request": "^2.79.0",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^1.0.1",

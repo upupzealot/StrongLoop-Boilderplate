@@ -20,6 +20,7 @@ npm-debug.log
 
 server/datasources.json
 server/config/*.json
+client/avatar/
 client/upload/
 biz
 !biz/README.md
