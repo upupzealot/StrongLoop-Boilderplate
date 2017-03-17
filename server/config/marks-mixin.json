@@ -1,0 +1,12 @@
+{
+  "createdAt": "created_at",
+  "createdBy": "created_by",
+  "createdIp": "created_ip",
+  "updatedAt": "updated_at",
+  "updatedBy": "updated_by",
+  "updatedIp": "updated_ip",
+  "deletedAt": "deleted_at",
+  "deletedBy": "deleted_by",
+  "deletedIp": "deleted_ip",
+  "isDeleted": "is_deleted"
+}

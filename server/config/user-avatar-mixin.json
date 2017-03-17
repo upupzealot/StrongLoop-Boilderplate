@@ -1,0 +1,15 @@
+{
+  "avatarDir": "./avatar",
+  "size": 100,
+  "backgroundColors": [
+    "#e8edf3", "#e6cf8b", "#b56969", "#dddfd4",
+    "#fae596", "#fae596", "#9ad3de", "#9ad3de",
+    "#89bdd3", "#5a5c51", "#ba9077", "#bcd5d1",
+    "#dbe9d8", "#c2d4d8", "#f2efe8", "#b0aac2",
+    "#62bcfa", "#fccdd3", "#bbc4ef", "#dbc3d0",
+    "#c7a693", "#856046", "#ede9ce", "#c7ad88",
+    "#64706c", "#935347"
+  ],
+  "font": "./assets/fonts/微软雅黑-粗体.ttf",
+  "fontSize": 64
+}
