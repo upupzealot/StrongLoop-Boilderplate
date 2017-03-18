@@ -25,11 +25,20 @@ describe('Mixin: Marks', function () {
 
   opts['createdBy'] = { createdBy: true };
   it('createdBy', function*() {
+    let created = null;
     yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`)
       .then((topic) => {
         should(topic).have.property('created_by')
           .which.equal(this.tony.id);
+
+        created = topic;
       });
+
+    created = yield this.Topic.findById(created.id);
+    const creator = yield created.creator.getAsync();
+    should(creator).be.ok()
+      .and.have.property('id')
+      .which.equal(this.tony.id);
   });
 
   opts['createdIp'] = { createdIp: true };
@@ -93,6 +102,12 @@ describe('Mixin: Marks', function () {
           .have.property('updated_by')
           .which.not.equal(created.created_by);
       });
+
+    created = yield this.Topic.findById(created.id);
+    const updator = yield created.updator.getAsync();
+    should(updator).be.ok()
+      .and.have.property('id')
+      .which.equal(this.steve.id);
   });
 
   opts['updatedIp'] = {

@@ -94,6 +94,11 @@ describe('Mixin: SoftDelete', function () {
     should(topic).be.ok()
       .and.has.property('deleted_by')
       .which.equal(this.tony.id);
+
+    const deletor = yield topic.deletor.getAsync();
+    should(deletor).be.ok()
+      .and.have.property('id')
+      .which.equal(this.tony.id);
   });
 
   opts['deletedIp'] = { deletedIp: true };

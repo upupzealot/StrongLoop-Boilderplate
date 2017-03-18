@@ -1,12 +1,14 @@
 'use strict';
 
 const _ = require('lodash');
+const loopback = require('loopback');
 
 const config = require('../config/index.js');
 const SoftDeleteMixin = require('./soft-delete.js');
 
 module.exports = (Model, options) => {
   const opt = _.merge({}, options);
+  const User = loopback.getModel('user');
 
   // create
   if (opt.createdAt) {
@@ -18,6 +20,11 @@ module.exports = (Model, options) => {
   if (opt.createdBy) {
     Model.defineProperty(config.marksMixin.createdBy, {
       type: Number,
+    });
+
+    Model.belongsTo(User, {
+      as: 'creator',
+      foreignKey: config.marksMixin.createdBy,
     });
   }
   if (opt.createdIp) {
@@ -36,6 +43,11 @@ module.exports = (Model, options) => {
   if (opt.updatedBy) {
     Model.defineProperty(config.marksMixin.updatedBy, {
       type: Number,
+    });
+
+    Model.belongsTo(User, {
+      as: 'updator',
+      foreignKey: config.marksMixin.updatedBy,
     });
   }
   if (opt.updatedIp) {
@@ -70,6 +82,11 @@ module.exports = (Model, options) => {
   if (opt.deletedBy) {
     Model.defineProperty(config.marksMixin.deletedBy, {
       type: Number,
+    });
+
+    Model.belongsTo(User, {
+      as: 'deletor',
+      foreignKey: config.marksMixin.deletedBy,
     });
   }
   if (opt.deletedIp) {
