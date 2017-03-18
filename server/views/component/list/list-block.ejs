@@ -12,7 +12,7 @@
 }
 .list-block-title {
   white-space: nowrap;
-  overflow:hidden !important;
+  overflow: hidden !important;
   text-overflow: ellipsis;
 }
 .list-block-text {
@@ -45,7 +45,7 @@
             </span>
           <% } %>
         </span>
-        <a href="#"><h4 class="list-block-title"><%- item.title %></h4></a>
+        <a href="<%- item.url %>"><h4 class="list-block-title"><%- item.title %></h4></a>
         <div class="list-block-thumbnail-wrapper pull-left clearfix">
           <% if(item.thumbnail) { %>
             <a href="<%- item.thumbnail %>" data-lightbox="thumnail-<%- item.id %>" data-title="<%- item.title %>">
