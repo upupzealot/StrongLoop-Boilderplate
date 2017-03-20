@@ -23,15 +23,6 @@ describe('Mixin: Commentable', function () {
       this.fifComment = yield this.fif.comments.create({content: 'fif\'s comment'});
     });
 
-    it('comments', function*() {
-      let topic = yield this.Topic.findById(this.topic.id, {include: 'comments'});
-
-      should(topic).be.ok();
-      topic = topic.toJSON();
-      should(topic).has.property('comments')
-        .which.is.an.Array();
-    });
-
     describe('commentable', function () {
       it('comment\'s', function*() {
         const commentable = yield this.comment.commentable.getAsync();
@@ -52,6 +43,28 @@ describe('Mixin: Commentable', function () {
 
         should(commentable).be.ok();
         should(commentable.toJSON()).eql(this.topic.toJSON());
+      });
+    });
+
+    describe('comments', function () {
+      it('commentable \'s', function*() {
+        const topic = yield this.Topic.findById(this.topic.id, {include: 'comments'});
+
+        should(topic.toJSON().comments)
+          .be.an.Array()
+          .and.has.property('length')
+          .which.equal(3);
+      });
+
+      it('commentable \'s', function*() {
+        const loopback = require('loopback');
+        const Comment = loopback.getModel('Comment');
+        const comment = yield Comment.findById(this.comment.id, {include: 'comments'});
+
+        should(comment.toJSON().comments)
+          .be.an.Array()
+          .and.has.property('length')
+          .which.equal(2);
       });
     });
 

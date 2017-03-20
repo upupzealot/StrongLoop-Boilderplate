@@ -58,37 +58,50 @@ module.exports = (Model, options) => {
     Comment.observe('before save', (ctx, next) => {
       const instance = ctx.instance;
       // 回复是楼中楼
-      if (instance && instance.commentable_type === 'Comment') {
+      if (instance && instance.parent_id) {
         co(function*() {
-          const comment = yield Comment.findById(instance.commentable_id);
+          const comment = yield Comment.findById(instance.parent_id);
           instance.commentable_id = comment.commentable_id;
           instance.commentable_type = comment.commentable_type;
 
           // 直接楼中楼
-          if (comment && comment.parent_id === undefined) {
+          if (comment && !comment.parent_id) {
             instance.parent_id = comment.id;
-          }
+
           // 回复楼中楼的楼中楼
-          else {
+          } else {
             instance.parent_id = comment.parent_id;
             instance.replied_id = comment.id;
           }
 
           next();
         }).catch(next);
-      }
+
       // 直接回复，不是楼中楼
-      else {
+      } else {
         next();
       }
     });
   }
 
-  Model.hasMany('comment', {
-    as: 'comments',
-    polymorphic: {
-      foreignKey: 'commentable_id',
-      discriminator: 'commentable_type',
-    },
-  });
+  if (Model.modelName !== 'Comment') {
+    Model.hasMany('comment', {
+      as: 'comments',
+      polymorphic: {
+        foreignKey: 'commentable_id',
+        discriminator: 'commentable_type',
+      },
+    });
+  } else {
+    Model.defineProperty('commentable_id', {
+      type: Number,
+    });
+    Model.defineProperty('commentable_type', {
+      type: String,
+    });
+    Model.hasMany('comment', {
+      as: 'comments',
+      foreignKey: 'parent_id',
+    });
+  }
 };
