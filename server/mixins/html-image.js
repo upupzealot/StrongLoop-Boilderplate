@@ -28,7 +28,7 @@ module.exports = (Model, options) => {
   }
 
   Model.observe('before save', (ctx, next) => {
-    const instance = ctx.instance;
+    const instance = ctx.instance || ctx.data;
     const html = instance[opt.from];
     let thumbnail = null;
     const images = [];

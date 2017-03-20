@@ -36,8 +36,10 @@ module.exports = (Model, options) => {
     });
 
     Model.observe('before save', (ctx, next) => {
-      const instance = ctx.instance;
-      instance[opt.field] = xss(instance[opt.field]);
+      const instance = ctx.instance || ctx.data;
+      if(instance[opt.field]) {
+        instance[opt.field] = xss(instance[opt.field]);
+      }
       next();
     });
   });
