@@ -87,8 +87,7 @@ describe('Mixin: Commentable', function () {
       it('fif\'s', function*() {
         const replied = yield this.fif.replied.getAsync();
 
-        should(replied).be.ok();
-        should(replied.toJSON()).eql(this.comment.toJSON());
+        should(replied).not.be.ok();
       });
 
       it('fif\'s comment\'s', function*() {
