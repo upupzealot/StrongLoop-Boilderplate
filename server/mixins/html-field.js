@@ -37,7 +37,7 @@ module.exports = (Model, options) => {
 
     Model.observe('before save', (ctx, next) => {
       const instance = ctx.instance || ctx.data;
-      if(instance[opt.field]) {
+      if (instance[opt.field]) {
         instance[opt.field] = xss(instance[opt.field]);
       }
       next();
