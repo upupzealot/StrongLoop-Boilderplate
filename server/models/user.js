@@ -21,11 +21,11 @@ module.exports = (User) => {
       const User = loopback.getModel('user');
       const user = yield User.findOne({
         where: {
-          username: ctx.args.credentials.email,
+          email: ctx.args.credentials.username,
         },
       });
       if (user) {
-        ctx.args.credentials.email = user.email;
+        ctx.args.credentials.username = user.username;
       }
       next();
     }).catch(next);
