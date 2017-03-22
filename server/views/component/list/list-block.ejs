@@ -46,14 +46,16 @@
           <% } %>
         </span>
         <h4 class="list-block-title"><a href="<%- item.url %>"><%- item.title %></a></h4>
-        <div class="list-block-thumbnail-wrapper pull-left clearfix">
-          <% if(item.thumbnail) { %>
-            <a href="<%- item.thumbnail %>" data-lightbox="thumnail-<%- item.id %>" data-title="<%- item.title %>">
-              <img src="<%- item.thumbnail %>" class="list-block-thumbnail">
-            </a>
-            <% } %>
-        </div>
-        <p class="list-block-text"><%- item.text %></p>
+        <% if(item.text) { %>
+          <div class="list-block-thumbnail-wrapper pull-left clearfix">
+            <% if(item.thumbnail) { %>
+              <a href="<%- item.thumbnail %>" data-lightbox="thumnail-<%- item.id %>" data-title="<%- item.title %>">
+                <img src="<%- item.thumbnail %>" class="list-block-thumbnail">
+              </a>
+              <% } %>
+          </div>
+          <p class="list-block-text"><%- item.text %></p>
+        <% } %>
       </div>
     </li>
   <% }); %>
