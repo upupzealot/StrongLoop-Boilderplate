@@ -3,13 +3,10 @@
 module.exports = (Model) => {
   // TODO: other mixins
 
-  Model.listUrl = () => {
-    return `/${Model.pluralModelName}`;
-  };
-  Model.prototype.listUrl = () => {
-    return Model.listUrl();
-  };
-  Model.prototype.url = function () {
-    return `/${Model.pluralModelName}/${this.id}`;
-  };
+  Model.observe('loaded', (ctx, next) => {
+    const instance = ctx.instance || ctx.data;
+    instance.listUrl = `/${Model.pluralModelName}`;
+    instance.url = `/${Model.pluralModelName}/${instance.id}`;
+    next();
+  });
 };
