@@ -24,6 +24,9 @@
       var self = this;
       var opt = self.opt;
       $['form-field']['vali-init'](self);
+      if(opt.beforeSubmit) {
+        opt.beforeSubmit = eval("(function(){return " + opt.beforeSubmit + " })()");
+      }
 
       self.fieldComponents = {};
       opt.fields.map(function(field) {
@@ -35,6 +38,14 @@
         component.form = self;
         self.fieldComponents[name] = component;
       });
+
+      if(opt.submit) {
+        var $submitBtn = self.$submitBtn = $(opt.submit.btn);
+        $submitBtn.on('click', function() {
+          $submitBtn.attr('disabled', true);
+          self.submit();
+        });
+      }
     }
 
     Form.prototype.val = function() {
@@ -53,6 +64,37 @@
         result = component.validate() === true && result;
       }
       return result;
+    }
+
+    Form.prototype.submit = function() {
+      var self = this;
+      var opt = self.opt;
+
+      // validate
+      var validation = self.validate();
+      if(validation !== true) {
+        self.$submitBtn.attr('disabled', false);
+        return;
+      }
+
+      // val
+      var formData = self.val();
+      if(opt.beforeSubmit) {
+        formData = opt.beforeSubmit(formData, this);
+      }
+
+      // ajax submit
+      $.ajax({
+        type: opt.submit.method || 'POST',
+        data: formData,
+        url: opt.submit.url,
+      }).success(function(res) {
+        if(opt.submit.redirectUrl) {
+          window.location.href = opt.submit.redirectUrl;
+        }
+      }).error(function(err) {
+        self.$submitBtn.attr('disabled', false);
+      });
     }
 
 

@@ -32,7 +32,11 @@
     }
 
     Input.prototype.val = function() {
-      return this.$ele.val();
+      if(arguments.length) {
+        return this.$ele.val(arguments[0]);
+      } else {
+        return this.$ele.val();
+      }
     }
 
 

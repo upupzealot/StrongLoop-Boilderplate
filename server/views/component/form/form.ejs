@@ -22,7 +22,7 @@
 <%# DOM -%>
 <% opt.fields.map(function(field) { %>
   <% if(_.isObject(field)) { %>
-    <div class="form-group">
+    <div class="form-group" <%- field.opt && field.opt.hidden ? 'hidden' : ''; %>>
       <% if(field.opt && field.opt.label) { %>
         <label><%- field.opt.label %></label>
       <% } %>
