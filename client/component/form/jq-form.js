@@ -16,6 +16,7 @@
     // 组件类型到 jq 插件名的映射
     var fieldClasses = {
       'input': 'formInput',
+      'textarea': 'formInput',
       'file': 'formInputFile',
       'combobox': 'formCombobox',
       'richEditor': 'formRichEditor',
@@ -89,8 +90,9 @@
         data: formData,
         url: opt.submit.url,
       }).success(function(res) {
-        if(opt.submit.redirectUrl) {
-          window.location.href = opt.submit.redirectUrl;
+        var redirectUrl = opt.submit.redirectUrl;
+        if(redirectUrl || redirectUrl === '') {
+          window.location.href = redirectUrl;
         }
       }).error(function(err) {
         self.$submitBtn.attr('disabled', false);

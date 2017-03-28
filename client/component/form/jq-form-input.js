@@ -20,6 +20,9 @@
       var self = this;
       var opt = self.opt;
       $['form-field']['vali-init'](self);
+      if(self.$ele.prop('tagName').toLowerCase() === 'textarea') {
+        autosize(self.$ele);
+      }
     }
 
     Input.prototype.validate = function() {
@@ -31,9 +34,9 @@
       return valiResult;
     }
 
-    Input.prototype.val = function() {
+    Input.prototype.val = function(value) {
       if(arguments.length) {
-        return this.$ele.val(arguments[0]);
+        return this.$ele.val(value);
       } else {
         return this.$ele.val();
       }

@@ -1,0 +1,8 @@
+<%#
+  opt: 组件 dataObject
+%>
+<%# DOM -%>
+<textarea name="<%- opt.name %>" placeholder="<%- opt.placeholder %>" class="form-control"></textarea>
+
+<%- include_js('//cdn.bootcss.com/autosize.js/3.0.20/autosize.min.js'); %>
+<%- include_js('/component/form/jq-form-input.js'); %>
