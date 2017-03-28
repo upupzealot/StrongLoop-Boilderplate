@@ -36,6 +36,7 @@
         'insertcode',
         '|','source'
       ];
+      editor.config.menuFixed = 50;
       editor.create();
     }
 
