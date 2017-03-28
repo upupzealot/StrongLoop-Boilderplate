@@ -117,8 +117,12 @@
                             hidden: true,
                             type: 'number',
                           },{
-                            name: 'content',
-                            vali: 'notEmpty',
+                            type: 'textarea',
+                            opt: {
+                              name: 'content',
+                              vali: 'notEmpty',
+                              type: 'textarea',
+                            },
                           }],
                           beforeSubmit: function(data) {
                             if(data.replied_id == 0) {
@@ -129,6 +133,7 @@
                           submit: {
                             btn: '#comment-' + comment.id + '-fif-submit-btn',
                             url: '/api/Comments/' + comment.id + '/comments',
+                            redirectUrl: '',
                           },
                         },
                       }); %>
@@ -162,7 +167,7 @@ $(function() {
 
     var $fifFormCollapse = $commentItem.find('.fif-form').closest('.collapse');
     var $repliedInfo = $commentItem.find('.fif-form .comment-info');
-    
+
     var fifCreateForm = $commentItem.find('#comment-' + id + '-fif-create').c();
     if(fifCreateForm) {
       var repliedIdField = fifCreateForm.fieldComponents.replied_id;
