@@ -29,4 +29,17 @@ module.exports = (Model, options) => {
       foreignKey: 'parent_id',
     });
   }
+
+  loopback.configureModel(Model, {
+    dataSource: Model.dataSource,
+    acls: [
+      {
+        accessType: 'EXECUTE',
+        principalType: 'ROLE',
+        principalId: '$authenticated',
+        permission: 'ALLOW',
+        property: '__create__comments',
+      },
+    ],
+  });
 };
