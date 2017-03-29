@@ -9,6 +9,8 @@ const config = require('../../config/index.js');
 let Comment = loopback.findModel('Comment');
 if (!Comment) {
   const db = app.dataSources.db;
+
+  // 创建 Comment Model
   Comment = db.createModel('Comment', {
     // properties
   }, {
@@ -23,6 +25,10 @@ if (!Comment) {
         updatedBy: true,
       },
       Commentable: {},
+
+      RemoteRouting: {
+        only: [],
+      },
     },
     relations: {
       creator: {
@@ -54,6 +60,7 @@ if (!Comment) {
     dataSource: db,
   });
 
+  // Comment 特有的逻辑
   Comment.observe('before save', (ctx, next) => {
     const instance = ctx.instance;
     // 回复是楼中楼
@@ -81,6 +88,8 @@ if (!Comment) {
       next();
     }
   });
+
+  //require('./comment');
 }
 
 module.exports = Comment;

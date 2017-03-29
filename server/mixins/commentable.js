@@ -1,13 +1,10 @@
 'use strict';
 
-const co = require('co');
 const loopback = require('loopback');
-const app = require('../server.js');
-
-const config = require('../config/index.js');
 
 module.exports = (Model, options) => {
-  const Comment = require('./models/comment');
+  // 生成 Comment Model
+  require('./lib/comment');
 
   if (Model.modelName !== 'Comment') {
     Model.hasMany('comment', {
