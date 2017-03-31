@@ -3,8 +3,10 @@
 const loopback = require('loopback');
 
 module.exports = (Model, options) => {
-  // 生成 Comment Model
+  // 生成 Model: Comment
   require('./lib/comment');
+  // 生成 Role : CommentDeletor
+  require('./lib/comment-deletor');
 
   if (Model.modelName !== 'Comment') {
     Model.hasMany('comment', {

@@ -88,8 +88,6 @@ if (!Comment) {
       next();
     }
   });
-
-  //require('./comment');
 }
 
 module.exports = Comment;
