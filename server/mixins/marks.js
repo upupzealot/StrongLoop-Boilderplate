@@ -26,6 +26,8 @@ module.exports = (Model, options) => {
       as: 'creator',
       foreignKey: config.marksMixin.createdBy,
     });
+
+    Model.disableRemoteMethodByName('prototype.__get__creator');
   }
   if (opt.createdIp) {
     Model.defineProperty(config.marksMixin.createdIp, {
@@ -49,6 +51,8 @@ module.exports = (Model, options) => {
       as: 'updator',
       foreignKey: config.marksMixin.updatedBy,
     });
+
+    Model.disableRemoteMethodByName('prototype.__get__updator');
   }
   if (opt.updatedIp) {
     Model.defineProperty(config.marksMixin.updatedIp, {

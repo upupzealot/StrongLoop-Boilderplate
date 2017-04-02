@@ -41,4 +41,13 @@ module.exports = (Model, options) => {
       },
     ],
   });
+
+  Model.disableRemoteMethodByName('prototype.__get__comments');
+  // Model.disableRemoteMethodByName('prototype.__create__comments');
+  Model.disableRemoteMethodByName('prototype.__delete__comments');
+  Model.disableRemoteMethodByName('prototype.__update__comments');
+  Model.disableRemoteMethodByName('prototype.__count__comments');
+  Model.disableRemoteMethodByName('prototype.__destroyById__comments');
+  Model.disableRemoteMethodByName('prototype.__findById__comments');
+  Model.disableRemoteMethodByName('prototype.__updateById__comments');
 };

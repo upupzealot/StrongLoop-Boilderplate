@@ -27,7 +27,9 @@ if (!Comment) {
       Commentable: {},
 
       RemoteRouting: {
-        only: [],
+        only: [
+          '@deleteById',
+        ],
       },
     },
     relations: {
