@@ -1,0 +1,52 @@
+{
+  "name": "NotificationEvent",
+  "description": "通知事件",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "type": {
+      "type": "string",
+      "required": true,
+      "description": "事件类型：公告、通知"
+    },
+    "action": {
+      "type": "string",
+      "required": true,
+      "description": "动作类型：回复、赞、关注"
+    },
+    "content": {
+      "type": "string",
+      "description": "内容（公告含有）"
+    }
+  },
+  "mixins": {
+    "Marks": {
+      "createdAt": true
+    }
+  },
+  "relations": {
+    "src": {
+      "type": "belongsTo",
+      "polymorphic": {
+        "foreignKey": "src_id",
+        "discriminator": "src_type"
+      }
+    },
+    "from": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "from_id"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    }
+  ]
+}

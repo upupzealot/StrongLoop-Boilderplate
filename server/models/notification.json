@@ -1,0 +1,41 @@
+{
+  "name": "Notification",
+  "description": "通知",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否已读"
+    }
+  },
+  "mixins": {
+    "Marks": {
+      "createdAt": true
+    }
+  },
+  "relations": {
+    "event": {
+      "type": "belongsTo",
+      "model": "NotificationEvent",
+      "foreignKey": "event_id"
+    },
+    "to": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "from_id"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    }
+  ]
+}
