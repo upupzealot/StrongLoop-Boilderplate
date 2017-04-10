@@ -7,6 +7,9 @@
 .comment-info.bottom {
   margin-bottom: 0;
 }
+.comment-delete {
+  cursor: pointer;
+}
 .comment-avatar {
   width: 36px;
   height: 36px;
@@ -60,6 +63,9 @@
           <div class="comment-info ">
             <a><%- comment.creator.username %></a>
             | <%- moment(comment.created_at).locale('zh-cn').fromNow() %>
+            <% if(locals.user && user.id === comment.created_by) { %>
+            | <span class="comment-delete"><i class="fa fa-trash"></i></span>
+            <% } %>
           </div>
 
           <%# 评论内容 %>
@@ -194,6 +200,7 @@
   </ul><%# collapse: 评论列表 %>
   
 </div>
+<%- include(_v + '/component/modal/modal.ejs'); %>
 <% } %>
 
 <script type="text/javascript">
@@ -201,6 +208,25 @@ $(function() {
   $('.comment-item').each(function(index, fif) {
     var $commentItem = $(this);
     var id = $commentItem.data('id');
+
+    var $deleteBtn = $commentItem.find('.comment-delete');
+    $deleteBtn.on('click', function() {
+      $.modal({
+        body: '删除评论？',
+        onConfirm: function() {
+          $.ajax({
+            url: '/api/Comments/' + id,
+            method: 'DELETE'
+          })
+          .success(function(result) {
+            console.log(result);
+          })
+          .error(function(err) {
+            console.log(err)
+          });
+        }
+      });
+    });
 
     var $fifFormCollapse = $commentItem.find('.fif-form').closest('.collapse');
     var $repliedInfo = $commentItem.find('.fif-form .comment-info');
