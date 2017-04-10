@@ -10,7 +10,7 @@
     "type": {
       "type": "string",
       "required": true,
-      "description": "事件类型：公告、通知"
+      "description": "事件类型：公告、通知、消息"
     },
     "action": {
       "type": "string",
@@ -19,7 +19,7 @@
     },
     "content": {
       "type": "string",
-      "description": "内容（公告含有）"
+      "description": "内容（公告、消息 含有）"
     }
   },
   "mixins": {
@@ -28,11 +28,11 @@
     }
   },
   "relations": {
-    "src": {
+    "target": {
       "type": "belongsTo",
       "polymorphic": {
-        "foreignKey": "src_id",
-        "discriminator": "src_type"
+        "foreignKey": "target_id",
+        "discriminator": "target_type"
       }
     },
     "from": {
