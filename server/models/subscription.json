@@ -1,39 +1,35 @@
 {
-  "name": "Notification",
-  "description": "通知",
+  "name": "Subscription",
+  "description": "订阅",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "is_read": {
-      "type": "boolean",
-      "default": false,
-      "description": "是否已读"
+    "action": {
+      "type": "string",
+      "required": true,
+      "description": "动作类型：回复、赞、关注"
     }
   },
   "mixins": {
     "Marks": {
       "createdAt": true
-    },
-    "RemoteRouting" : {
-      "only": [
-        "@find",
-        "@count"
-      ]
     }
   },
   "relations": {
-    "event": {
-      "type": "belongsTo",
-      "model": "NotificationEvent",
-      "foreignKey": "event_id"
-    },
-    "to": {
+    "user": {
       "type": "belongsTo",
       "model": "user",
-      "foreignKey": "from_id"
+      "foreignKey": "user_id"
+    },
+    "src": {
+      "type": "belongsTo",
+      "polymorphic": {
+         "foreignKey": "src_id",
+         "discriminator": "src_type"
+      }
     }
   },
   "acls": [
@@ -43,5 +39,6 @@
       "principalId": "$everyone",
       "permission": "DENY"
     }
-  ]
+  ],
+  "methods": {}
 }
