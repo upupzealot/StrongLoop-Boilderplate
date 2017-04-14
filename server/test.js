@@ -28,5 +28,8 @@ module.exports = () => {
 
       process.exit();
     });
-  }).catch(console.error);
+  }).catch((err) => {
+    console.error(err);
+    process.exit();
+  });
 };

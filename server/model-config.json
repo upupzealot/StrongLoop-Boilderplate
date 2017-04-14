@@ -12,9 +12,6 @@
       "../node_modules/loopback-remote-routing"
     ]
   },
-  "user": {
-    "dataSource": "db"
-  },
   "AccessToken": {
     "dataSource": "db",
     "public": false
@@ -28,6 +25,21 @@
     "public": false
   },
   "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  
+  "user": {
+    "dataSource": "db"
+  },
+  "NotificationEvent": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Notification": {
+    "dataSource": "db"
+  },
+  "Subscription": {
     "dataSource": "db",
     "public": false
   }
