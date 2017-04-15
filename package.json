@@ -7,7 +7,8 @@
     "linx": "eslint . --fix",
     "start": "node .",
     "dev": "NODE_ENV=develop pm2 start . --name=slb",
-    "test": "NODE_ENV=test node server/server.js"
+    "test": "NODE_ENV=test node server/server.js",
+    "cover": "NODE_ENV=test istanbul cover server/server.js"
   },
   "dependencies": {
     "bluebird": "^3.4.7",
@@ -44,6 +45,7 @@
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-standard": "2.0.0",
     "babel-eslint": "^7.1.1",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "should": "^11.2.0",
     "supertest": "^3.0.0",
