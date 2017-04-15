@@ -19,6 +19,12 @@ const remoteFuns = (method) => {
     return request(app)[method](url)
         .send(body)
         .then((res) => {
+          if (res.status !== code) {
+            if (code === 200) {
+              const errJson = JSON.parse(res.error.text);
+              console.error(errJson.error.message);
+            }
+          }
           should(res).have.property('status').which.equal(code);
           return res.body;
         });

@@ -66,6 +66,34 @@ module.exports = (Model, options) => {
   }
 
   function* notiOnComment (comment) {
-    console.log('on comment');
+    const NotificationEvent = loopback.getModel('NotificationEvent');
+    const commenterId = comment[config.marksMixin.createdBy];
+
+    yield NotificationEvent.emitNoti({
+      from: commenterId,
+      action: 'comment',
+      target_type: Model.modelName,
+      target_id: comment.id,
+    });
+
+    const parent = yield comment.parent.getAsync();
+    if (parent) {
+      yield NotificationEvent.emitNoti({
+        from: commenterId,
+        action: 'reply',
+        target_type: 'Comment',
+        target_id: parent.id,
+      });
+    }
+
+    const replied = yield comment.replied.getAsync();
+    if (replied) {
+      yield NotificationEvent.emitNoti({
+        from: commenterId,
+        action: 'reply',
+        target_type: 'Comment',
+        target_id: replied.id,
+      });
+    }
   }
 };

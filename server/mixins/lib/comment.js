@@ -25,6 +25,9 @@ if (!Comment) {
         updatedBy: true,
       },
       Commentable: {},
+      Notificatable: {
+        create: true,
+      },
 
       RemoteRouting: {
         only: [

@@ -18,9 +18,9 @@ describe('Mixin: Commentable', function () {
     before(function*() {
       this.Topic = mixinModel.getMixinModel('Topic', { Commentable: {} });
       this.topic = yield this.Topic.create({});
-      this.comment = yield this.topic.comments.create({content: 'root level comment'});
-      this.fif = yield this.comment.comments.create({content: 'fif'});
-      this.fifComment = yield this.fif.comments.create({content: 'fif\'s comment'});
+      this.comment = yield this.topic.comments.create({content: 'root level comment', created_by: this.tony.id});
+      this.fif = yield this.comment.comments.create({content: 'fif', created_by: this.tony.id});
+      this.fifComment = yield this.fif.comments.create({content: 'fif\'s comment', created_by: this.tony.id});
     });
 
     describe('commentable', function () {
@@ -117,8 +117,8 @@ describe('Mixin: Commentable', function () {
 
     it('create comments', function*() {
       const created = yield this.Topic.create({});
-      yield remote.post(`/api/Topics/${created.id}/comments`, 422);
-      yield remote.post(`/api/Topics/${created.id}/comments`, {content: 'hehe'});
+      yield remote.post(`/api/Topics/${created.id}/comments?access_token=${this.tony.accessToken}`, 422);
+      yield remote.post(`/api/Topics/${created.id}/comments?access_token=${this.tony.accessToken}`, {content: 'hehe'});
       let topic = yield this.Topic.findById(created.id, {include: 'comments'});
 
       should(topic).be.ok();
@@ -131,8 +131,8 @@ describe('Mixin: Commentable', function () {
 
     it('create fif', function*() {
       const created = yield this.Topic.create({});
-      const comment = yield remote.post(`/api/Topics/${created.id}/comments`, {content: 'hehe'});
-      const fif = yield remote.post(`/api/Comments/${comment.id}/comments`, {content: 'haha'});
+      const comment = yield remote.post(`/api/Topics/${created.id}/comments?access_token=${this.tony.accessToken}`, {content: 'hehe'});
+      const fif = yield remote.post(`/api/Comments/${comment.id}/comments?access_token=${this.tony.accessToken}`, {content: 'haha'});
 
       should(fif).be.ok();
     });
