@@ -46,7 +46,7 @@ module.exports = (Model, options) => {
       return yield notiOnComment(instance);
     }
 
-    yield NotificationEvent.trigger({
+    yield NotificationEvent.push({
       from_id: instance[config.marksMixin.createdBy],
       action: 'create',
       target_type: Model.modelName,
@@ -57,7 +57,7 @@ module.exports = (Model, options) => {
   function* notiOnUpdate (instance) {
     const NotificationEvent = loopback.getModel('NotificationEvent');
 
-    yield NotificationEvent.trigger({
+    yield NotificationEvent.push({
       from_id: instance[config.marksMixin.updatedBy],
       action: 'update',
       target_type: Model.modelName,
@@ -69,7 +69,7 @@ module.exports = (Model, options) => {
     const NotificationEvent = loopback.getModel('NotificationEvent');
     const commenterId = comment[config.marksMixin.createdBy];
 
-    yield NotificationEvent.trigger({
+    yield NotificationEvent.push({
       from_id: commenterId,
       action: 'comment',
       target_type: Model.modelName,
@@ -78,7 +78,7 @@ module.exports = (Model, options) => {
 
     const parent = yield comment.parent.getAsync();
     if (parent) {
-      yield NotificationEvent.trigger({
+      yield NotificationEvent.push({
         from_id: commenterId,
         action: 'reply',
         target_type: 'Comment',
@@ -88,7 +88,7 @@ module.exports = (Model, options) => {
 
     const replied = yield comment.replied.getAsync();
     if (replied) {
-      yield NotificationEvent.trigger({
+      yield NotificationEvent.push({
         from_id: commenterId,
         action: 'reply',
         target_type: 'Comment',
