@@ -24,11 +24,11 @@
       "model": "user",
       "foreignKey": "user_id"
     },
-    "src": {
+    "target": {
       "type": "belongsTo",
       "polymorphic": {
-         "foreignKey": "src_id",
-         "discriminator": "src_type"
+        "foreignKey": "target_id",
+        "discriminator": "target_type"
       }
     }
   },

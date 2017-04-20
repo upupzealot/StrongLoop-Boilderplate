@@ -33,7 +33,7 @@
     "to": {
       "type": "belongsTo",
       "model": "user",
-      "foreignKey": "from_id"
+      "foreignKey": "to_id"
     }
   },
   "acls": [
