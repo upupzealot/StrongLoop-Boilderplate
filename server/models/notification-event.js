@@ -13,12 +13,13 @@ module.exports = (NotificationEvent) => {
     assert(event.target_type);
     assert(event.target_id);
 
+    // 消息事件
     const noti = _.merge({}, {
       type: 'notification',
     }, event);
-
     const notiEvent = yield NotificationEvent.create(noti);
 
+    // 找到相关订阅
     const Subscription = loopback.getModel('Subscription');
     const subscriptions = yield Subscription.find({
       where: {
@@ -28,20 +29,18 @@ module.exports = (NotificationEvent) => {
       },
     });
 
-    const notifications = subscriptions.map((subscription) => {
+    // 创建消息实体
+    const noties = subscriptions.map((subscription) => {
       return {
         event_id: notiEvent.id,
-        action: notiEvent.action,
-        target_type: notiEvent.target_type,
-        target_id: notiEvent.target_id,
         to_id: subscription.id,
       };
     });
     const Notification = loopback.getModel('Notification');
-    yield Promise.map(notifications, (notification) => {
-      return Notification.create(notification);
+    const notifications = yield Promise.map(noties, (noti) => {
+      return Notification.create(noti);
     });
 
-    return notiEvent;
+    return notifications;
   };
 };
