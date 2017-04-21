@@ -26,6 +26,7 @@ module.exports = (NotificationEvent) => {
         action: notiEvent.action,
         target_type: notiEvent.target_type,
         target_id: notiEvent.target_id,
+        user_id: { neq: notiEvent.from_id },
       },
     });
 

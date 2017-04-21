@@ -26,38 +26,43 @@ describe('Model: NotificationEvent', function () {
     yield Notification.deleteAll();
   });
 
-  it('push', function*() {
-    yield Subscription.create({
-      user_id: this.tony.id,
-      action: 'create',
-      target_type: 'Topic',
-      target_id: this.topic.id,
-    });
-    yield Subscription.create({
-      user_id: this.steve.id,
-      action: 'create',
-      target_type: 'Topic',
-      target_id: this.topic.id,
+  describe('push', function () {
+    it('success', function*() {
+      yield Subscription.create({
+        user_id: this.steve.id,
+        action: 'create',
+        target_type: 'Topic',
+        target_id: this.topic.id,
+      });
+
+      yield NotificationEvent.push({
+        from_id: this.tony.id,
+        action: 'create',
+        target_type: 'Topic',
+        target_id: this.topic.id,
+      });
+
+      let count = yield Notification.count();
+      should(count).equal(1);
     });
 
-    yield NotificationEvent.push({
-      from_id: this.tony.id,
-      action: 'create',
-      target_type: 'Topic',
-      target_id: this.topic.id,
-    });
+    it('do not notify event owner self', function*() {
+      yield Subscription.create({
+        user_id: this.tony.id,
+        action: 'create',
+        target_type: 'Topic',
+        target_id: this.topic.id,
+      });
 
-    let count = yield Notification.count();
-    should(count).equal(2);
+      yield NotificationEvent.push({
+        from_id: this.tony.id,
+        action: 'create',
+        target_type: 'Topic',
+        target_id: this.topic.id,
+      });
 
-    count = yield Notification.count({
-      to_id: this.tony.id,
+      const count = yield Notification.count();
+      should(count).equal(0);
     });
-    should(count).equal(1);
-
-    count = yield Notification.count({
-      to_id: this.steve.id,
-    });
-    should(count).equal(1);
   });
 });
