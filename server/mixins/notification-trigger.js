@@ -72,8 +72,8 @@ module.exports = (Model, options) => {
     yield NotificationEvent.push({
       from_id: commenterId,
       action: 'comment',
-      target_type: Model.modelName,
-      target_id: comment.id,
+      target_type: comment.commentable_type,
+      target_id: comment.commentable_id,
     });
 
     const parent = yield comment.parent.getAsync();

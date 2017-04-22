@@ -25,6 +25,8 @@ if (!Comment) {
         updatedBy: true,
       },
       Commentable: {},
+
+      AutoSubscription: {},
       NotificationTrigger: {
         create: true,
       },

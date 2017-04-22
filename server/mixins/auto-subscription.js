@@ -36,11 +36,12 @@ module.exports = (Model, options) => {
   function* subsOnCreate (instance) {
     const Subscription = loopback.getModel('Subscription');
 
-    yield Subscription.create({
+    const subscription = {
       user_id: instance[config.marksMixin.createdBy],
-      action: 'comment',
+      action: Model.modelName === 'Comment' ? 'reply' : 'comment',
       target_type: Model.modelName,
       target_id: instance.id,
-    });
+    };
+    yield Subscription.create(subscription);
   }
 };
