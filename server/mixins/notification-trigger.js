@@ -8,8 +8,8 @@ const config = require('../config/index.js');
 
 module.exports = (Model, options) => {
   const opt = _.merge({}, {
-    // create: true,
-    // update: false,
+    create: true,
+    update: false,
   }, options);
 
   Model.observe('before save', (ctx, next) => {
@@ -30,6 +30,7 @@ module.exports = (Model, options) => {
         const instance = ctx.instance;
         if (ctx.hookState.isNew === true && opt.create) {
           yield notiOnCreate(instance);
+          yield subsOnCreate(instance);
         }
         if (ctx.hookState.isNew === false && opt.update) {
           yield notiOnUpdate(instance);
@@ -49,6 +50,17 @@ module.exports = (Model, options) => {
     yield NotificationEvent.push({
       from_id: instance[config.marksMixin.createdBy],
       action: 'create',
+      target_type: Model.modelName,
+      target_id: instance.id,
+    });
+  }
+
+  function* subsOnCreate (instance) {
+    const Subscription = loopback.getModel('Subscription');
+
+    yield Subscription.create({
+      user_id: instance[config.marksMixin.createdBy],
+      action: 'comment',
       target_type: Model.modelName,
       target_id: instance.id,
     });

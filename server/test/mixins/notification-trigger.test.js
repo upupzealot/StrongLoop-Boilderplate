@@ -8,14 +8,16 @@ const remote = util.remote;
 const testUsers = require('../lib/test-users');
 const mixinModel = require('../lib/mixin-model');
 
-describe('Mixin: Notificatable', function () {
+const loopback = require('loopback');
+const NotificationEvent = loopback.getModel('NotificationEvent');
+
+describe('Mixin: NotificationTrigger', function () {
   before(testUsers.register);
   after(testUsers.unregister);
 
   const opts = {};
-  beforeEach(function () {
-    const loopback = require('loopback');
-    this.NotificationEvent = loopback.getModel('NotificationEvent');
+  beforeEach(function*() {
+    yield NotificationEvent.deleteAll();
   });
 
   describe('options', function () {
@@ -26,52 +28,51 @@ describe('Mixin: Notificatable', function () {
             createdBy: true,
             updatedBy: true,
           },
-          Notificatable: opts[this.currentTest.title],
+          NotificationTrigger: opts[this.currentTest.title],
         });
     });
 
-    opts['create'] = { create: true };
-    it('create', function*() {
-      yield this.NotificationEvent.deleteAll();
+    opts['event on create'] = { create: true, update: false };
+    it('event on create', function*() {
       yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`);
-      const count = yield this.NotificationEvent.count();
-      should(count).equal(1);
+
+      const eventCount = yield NotificationEvent.count();
+      should(eventCount).equal(1);
     });
 
-    opts['update'] = { update: true };
-    it('update', function*() {
-      yield this.NotificationEvent.deleteAll();
+    opts['event on update'] = { create: false, update: true };
+    it('event on update', function*() {
       const created = yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`);
       yield remote.patch(`/api/Topics/${created.id}?access_token=${this.steve.accessToken}`);
 
-      const count = yield this.NotificationEvent.count();
+      const count = yield NotificationEvent.count();
       should(count).equal(1);
     });
   });
 
   describe('comment', function () {
-    beforeEach(function* () {
+    before(function* () {
       this.Topic = mixinModel.getMixinModel(
         'Topic', {
           Marks: {
             createdBy: true,
             updatedBy: true,
           },
-          Notificatable: opts[this.currentTest.title],
+          NotificationTrigger: {
+            create: true,
+          },
           Commentable: {},
         });
       this.created = yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`);
     });
 
-    opts['comment'] = { create: true };
     it('comment', function*() {
-      yield this.NotificationEvent.deleteAll();
       yield remote.post(
         `/api/Topics/${this.created.id}/comments?access_token=${this.tony.accessToken}`, {
           content: 'comment content',
         });
 
-      const count = yield this.NotificationEvent.count();
+      const count = yield NotificationEvent.count();
       should(count).equal(1); // comment event
     });
 
@@ -82,13 +83,13 @@ describe('Mixin: Notificatable', function () {
             content: 'comment content',
           });
 
-      yield this.NotificationEvent.deleteAll();
+      yield NotificationEvent.deleteAll();
       yield remote.post(
         `/api/Comments/${comment.id}/comments?access_token=${this.tony.accessToken}`, {
           content: 'fif content',
         });
 
-      const count = yield this.NotificationEvent.count();
+      const count = yield NotificationEvent.count();
       should(count).equal(2); // comment event & reply event;
     });
 
@@ -104,12 +105,13 @@ describe('Mixin: Notificatable', function () {
             content: 'fif content',
           });
 
-      yield this.NotificationEvent.deleteAll();
+      yield NotificationEvent.deleteAll();
       yield remote.post(
         `/api/Comments/${fif.id}/comments?access_token=${this.tony.accessToken}`, {
           content: 'fif content',
         });
-      const count = yield this.NotificationEvent.count();
+
+      const count = yield NotificationEvent.count();
       should(count).equal(3);
       // 1 comment event
       // 2 reply event:

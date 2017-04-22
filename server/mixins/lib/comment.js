@@ -25,7 +25,7 @@ if (!Comment) {
         updatedBy: true,
       },
       Commentable: {},
-      Notificatable: {
+      NotificationTrigger: {
         create: true,
       },
 

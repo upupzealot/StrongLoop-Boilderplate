@@ -42,7 +42,7 @@ describe('Model: NotificationEvent', function () {
         target_id: this.topic.id,
       });
 
-      let count = yield Notification.count();
+      const count = yield Notification.count();
       should(count).equal(1);
     });
 
