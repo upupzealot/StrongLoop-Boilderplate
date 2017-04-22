@@ -36,8 +36,8 @@ describe('Mixin: NotificationTrigger', function () {
     it('event on create', function*() {
       yield remote.post(`/api/Topics?access_token=${this.tony.accessToken}`);
 
-      const eventCount = yield NotificationEvent.count();
-      should(eventCount).equal(1);
+      const count = yield NotificationEvent.count();
+      should(count).equal(1);
     });
 
     opts['event on update'] = { create: false, update: true };
