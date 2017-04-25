@@ -1,0 +1,31 @@
+<li>
+  <a id="nav-msg-btn">
+    消息
+    <span class="badge"></span>
+  </a>
+</li>
+<script type="text/javascript">
+  $(function() {
+    var $navMsgBtn = $('#nav-msg-btn');
+    var $msgCount = $navMsgBtn.find('.badge');
+    
+    var countMsg = function() {
+      $.ajax({
+        type: 'GET',
+        url: '/api/Notifications/count?where={"is_read":false}',
+      }).success(function(res) {
+        var count = res.count;
+        if(count) {
+          $msgCount.text(count);
+        } else {
+          $msgCount.text('');
+        }
+      }).error(function(err) {
+        console.log(err);
+      });
+    }
+
+    setInterval(countMsg, 5000);
+    countMsg();
+  }); 
+</script>
