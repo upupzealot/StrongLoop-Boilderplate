@@ -22,24 +22,24 @@ module.exports = (Notification) => {
     create: '创建了',
     comment: '评论了',
     reply: '回复了',
-  }
+  };
 
-  Notification.prototype.getHTML = function() {
+  Notification.prototype.getHTML = function () {
     const event = this.toJSON().event;
 
-    if(event.action === 'comment') {
+    if (event.action === 'comment') {
       this.html =
-        event.from.username +
-        ' 评论了你的' + loopback.getModel(event.target.commentable_type).modelName +
-        '(' + event.target.commentable_id + ')';
-    } else if(event.action === 'reply') {
+        `${event.from.username
+        } 评论了你的${loopback.getModel(event.target.commentable_type).modelName
+        }(${event.target.commentable_id})`;
+    } else if (event.action === 'reply') {
       this.html =
-        event.from.username +
-        ' 回复了你在 ' + loopback.getModel(event.target.commentable_type).modelName +
-        '(' + event.target.commentable_id + ')' +
-        ' 下的评论' + 
-        loopback.getModel(event.target_type).modelName +
-        '(' + event.target_id + ')';
+        `${event.from.username
+        } 回复了你在 ${loopback.getModel(event.target.commentable_type).modelName
+        }(${event.target.commentable_id})` +
+        ` 下的评论${
+        loopback.getModel(event.target_type).modelName
+        }(${event.target_id})`;
     } else {
       this.html =
         `${event.from.username
@@ -47,7 +47,7 @@ module.exports = (Notification) => {
         } ${loopback.getModel(event.target_type).modelName
         }(${event.target_id})`;
     }
-  }
+  };
 
   Notification.afterRemote('find', (ctx, instances, next) => {
     instances.forEach((instance) => {
