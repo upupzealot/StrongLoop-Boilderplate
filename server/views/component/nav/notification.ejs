@@ -3,12 +3,24 @@
   width: 200px;
   height: 240px;
 }
-.nav-noti-popover ul li {
+.nav-noti-popover ul.nav li {
   width: 33%;
   margin: 0;
   text-align: center;
 }
+.nav-noti-loading {
+  text-align: center;
+  padding: 10px 0 10px;
+  color: #ccc;
+}
+
+.scrollbar-macosx {
+  height: 200px;
+}
 </style>
+
+<%- include_css("//cdn.bootcss.com/jquery.scrollbar/0.2.11/jquery.scrollbar.min.css"); %>
+<%- include_js("//cdn.bootcss.com/jquery.scrollbar/0.2.11/jquery.scrollbar.min.js"); %>
 
 <li>
   <a id="nav-noti-btn" href="#" onclick="javascript:;">
@@ -18,7 +30,7 @@
   <div class="nav-noti-popover" hidden>
     <!-- Nav tabs -->
     <ul class="nav nav-pills">
-      <li class="active"><a href="#nav-tab-content-noti" data-toggle="tab">
+      <li class="active"><a href="#nav-tab-content-event" data-toggle="tab">
         <i class="fa fa-list"></i>
       </a></li>
       <li><a href="#nav-tab-content-follow" data-toggle="tab">
@@ -31,9 +43,13 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <div class="tab-pane active" id="nav-tab-content-noti">
-        <div style="text-align: center;">
-          <i class="fa fa-spinner fa-pulse"></i>
+      <div class="tab-pane active" id="nav-tab-content-event">
+        <div class="scrollbar-macosx">
+          <div class="nav-noti-loading">
+            <i class="fa fa-spinner fa-pulse fa-2x"></i>
+          </div>
+          <ul class="list-group" style="margin: 0;">
+          </ul>
         </div>
       </div>
       <div class="tab-pane" id="nav-tab-content-follow">
@@ -45,6 +61,7 @@
     </div>
   </div>
 </li>
+
 <script type="text/javascript">
   $(function() {
     var $navNotiBtn = $('#nav-noti-btn');
@@ -84,17 +101,76 @@
       content: popoverContent,
       placement: 'bottom',
     });
-    $navNotiBtn.on('shown.bs.popover', function() {
+    // 点击页面其余区域时，时关闭 popover
+    $('body').click(function (event) {
+      var $target = $(event.target);
+      if($target[0] !== $navNotiBtn[0]
+      && !$navNotiBtn.has($target[0]).length
+      && !$target.closest('.popover-content').length) {
+        $navNotiBtn.popover('hide');
+      }
+    });
 
-      // noti-tab
-      var $notiTab = $('a[data-toggle="tab"][href="#nav-tab-content-noti"]');
-      var $notiContent = $('#nav-tab-content-noti');
-      $notiTab.on('shown.bs.tab', function (e) {
-        console.log(e.target) // activated tab
-        // e.relatedTarget // previous tab
+    $navNotiBtn.on('shown.bs.popover', function() {
+      $('.scrollbar-macosx').scrollbar({
+        onScroll: function(y, x){
+          if(y.maxScroll && y.scroll === y.maxScroll){
+            console.log('Scrolled to bottom');
+          }
+        }
       });
 
-      $notiTab.trigger('shown.bs.tab');
+      // tabs
+      var $tabs = $('a[data-toggle="tab"]');
+      var contents = {
+        'event': $('#nav-tab-content-event'),
+        'follow': $('#nav-tab-content-follow'),
+        'like': $('#nav-tab-content-like'),
+      };
+      $tabs.on('shown.bs.tab', function (e) {
+        var $tab = $(e.target);
+        var tabName = $tab.attr('href').substr('#nav-tab-content-'.length);
+        tabShow(tabName, $tab, contents[tabName]); // activated tab
+      });
+
+      // on tab show
+      var notifications = {
+        'event': [],
+        'follow': [],
+        'like': [],
+      };
+      var tabShow = function(tabName, $tab, $content) {
+        pullNotis(tabName, $tab, $content);
+      };
+
+      // pull new notis
+      var pullNotis = function(tabName, $tab, $content) {
+        var $loading = $content.find('.nav-noti-loading');
+        var $notiList = $content.find('ul');
+
+        var notis = notifications[tabName];
+        var filter = { where: {} };
+        if(notis.length) {
+          filter.where.created_at = {
+            gt: notis[notis.length - 1].created_at
+          };
+        }
+        $.ajax({
+          type: 'GET',
+          url: '/api/Notifications?filter=' + JSON.stringify(filter),
+        }).success(function(newNotis) {
+          $loading.animate({ height: 0, padding: 0 }, 200, function() { $loading.hide(); });
+          newNotis.forEach(function(noti) {
+            $notiList.prepend('<li class="list-group-item">' + noti.html + '</li>');
+          });
+          notifications[tabName] = notis.concat(newNotis);
+        }).error(function(err) {
+          console.log(err);
+        });
+      }
+
+      // after all
+      $tabs.first().trigger('shown.bs.tab');
     });
   }); 
 </script>
