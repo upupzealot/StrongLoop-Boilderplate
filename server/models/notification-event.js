@@ -34,7 +34,7 @@ module.exports = (NotificationEvent) => {
     const noties = subscriptions.map((subscription) => {
       return {
         event_id: notiEvent.id,
-        to_id: subscription.id,
+        to_id: subscription.user_id,
       };
     });
     const Notification = loopback.getModel('Notification');
