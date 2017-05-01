@@ -1,13 +1,23 @@
 <style type="text/css">
+.popover {
+  max-width: initial;
+}
 .nav-noti-popover {
-  width: 200px;
-  height: 240px;
+  width: 260px;
+  height: 360px;
 }
 .nav-noti-popover ul.nav li {
   width: 33%;
   margin: 0;
   text-align: center;
 }
+.nav-noti-popover .list-group-item {
+  border: none;
+  border-radius: 0;
+  border-bottom: solid 1px #eee;
+}
+
+
 .nav-noti-loading {
   text-align: center;
   padding: 10px 0 10px;
@@ -15,7 +25,7 @@
 }
 
 .scrollbar-macosx {
-  height: 200px;
+  height: 220px;
 }
 </style>
 
@@ -88,7 +98,9 @@
     countNotification();
 
     // popover
-    var popoverContent = 
+    // 对应的 div 被转化成 html
+    // 随后这个 div 会被移除
+    var popoverContent =
       $navNotiBtn
         .siblings('.nav-noti-popover')
         .remove()
@@ -111,11 +123,17 @@
       }
     });
 
+    // tabs
     $navNotiBtn.on('shown.bs.popover', function() {
+      // popover 的实例每次都是不同的
+      // 所以 popover 内部的这些代码每次都要执行
+      
+      // 处理 noti 列表的 scrollbars
       $('.scrollbar-macosx').scrollbar({
+        disableBodyScroll: true,
         onScroll: function(y, x){
-          if(y.maxScroll && y.scroll === y.maxScroll){
-            console.log('Scrolled to bottom');
+          if(y.maxScroll && y.scroll === y.maxScroll) {
+            // TODO 尝试加载
           }
         }
       });
@@ -169,7 +187,7 @@
         });
       }
 
-      // after all
+      // 触发第一个 tab 的显示事件
       $tabs.first().trigger('shown.bs.tab');
     });
   }); 
