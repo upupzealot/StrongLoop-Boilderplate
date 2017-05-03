@@ -34,7 +34,7 @@ module.exports = (Notification) => {
         this.html =
         `${event.from.username
         }评论了你的${targetModel.settings.description
-        }<a href="${event.target.url}">《${event.target.title
+        }<a href="${this.url}">《${event.target.title
         }》</a>`;
       }
 
@@ -45,14 +45,17 @@ module.exports = (Notification) => {
         this.html =
         `${event.from.username
         }回复了你在${commentableModel.settings.description
-        } <a href="${commentable.url}">《${commentable.title
+        } <a href="${this.url}">《${commentable.title
         }》下的评论</a>`;
       }
     } else {
+      const commentableModel = loopback.getModel(event.target.commentable_type);
+      const commentable = yield commentableModel.findById(event.target.commentable_id);
+
       this.html =
         `${event.from.username
         } ${Actions[event.action]}了你的 ${commentableModel.settings.description
-        } <a href="${commentable.url}">《${commentable.title
+        } <a href="${this.url}">《${commentable.title
         }》</a> 下的评论${targetModel.settings.description
         }`;
     }
