@@ -17,6 +17,7 @@
     "Marks": {
       "createdAt": true
     },
+    "Routable": {},
     "RemoteRouting" : {
       "only": [
         "@find",
