@@ -20,9 +20,9 @@ module.exports = (Notification) => {
   });
 
   const Actions = {
-    create: '创建了',
-    comment: '评论了',
-    reply: '回复了',
+    create: '创建',
+    comment: '评论',
+    reply: '回复',
   };
 
   Notification.prototype.getHTML = function*() {
@@ -33,9 +33,9 @@ module.exports = (Notification) => {
       if (event.action === 'comment') {
         this.html =
         `${event.from.username
-        } 评论了你的${targetModel.modelName
-        } <a href="${event.target.url}">${event.target.title
-        }</a> `;
+        }评论了你的${targetModel.settings.description
+        }<a href="${event.target.url}">《${event.target.title
+        }》</a>`;
       }
 
       if (event.action === 'reply') {
@@ -44,17 +44,17 @@ module.exports = (Notification) => {
 
         this.html =
         `${event.from.username
-        } 回复了你在 ${commentableModel.modelName
-        } <a href="${commentable.url}">${commentable.title
-        }</a> 下的评论${targetModel.modelName
-        }(${event.target_id})`;
+        }回复了你在${commentableModel.settings.description
+        } <a href="${commentable.url}">《${commentable.title
+        }》下的评论</a>`;
       }
     } else {
       this.html =
         `${event.from.username
-        } ${Actions[event.action]
-        } ${targetModel.modelName
-        }(${event.target_id})`;
+        } ${Actions[event.action]}了你的 ${commentableModel.settings.description
+        } <a href="${commentable.url}">《${commentable.title
+        }》</a> 下的评论${targetModel.settings.description
+        }`;
     }
   };
 
