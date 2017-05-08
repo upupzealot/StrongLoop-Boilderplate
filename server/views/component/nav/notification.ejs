@@ -11,13 +11,23 @@
   margin: 0;
   text-align: center;
 }
-.nav-noti-popover .list-group-item {
+.nav-noti-popover ul.nav li a {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.nav-noti-popover .tab-pane .list-group {
+  margin: 0;
+}
+.nav-noti-popover .tab-pane .list-group-item {
   border: none;
   border-top: solid 1px #eee;
   border-radius: 0;
 }
-.nav-noti-popover .list-group-item:first-child {
+.nav-noti-popover .tab-pane .list-group-item:first-child {
   border-top: none;
+}
+.nav-noti-popover .tab-pane .list-group-item.unread {
+  background-color: rgba(51, 122, 183, .1);
 }
 
 
@@ -58,7 +68,7 @@
     <div class="tab-content">
       <div class="tab-pane active" id="nav-tab-content-event">
         <div class="scrollbar scrollbar-macosx">
-          <ul class="list-group" style="margin: 0;">
+          <ul class="list-group">
           </ul>
           <div class="nav-noti-loading">
             <i class="fa fa-spinner fa-pulse"></i>
@@ -151,12 +161,14 @@
         'like': [],
       };
       var tabShow = function(tabName) {
-        var $content = contents[tabName];
-        pullNotis(tabName, $content);
+        pullNotis(tabName);
+        pulling[tabName] = false;
       };
 
       // pull new notis
       var pullNotis = function(tabName, $content) {
+        var $content = contents[tabName];;
+
         var $loading = $content.find('.nav-noti-loading');
         var $notiList = $content.find('ul');
 
@@ -173,25 +185,44 @@
           type: 'GET',
           url: '/api/Notifications?filter=' + JSON.stringify(filter),
         }).success(function(newNotis) {
-          $loading.animate({opacity: 0});
           newNotis.forEach(function(noti) {
-            $notiList.append('<li class="list-group-item">' + noti.html + '</li>');
+            var notiHtml = '<li class="list-group-item';
+            if(!noti.is_read) {
+              notiHtml += ' unread';
+            }
+            notiHtml += '">' + noti.html + '</li>'
+            $notiList.append(notiHtml);
           });
           notifications[tabName] = notis.concat(newNotis);
+
+          $loading.animate({opacity: 0}, function() {
+            pulling[tabName] = false;
+          });
         }).error(function(err) {
           console.log(err);
+          pulling[tabName] = false;
         });
       }
 
       // 触发第一个 tab 的显示事件
       $tabs.first().trigger('shown.bs.tab');
 
+      var pulling = {
+        'event': false,
+        'follow': false,
+        'like': false,
+      }
       // 处理 noti 列表的 scrollbars
       $('.scrollbar-macosx').scrollbar({
         disableBodyScroll: true,
         onScroll: function(y, x){
-          if(y.maxScroll && y.scroll === y.maxScroll) {
-            // TODO 尝试加载
+          if(y.maxScroll && y.scroll === y.maxScroll && !pulling[tabName]) {
+            var tabName = $(this.container)
+              .closest('.tab-pane')
+              .attr('id')
+              .substr('nav-tab-content-'.length);
+            pulling[tabName] = true;
+            pullNotis(tabName);
           }
         }
       });
