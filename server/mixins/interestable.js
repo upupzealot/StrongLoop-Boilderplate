@@ -37,10 +37,10 @@ module.exports = (Model, options) => {
   if (Model.modelName === 'user') {
     Model.prototype.follow = interest;
     Model.prototype.unfollow = uninterest;
-    Model.prototype.isFollowing = isInterested;
+    Model.prototype.following = isInterested;
   } else {
     Model.prototype.like = interest;
     Model.prototype.unlike = uninterest;
-    Model.prototype.isLiking = isInterested;
+    Model.prototype.liking = isInterested;
   }
 };
