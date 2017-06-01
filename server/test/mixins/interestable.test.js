@@ -11,7 +11,7 @@ const User = loopback.getModel('user');
 const Interestable = require('../../mixins/interestable');
 
 describe('Mixin: Interestable', function () {
-  before(function() {
+  before(function () {
     Interestable(User);
   });
   before(testUsers.register);
