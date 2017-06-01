@@ -36,4 +36,54 @@ describe('Mixin: Interestable', function () {
       should(this.topic.liking).be.a.Function();
     });
   });
+
+  describe('interest', function () {
+    before(function*() {
+      this.Interest = loopback.getModel('Interest');
+    });
+
+    beforeEach(function*() {
+      yield this.Interest.deleteAll();
+    });
+
+    it('like', function*() {
+      yield this.topic.like(this.tony.id);
+
+      const count = yield this.Interest.count({
+        created_by: this.tony.id,
+        interestable_type: this.Topic.modelName,
+        interestable_id: this.topic.id,
+        is_canceled: false,
+      });
+      should(count).equal(1);
+    });
+
+    it('unlike', function*() {
+      yield this.topic.like(this.tony.id);
+      yield this.topic.unlike(this.tony.id);
+
+      const count = yield this.Interest.count({
+        created_by: this.tony.id,
+        interestable_type: this.Topic.modelName,
+        interestable_id: this.topic.id,
+        is_canceled: true,
+      });
+      should(count).equal(1);
+    });
+
+    it('isliking', function*() {
+      let isLiking = yield this.topic.liking(this.tony.id);
+      should(isLiking).equal(false);
+
+      yield this.topic.like(this.tony.id);
+
+      isLiking = yield this.topic.liking(this.tony.id);
+      should(isLiking).equal(true);
+
+      yield this.topic.unlike(this.tony.id);
+
+      isLiking = yield this.topic.liking(this.tony.id);
+      should(isLiking).equal(false);
+    });
+  });
 });
