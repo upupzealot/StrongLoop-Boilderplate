@@ -15,13 +15,15 @@ module.exports = (Model, options) => {
   };
 
   const uninterest = function*(userId) {
-    yield Interest.updateAll({
+    const interest = yield Interest.findOne({
       created_by: userId,
       interestable_type: Model.modelName,
       interestable_id: this.id,
-    }, {
-      is_canceled: true,
     });
+
+    if(!interest.is_canceled) {
+      yield interest.updateAttribute('is_canceled', true);
+    }
   };
 
   const isInterested = function*(userId) {

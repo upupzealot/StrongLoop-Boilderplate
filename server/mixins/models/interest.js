@@ -52,6 +52,24 @@ if (!Interest) {
     public: true,
     dataSource: db,
   });
+
+  Interest.observe('after save', (ctx, next) => {
+    const instance = ctx.instance;
+
+    co(function*() {
+      
+      if(!instance.is_canceled) {
+        // 订阅
+        
+      } else {
+        // 取消订阅
+        
+      }
+
+      next();
+    }).catch(next);
+
+  });
 }
 
 module.exports = Interest;
