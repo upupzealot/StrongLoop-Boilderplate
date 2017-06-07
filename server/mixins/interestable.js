@@ -21,7 +21,7 @@ module.exports = (Model, options) => {
       interestable_id: this.id,
     });
 
-    if(!interest.is_canceled) {
+    if (!interest.is_canceled) {
       yield interest.updateAttribute('is_canceled', true);
     }
   };

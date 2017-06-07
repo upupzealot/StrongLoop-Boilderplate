@@ -40,20 +40,30 @@ describe('Mixin: Interestable', function () {
   describe('interest', function () {
     before(function*() {
       this.Interest = loopback.getModel('Interest');
+      this.Subscription = loopback.getModel('Subscription');
     });
 
     beforeEach(function*() {
       yield this.Interest.deleteAll();
+      yield this.Subscription.deleteAll();
     });
 
     it('like', function*() {
       yield this.topic.like(this.tony.id);
 
-      const count = yield this.Interest.count({
+      let count = yield this.Interest.count({
         created_by: this.tony.id,
         interestable_type: this.Topic.modelName,
         interestable_id: this.topic.id,
         is_canceled: false,
+      });
+      should(count).equal(1);
+
+      count = yield this.Subscription.count({
+        user_id: this.tony.id,
+        action: 'comment',
+        target_type: this.Topic.modelName,
+        target_id: this.topic.id,
       });
       should(count).equal(1);
     });
@@ -62,13 +72,21 @@ describe('Mixin: Interestable', function () {
       yield this.topic.like(this.tony.id);
       yield this.topic.unlike(this.tony.id);
 
-      const count = yield this.Interest.count({
+      let count = yield this.Interest.count({
         created_by: this.tony.id,
         interestable_type: this.Topic.modelName,
         interestable_id: this.topic.id,
         is_canceled: true,
       });
       should(count).equal(1);
+
+      count = yield this.Subscription.count({
+        user_id: this.tony.id,
+        action: 'comment',
+        target_type: this.Topic.modelName,
+        target_id: this.topic.id,
+      });
+      should(count).equal(0);
     });
 
     it('isliking', function*() {

@@ -1,5 +1,6 @@
 'use strict';
 
+const co = require('co');
 const loopback = require('loopback');
 const app = require('../../server.js');
 
@@ -25,7 +26,6 @@ if (!Interest) {
         createdAt: true,
         createdBy: true,
       },
-      Commentable: {},
 
       RemoteRouting: {
         only: [
@@ -39,13 +39,6 @@ if (!Interest) {
         model: 'user',
         foreignKey: config.marksMixin.createdBy,
       },
-      commentable: {
-        type: 'belongsTo',
-        polymorphic: {
-          foreignKey: 'interestable_id',
-          discriminator: 'interestable_type',
-        },
-      },
     },
   });
   app.model(Interest, {
@@ -55,20 +48,29 @@ if (!Interest) {
 
   Interest.observe('after save', (ctx, next) => {
     const instance = ctx.instance;
+    const Subscription = loopback.getModel('Subscription');
+
+    const subs = {
+      user_id: instance[config.marksMixin.createdBy],
+      action: 'comment',
+      target_type: instance.interestable_type,
+      target_id: instance.interestable_id,
+    };
 
     co(function*() {
-      
-      if(!instance.is_canceled) {
+      if (!instance.is_canceled) {
         // 订阅
-        
+        yield Subscription.findOrCreate(subs);
       } else {
         // 取消订阅
-        
+        const subscription = yield Subscription.findOne({where: subs});
+        if (subscription) {
+          yield subscription.delete();
+        }
       }
 
       next();
     }).catch(next);
-
   });
 }
 
