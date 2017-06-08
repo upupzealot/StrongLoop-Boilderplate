@@ -30,6 +30,7 @@ describe('Model: NotificationEvent', function () {
     it('success', function*() {
       yield Subscription.create({
         user_id: this.steve.id,
+        reason: 'test',
         action: 'create',
         target_type: 'Topic',
         target_id: this.topic.id,
@@ -51,6 +52,7 @@ describe('Model: NotificationEvent', function () {
     it('do not notify event owner self', function*() {
       yield Subscription.create({
         user_id: this.tony.id,
+        reason: 'test',
         action: 'create',
         target_type: 'Topic',
         target_id: this.topic.id,

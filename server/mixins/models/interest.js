@@ -52,6 +52,7 @@ if (!Interest) {
 
     const subs = {
       user_id: instance[config.marksMixin.createdBy],
+      reason: 'like',
       action: 'comment',
       target_type: instance.interestable_type,
       target_id: instance.interestable_id,

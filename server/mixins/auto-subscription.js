@@ -38,6 +38,7 @@ module.exports = (Model, options) => {
 
     const subscription = {
       user_id: instance[config.marksMixin.createdBy],
+      reason: 'create',
       action: Model.modelName === 'Comment' ? 'reply' : 'comment',
       target_type: Model.modelName,
       target_id: instance.id,
