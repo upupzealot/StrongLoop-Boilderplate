@@ -160,6 +160,11 @@
         'follow': [],
         'like': [],
       };
+      var pulling = {
+        'event': false,
+        'follow': false,
+        'like': false,
+      }
       var tabShow = function(tabName) {
         pullNotis(tabName);
         pulling[tabName] = false;
@@ -207,11 +212,6 @@
       // 触发第一个 tab 的显示事件
       $tabs.first().trigger('shown.bs.tab');
 
-      var pulling = {
-        'event': false,
-        'follow': false,
-        'like': false,
-      }
       // 处理 noti 列表的 scrollbars
       $('.scrollbar-macosx').scrollbar({
         disableBodyScroll: true,
